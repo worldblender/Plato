@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Latitude:</b>
+  <%= @bomb.latitude %>
+</p>
+
+<p>
+  <b>Longitude:</b>
+  <%= @bomb.longitude %>
+</p>
+
+<p>
+  <b>Createtime:</b>
+  <%= @bomb.createtime %>
+</p>
+
+<p>
+  <b>Detonatetime:</b>
+  <%= @bomb.detonatetime %>
+</p>
+
+
+<%= link_to 'Edit', edit_bomb_path(@bomb) %> |
+<%= link_to 'Back', bombs_path %>

@@ -1,0 +1,33 @@
+<%= form_for(@bomb) do |f| %>
+  <% if @bomb.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@bomb.errors.count, "error") %> prohibited this bomb from being saved:</h2>
+
+      <ul>
+      <% @bomb.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :latitude %><br />
+    <%= f.text_field :latitude %>
+  </div>
+  <div class="field">
+    <%= f.label :longitude %><br />
+    <%= f.text_field :longitude %>
+  </div>
+  <div class="field">
+    <%= f.label :createtime %><br />
+    <%= f.datetime_select :createtime %>
+  </div>
+  <div class="field">
+    <%= f.label :detonatetime %><br />
+    <%= f.datetime_select :detonatetime %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

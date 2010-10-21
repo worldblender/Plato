@@ -1,0 +1,29 @@
+<h1>Listing bombs</h1>
+
+<table>
+  <tr>
+    <th>Latitude</th>
+    <th>Longitude</th>
+    <th>Createtime</th>
+    <th>Detonatetime</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @bombs.each do |bomb| %>
+  <tr>
+    <td><%= bomb.latitude %></td>
+    <td><%= bomb.longitude %></td>
+    <td><%= bomb.createtime %></td>
+    <td><%= bomb.detonatetime %></td>
+    <td><%= link_to 'Show', bomb %></td>
+    <td><%= link_to 'Edit', edit_bomb_path(bomb) %></td>
+    <td><%= link_to 'Destroy', bomb, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Bomb', new_bomb_path %>

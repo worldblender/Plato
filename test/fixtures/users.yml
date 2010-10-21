@@ -1,0 +1,15 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  latitude: 1.5
+  longitude: 1.5
+  createtime: 2010-10-21 02:03:02
+  deadtime: 2010-10-21 02:03:02
+  bomb_id: 1
+
+two:
+  latitude: 1.5
+  longitude: 1.5
+  createtime: 2010-10-21 02:03:02
+  deadtime: 2010-10-21 02:03:02
+  bomb_id: 1
