@@ -1,7 +1,13 @@
 Plato::Application.routes.draw do
+  get "game/index"
+
+  devise_for :users
+
   resources :users
 
   resources :bombs
+
+  root :to => "game#index"
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

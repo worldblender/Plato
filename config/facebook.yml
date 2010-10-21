@@ -1,0 +1,11 @@
+development:
+  apikey: 112171295512747
+  secret: 541a431aedf96a9d53f2f9fc27afae04
+
+test:
+  appid:
+  secret:
+
+production:
+  apikey: 162747913749509
+  secret: 7daee9c667b722d78e0c6ab34850f75f
