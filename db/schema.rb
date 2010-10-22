@@ -12,6 +12,15 @@
 
 ActiveRecord::Schema.define(:version => 20101021205437) do
 
+  create_table "bombs", :force => true do |t|
+    t.float    "latitude"
+    t.float    "longitude"
+    t.datetime "createtime"
+    t.datetime "detonatetime"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
     t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
