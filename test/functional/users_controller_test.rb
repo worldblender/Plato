@@ -17,6 +17,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test "should create user" do
+    @user.email= 'newEmail@worldblender.com'
     assert_difference('User.count') do
       post :create, :user => @user.attributes
     end
