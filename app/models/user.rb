@@ -28,22 +28,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def setLocation(latitude,longitude)
-    if self[:deadtime] == nil
-      self[:latitude] = latitude
-      self[:longitude] = longitude
-      self.save
-    end
-  end
-
   def photoUrl
     return "http://graph.facebook.com/" + self[:facebook_id] + "/picture"
-  end
-
-  def kill
-    if self[:deadtime] == nil
-      self[:deadtime] == DateTime.now
-      self.save
-    end
   end
 end

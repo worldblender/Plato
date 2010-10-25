@@ -3,6 +3,9 @@ Plato::Application.routes.draw do
 
   devise_for :users
 
+  get "game/dropBomb"
+  get "game/playerMoved"
+
   resources :users
 
   resources :bombs
