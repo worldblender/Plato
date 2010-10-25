@@ -60,9 +60,10 @@ class BombsController < ApplicationController
   # PUT /bombs/1.xml
   def update
     @bomb = Bomb.find(params[:id])
+    # @user.update_attributes(params[:user])
 
     respond_to do |format|
-      if @bomb.update_attributes(params[:bomb])
+      if @bomb.save
         format.html { redirect_to(@bomb, :notice => 'Bomb was successfully updated.') }
         format.xml  { head :ok }
       else
