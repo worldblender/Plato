@@ -20,5 +20,14 @@ class Bomb < ActiveRecord::Base
     end
   end
 
+  def timeLeft
+    timeLeft = BOMB_TIME.seconds-(DateTime.now-self.startTime)
+    if(timeLeft < 0)
+      return 0
+    else
+      return timeLeft
+    end
+  end
+
   scope :explodeDurring, lambda{|startTime,endTime| where({:createtime => (startTime-BOMB_TIME.seconds)..(endTime-BOMB_TIME.seconds)})}
 end

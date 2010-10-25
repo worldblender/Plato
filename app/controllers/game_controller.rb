@@ -1,5 +1,25 @@
 class GameController < ApplicationController
   def index
+    @bombs = Bomb.all
+    @players = User.all
   end
 
+  def dropBomb
+    if current_user.bomb_id == nil && current_user.deadtime == nil
+      bomb = Bomb.new
+      bomb.createtime = DateTime.now
+      bomb.latitude = params[:latitude]
+      bomb.longitude = params[:longitude]
+      bomb.detonatetime = nil
+      current_user.bomb_id = @bomb.id
+      bomb.save
+      current_user.save
+    end
+  end
+
+  def movedPlayer
+    current_user.latitude = params[:latitude]
+    current_user.longitude = params[:longitude]
+    current_user.save
+  end
 end
