@@ -17,7 +17,7 @@ class GameController < ApplicationController
     end
   end
 
-  def movedPlayer
+  def playerMoved
     current_user.latitude = params[:lat]
     current_user.longitude = params[:lng]
     current_user.save
