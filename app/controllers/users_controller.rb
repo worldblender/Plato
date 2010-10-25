@@ -60,12 +60,13 @@ class UsersController < ApplicationController
   # PUT /users/1.xml
   def update
     @user = User.find(params[:id])
+    @user.update_attributes(params[:user])
     @user.createtime = DateTime.now
     @user.deadtime = nil
     @user.bomb_id = nil
 
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      if @user.save
         format.html { redirect_to(@user, :notice => 'User was successfully updated.') }
         format.xml  { head :ok }
       else
