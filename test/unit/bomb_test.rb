@@ -5,4 +5,7 @@ class BombTest < ActiveSupport::TestCase
   test "the truth" do
     assert true
   end
+
+  test "bomb filter" do
+  end
 end

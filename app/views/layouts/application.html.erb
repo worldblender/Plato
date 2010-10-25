@@ -13,7 +13,7 @@
       <%= link_to 'Sign out', destroy_user_session_path %>
       <%= yield %>
     <%- else %>
-      <%= link_to 'Sign in', user_oauth_authorize_url(:facebook) %>
+      <%= link_to 'Sign in with Facebook', user_oauth_authorize_url(:facebook) %>
     <%- end %>
   </span>
 

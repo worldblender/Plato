@@ -30,3 +30,7 @@ gem 'devise', :git => 'git://github.com/plataformatec/devise.git'
 # group :development, :test do
 #   gem 'webrat'
 # end
+group :test do
+  gem "capybara"
+  gem "launchy"
+end

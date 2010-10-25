@@ -3,8 +3,8 @@ development:
   secret: 541a431aedf96a9d53f2f9fc27afae04
 
 test:
-  appid:
-  secret:
+  appid: 112171295512747
+  secret: 541a431aedf96a9d53f2f9fc27afae04
 
 production:
   apikey: 162747913749509
