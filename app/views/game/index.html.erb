@@ -19,7 +19,7 @@ var map;
 var allPlayers = [
 <%- @users.each do |user| %>
   [
-    <%= user.latitude %>, <%= user.longitude %>, <%= user.name %>, <%= user.facebook_id %>
+    <%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>
   ]
 <%- end %>
 ];
@@ -31,8 +31,6 @@ var allBombs = [
 <%- end %>
 ];
 
-@bombs.latitude
-@bombs.longitude
 function initialize() {
   console.log("initialize called");
   var mapOptions = {
