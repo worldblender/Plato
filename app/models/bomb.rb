@@ -21,11 +21,11 @@ class Bomb < ActiveRecord::Base
   end
 
   def timeLeft
-    timeLeft = BOMB_TIME.seconds-(DateTime.now-self.createtime)
+    timeLeft = BOMB_TIME.seconds-(DateTime.now-self.createtime) # this will result in the timeLeft, but in days as a float
     if(timeLeft < 0)
-      return 0.seconds
+      return 0
     else
-      return timeLeft
+      return (timeLeft*24*60*60).to_i
     end
   end
 
