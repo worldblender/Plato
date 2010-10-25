@@ -18,6 +18,9 @@ var map;
 //var allBombs = [[47.6209023, -122.32717827, 15000], [47.6063789, -122.3297322, 10000], [47.6000, -122.3116333, 6000]];
 var allPlayers = [
 <%- @players.each do |user| %>
+  <% if @players.first!=user %>
+    ,
+  <% end %>
   [
     <%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>
   ]
@@ -25,6 +28,9 @@ var allPlayers = [
 ];
 var allBombs = [
 <%- @bombs.each do |bomb| %>
+  <% if @bombs.first!=bomb%>
+    ,
+  <% end %>
   [
     <%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>
   ]
