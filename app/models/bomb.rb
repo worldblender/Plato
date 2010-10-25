@@ -21,7 +21,7 @@ class Bomb < ActiveRecord::Base
   end
 
   def timeLeft
-    timeLeft = BOMB_TIME.seconds-(DateTime.now-self.startTime)
+    timeLeft = BOMB_TIME.seconds-(DateTime.now-self.createtime)
     if(timeLeft < 0)
       return 0
     else
