@@ -41,10 +41,13 @@ class BombsController < ApplicationController
   # POST /bombs.xml
   def create
     @bomb = Bomb.new(params[:bomb])
+    @bomb.createtime = DateTime.now
+    @bomb.detonatetime = nil
+    current_user.bomb_id = @bomb.id
 
     respond_to do |format|
       if @bomb.save
-        format.html { redirect_to(@bomb, :notice => 'Bomb was successfully created.') }
+        format.html { current_user.bomb_id = @bomb.id; current_user.save; redirect_to(@bomb, :notice => 'Bomb was successfully created.') }
         format.xml  { render :xml => @bomb, :status => :created, :location => @bomb }
       else
         format.html { render :action => "new" }
