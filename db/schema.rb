@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101021205437) do
+ActiveRecord::Schema.define(:version => 20101026231230) do
 
   create_table "bombs", :force => true do |t|
     t.float    "latitude"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(:version => 20101021205437) do
     t.datetime "updated_at"
     t.string   "name"
     t.integer  "facebook_id"
+    t.string   "phone"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
