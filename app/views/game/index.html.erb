@@ -20,8 +20,9 @@ var allPlayers = [<%- @players.each do |user| %>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>"]
 <%- end %>];
 var allBombs = [<%- @bombs.each do |bomb| %>
-  <% if @bombs.first!=bomb%>,<% end %>
-  [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>]
+  <% if !bomb.detonatetime %>
+    [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>],
+  <% end %>
 <%- end %>];
 
 function initialize() {
