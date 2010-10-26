@@ -39,7 +39,15 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   //setTimeout("hideCopyright()", 1000);
+  setTimeout("zOrderRotator()", 2000);
 }
+
+function zOrderRotator() {
+  //for (i = 0; i < allPlayers.length; ++i) {
+  //  allPlayers[i][5].setZIndex
+  //}
+}
+
 /*
 function hideCopyright() {
   // currently not used
@@ -135,11 +143,12 @@ function drawAllPlayers() {
 
     console.log("user " + i + " has been alive <%= Time.now - current_user.createtime %>");
 
-    var playerInfoWindow = new google.maps.InfoWindow({
-      content: allPlayers[i][2]
-    }); // TODO(Jeff): only Brad gets an InfoWindow. why?
+    allPlayers[i][5] = marker;
 
     google.maps.event.addListener(marker, 'click', function() {
+      var playerInfoWindow = new google.maps.InfoWindow({
+        content: marker.getTitle()
+      });
       playerInfoWindow.open(map, marker);
     });
 
