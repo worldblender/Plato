@@ -38,11 +38,6 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setTimeout("hideCopyright()", 1000);
-  setTimeout("showBombInfo()", 1000);
-}
-
-function showBombInfo() {
-  infoWindow.open(map, marker);
 }
 
 function hideCopyright() {
@@ -163,6 +158,7 @@ function createBomb(location) {
   var infoWindow = new google.maps.InfoWindow({
     content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
   });
+  infoWindow.open(map, marker);
   google.maps.event.addListener(marker, "dragend", function() {
     console.log("bomb moved to " + marker.getPosition());
   });
