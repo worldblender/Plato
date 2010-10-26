@@ -38,9 +38,9 @@ function initialize() {
   setMapLocation();
   drawAllPlayers();
   drawAllBombs();
-  setTimeout("hideCopyright()", 1000);
+  //setTimeout("hideCopyright()", 1000);
 }
-
+/*
 function hideCopyright() {
   // currently not used
   console.log('hideCopyright called');
@@ -51,7 +51,7 @@ function hideCopyright() {
   }
   logo.style.display = "none";
   logo.nextSibling.style.display = "none";
-}
+}*/
 
 function tick(i) {
   console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
