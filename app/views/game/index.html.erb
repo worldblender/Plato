@@ -36,7 +36,6 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setTimeout("hideCopyright()", 1000);
-  console.log(<%= "Current User: " + current_user.id.to_s %>);
 }
 
 function hideCopyright() {
@@ -51,8 +50,8 @@ function hideCopyright() {
   logo.nextSibling.style.display = "none";
 }
 
-function tick(i, isOwner) {
-  //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining. isOwner: " + isOwner);
+function tick(i/*, isOwner*/) {
+  //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining."); // isOwner: " + isOwner);
   allBombs[i][2] -= TICK_INTERVAL;
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
@@ -62,15 +61,16 @@ function tick(i, isOwner) {
       fillOpacity: fillO,
       strokeOpacity: strokeO
     });
-    var timeoutStatement = "tick(" + i + "," +  isOwner + ")";
+    var timeoutStatement = "tick(" + i + "," /*+  isOwner*/ + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
   } else {
     allBombs[i][4].setMap(null);
     allBombs[i][3].setIcon("http://tibia.looki.de/images/magic/ultimateexplosion.gif");
     allBombs[i][3].setVisible(true);
-    if (isOwner) {
-      createBomb(map.center);
-    }
+    window.location.reload(true);
+    //if (isOwner) {
+    //  createBomb(map.center);
+    //}
   }
 }
 
@@ -172,7 +172,9 @@ function gotPositionCallback(position) {
   console.log("gotPositionCallback called");
   var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   map.setCenter(initialLocation);
-  createBomb(initialLocation);
+  <% if !current_user.deadtime %>
+    createBomb(initialLocation);
+  <% end %>
 }
 
 function setMapLocation() {
