@@ -176,7 +176,7 @@ function gotPositionCallback(position) {
   console.log("gotPositionCallback called");
   var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   map.setCenter(initialLocation);
-  <% if !current_user.deadtime and !current_user.bomb %>
+  <% if !current_user.deadtime and !current_user.bomb_id %>
     createBomb(initialLocation);
   <% end %>
 }
