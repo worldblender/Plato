@@ -34,4 +34,31 @@ class User < ActiveRecord::Base
   def photoUrl
     return "http://graph.facebook.com/" + self[:facebook_id] + "/picture"
   end
+
+  def acceptText?
+    return self.phone != nil
+  end
+
+  def notify(textMessage)
+    if self.acceptText?
+      # send a text message
+      sendText(textMessage,self)
+    else
+      # send an email
+      Dmailer.send_text(textMessage,self).deliver
+    end
+  end
+
+  def sendText(message,recipient)
+    account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
+    data = {
+      'From' => CALLER_ID,
+      'To' => recipient.phone,
+      'Body' => message,
+    }
+    resp = account.request("/#{API_VERSION}/Accounts/#{ACCOUNT_SID}/SMS/Messages",'POST', data)
+    if !resp.kind_of? Net::HTTPSuccess
+      puts('there was a bad number or a 400 error or something with a send message to twillio')
+    end
+  end
 end
