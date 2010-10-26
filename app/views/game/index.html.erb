@@ -9,20 +9,16 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript">
 
-var BOMB_TIME = 15000; // in milliseconds
+var BOMB_TIME = <%= BOMB_TIME * 1000 %>; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
-var BOMB_RADIUS = 500; // in meters - we should move this to the constant
+var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters - we should move this to the constant
 var map;
-//var allPlayers = [[47.6209923, -122.32814827, "Jeff", 1900876], [47.6063889, -122.3308333, "Mike", 500065665], [47.6100, -122.3304333, "Pete", 1924170], [47.6213778,-122.335423, "Zach", 1194565532], [47.6235393,-122.3359711, "Brad", 504503972]];
-//var allBombs = [[47.6209023, -122.32717827, 15000], [47.6063789, -122.3297322, 10000], [47.6000, -122.3116333, 6000]];
 var allPlayers = [
 <%- @players.each do |user| %>
   <% if @players.first!=user %>
     ,
   <% end %>
-  [
-    <%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>
-  ]
+  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, <%= user.deadtime %>]
 <%- end %>
 ];
 var allBombs = [
@@ -30,16 +26,14 @@ var allBombs = [
   <% if @bombs.first!=bomb%>
     ,
   <% end %>
-  [
-    <%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>
-  ]
+  [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>]
 <%- end %>
 ];
 
 function initialize() {
   console.log("initialize called");
   var mapOptions = {
-    zoom: 14,
+    zoom: 16,
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     navigationControl: false,
     mapTypeControl: false,
@@ -78,6 +72,7 @@ function tick(i, isOwner) {
     var timeoutStatement = "tick(" + i + "," +  isOwner + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
   } else {
+    allBombs[i][4].setMap(null);
     allBombs[i][3].setIcon("http://tibia.looki.de/images/magic/ultimateexplosion.gif");
     allBombs[i][3].setVisible(true);
     if (isOwner) {
@@ -122,20 +117,26 @@ function drawAllBombs() {
   console.log("drawAllBombs called");
   for (i = 0; i < allBombs.length; ++i) {
     var location = new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
-    placeBomb(location, i, false);
+    if (allBombs[i][2] > 0) {
+      placeBomb(location, i, false);
+    }
   }
 }
 
 function drawAllPlayers() {
   console.log("drawAllPlayers called");
   for (i = 0; i < allPlayers.length; ++i) {
+    if (allPlayers[i][4])
+      icon = "http://freepages.genealogy.rootsweb.ancestry.com/~larsonmorgan/gifs/tombstone.gif";
+    else
+      icon = "http://graph.facebook.com/" + allPlayers[i][3] + "/picture";
     var location = new google.maps.LatLng(allPlayers[i][0], allPlayers[i][1]);
     var marker = new google.maps.Marker({
       position: location,
       map: map,
       title: allPlayers[i][2],
       //icon: "http://jeffhuang.com/personIcon.png",
-      icon: "http://graph.facebook.com/" + allPlayers[i][3] + "/picture",
+      icon: icon, //"http://graph.facebook.com/" + allPlayers[i][3] + "/picture",
       zIndex: 0
     });
 
@@ -191,6 +192,7 @@ function setMapLocation() {
     var watchId = navigator.geolocation.watchPosition(function(position) {
       pushData = new Image();
       pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
+      // TODO(jeff): redraw player in new location
       console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
     });
   } else {
