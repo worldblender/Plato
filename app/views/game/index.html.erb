@@ -153,6 +153,10 @@ function createBomb(location) {
     draggable: true,
     zIndex: 1
   });
+  var infoWindow = new google.maps.InfoWindow({
+    content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!"
+  });
+  infoWindow.open(map, marker);
   google.maps.event.addListener(marker, "dragend", function() {
     console.log("bomb moved to " + marker.getPosition());
   });
