@@ -48,7 +48,7 @@ function zOrderRotator() {
   zIndexTop++;
   for (i = 0; i < allPlayers.length; ++i) {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
-    if (!allPlayers[i][5])
+    if (!allPlayers[i][4])
       allPlayers[i][5].setZIndex(zIndex);
   }
   setTimeout("zOrderRotator()", 2000);
