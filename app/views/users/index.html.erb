@@ -2,6 +2,7 @@
 
 <table>
   <tr>
+    <th>Name</th>
     <th>Latitude</th>
     <th>Longitude</th>
     <th>Createtime</th>
@@ -14,6 +15,7 @@
 
 <% @users.each do |user| %>
   <tr>
+    <td><%= user.name %></td>
     <td><%= user.latitude %></td>
     <td><%= user.longitude %></td>
     <td><%= user.createtime %></td>

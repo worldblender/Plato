@@ -1,3 +1,5 @@
+<%if current_user %>
+
 <% content_for :head do %>
 
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -13,14 +15,15 @@ var BOMB_TIME = <%= BOMB_TIME * 1000 %>; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters - we should move this to the constant
 var map;
-var allPlayers = [<%- @players.each do |user| %>
-  <% if @players.first != user %>,<% end %>
+var allPlayers = [<%- @players.each do |user| -%>
+  <%- if @players.first != user -%>,<%- end -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>"]
-<%- end %>];
-var allBombs = [<%- @bombs.each do |bomb| %>
-  <% if @bombs.first!=bomb%>,<% end %>
-  [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>]
-<%- end %>];
+<%- end -%>];
+var allBombs = [<%- @bombs.each do |bomb| -%>
+  <%- if !bomb.detonatetime -%>
+    [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>],
+  <%- end -%>
+<%- end -%>];
 
 function initialize() {
   console.log("initialize called");
@@ -35,14 +38,9 @@ function initialize() {
   setMapLocation();
   drawAllPlayers();
   drawAllBombs();
-  setTimeout("hideCopyright()", 1000);
-  setTimeout("showBombInfo()", 1000);
+  //setTimeout("hideCopyright()", 1000);
 }
-
-function showBombInfo() {
-  infoWindow.open(map, marker);
-}
-
+/*
 function hideCopyright() {
   // currently not used
   console.log('hideCopyright called');
@@ -53,7 +51,7 @@ function hideCopyright() {
   }
   logo.style.display = "none";
   logo.nextSibling.style.display = "none";
-}
+}*/
 
 function tick(i) {
   //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
@@ -103,7 +101,7 @@ function placeBomb(location, i, isOwner) {
   console.log("drew bomb " + i + " at (" + location.lat() + "," + location.lng() + ")");
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
-  var timeoutStatement = "tick(" + i + "," +  isOwner + ")";
+  var timeoutStatement = "tick(" + i + ")";
   console.log("setting timeout with statement: " + timeoutStatement);
   setTimeout(timeoutStatement, TICK_INTERVAL);
 }
@@ -161,6 +159,7 @@ function createBomb(location) {
   var infoWindow = new google.maps.InfoWindow({
     content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
   });
+  infoWindow.open(map, marker);
   google.maps.event.addListener(marker, "dragend", function() {
     console.log("bomb moved to " + marker.getPosition());
   });
@@ -177,7 +176,7 @@ function gotPositionCallback(position) {
   console.log("gotPositionCallback called");
   var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   map.setCenter(initialLocation);
-  <% if !current_user.deadtime %>
+  <% if !current_user.deadtime and !current_user.bomb_id %>
     createBomb(initialLocation);
   <% end %>
 }
@@ -188,7 +187,7 @@ function setMapLocation() {
     navigator.geolocation.getCurrentPosition(gotPositionCallback,
       function(error) {
         alert("Geolocation failed: " + error.message);
-      }, {timeout: 2500}
+      }, {timeout: 5000}
     );
     var watchId = navigator.geolocation.watchPosition(function(position) {
       pushData = new Image();
@@ -207,3 +206,5 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
+
+<% end %>
