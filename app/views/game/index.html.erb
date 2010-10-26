@@ -54,7 +54,7 @@ function hideCopyright() {
 }
 
 function tick(i) {
-  //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
+  console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
   allBombs[i][2] -= TICK_INTERVAL;
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
