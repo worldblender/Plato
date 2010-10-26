@@ -133,7 +133,7 @@ function drawAllPlayers() {
       zIndex: 0
     });
 
-    console.log("user " + i + " has been alive " + (user.created_at - user.deadtime));
+    console.log("user " + i + " has been alive <%= current_user.created_at - current_user.deadtime %>");
     if (user.created_at - user.deadtime < 1000) {
       var bombInfoWindow = new google.maps.InfoWindow({
         content: allPlayers[i][2]
