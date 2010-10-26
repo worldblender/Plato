@@ -21,6 +21,9 @@ class User < ActiveRecord::Base
     else
       # Create an user with a stub password.
       user = User.create!(:email => data["email"], :password => Devise.friendly_token)
+      user.createtime = DateTime.now
+      user.deadtime = nil
+      user.bomb_id = nil
       user.facebook_id = data['id']
       user.name = data['name']
       user.save

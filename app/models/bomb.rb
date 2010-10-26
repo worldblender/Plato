@@ -4,7 +4,7 @@ class Bomb < ActiveRecord::Base
                    :distance_field_name => :distance,
                    :lat_column_name => :latitude,
                    :lng_column_name => :longitude
-  acts_as_mappable 
+  acts_as_mappable
   def explode(curTime)
     # cause this bomb to blow, kill people caught in radius
     User.where(:deadtime => nil).within(BOMB_RADIUS, :origin => [self.latitude,self.longitude]).each do |user|
