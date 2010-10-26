@@ -16,7 +16,7 @@ var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters - we should move this to the constant
 var map;
 var allPlayers = [<%- @players.each do |user| %>
-  <% if @players.first != user %>,<% end %>
+  <%- if @players.first != user %>,<%- end %>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>"]
 <%- end %>];
 var allBombs = [<%- @bombs.each do |bomb| %>
@@ -176,7 +176,7 @@ function gotPositionCallback(position) {
   console.log("gotPositionCallback called");
   var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   map.setCenter(initialLocation);
-  <% if !current_user.deadtime %>
+  <% if !current_user.deadtime and !current_user.bomb %>
     createBomb(initialLocation);
   <% end %>
 }
