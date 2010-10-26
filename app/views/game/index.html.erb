@@ -21,7 +21,7 @@ var allPlayers = [<%- @players.each do |user| %>
 <%- end %>];
 var allBombs = [<%- @bombs.each do |bomb| %>
   <%- if !bomb.detonatetime %>
-    [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>],
+    [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>],
   <%- end %>
 <%- end %>];
 
