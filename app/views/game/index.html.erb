@@ -20,9 +20,9 @@ var allPlayers = [<%- @players.each do |user| %>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>"]
 <%- end %>];
 var allBombs = [<%- @bombs.each do |bomb| %>
-  <% if !bomb.detonatetime %>
+  <%- if !bomb.detonatetime %>
     [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>],
-  <% end %>
+  <%- end %>
 <%- end %>];
 
 function initialize() {
@@ -70,7 +70,7 @@ function tick(i) {
     allBombs[i][4].setMap(null);
     allBombs[i][3].setIcon("http://tibia.looki.de/images/magic/ultimateexplosion.gif");
     allBombs[i][3].setVisible(true);
-    window.location.reload(true);
+    //window.location.reload(true);
   }
 }
 
