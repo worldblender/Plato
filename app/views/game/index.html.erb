@@ -101,7 +101,7 @@ function placeBomb(location, i, isOwner) {
   console.log("drew bomb " + i + " at (" + location.lat() + "," + location.lng() + ")");
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
-  var timeoutStatement = "tick(" + i + "," +  isOwner + ")";
+  var timeoutStatement = "tick(" + i + ")";
   console.log("setting timeout with statement: " + timeoutStatement);
   setTimeout(timeoutStatement, TICK_INTERVAL);
 }
