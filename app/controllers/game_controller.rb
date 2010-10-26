@@ -11,8 +11,8 @@ class GameController < ApplicationController
       bomb.latitude = params[:lat]
       bomb.longitude = params[:lng]
       bomb.detonatetime = nil
-      current_user.bomb_id = bomb.id
       bomb.save
+      current_user.bomb_id = bomb.id
       current_user.save
     end
   end
