@@ -1,3 +1,5 @@
+<%if current_user %>
+
 <% content_for :head do %>
 
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -207,3 +209,5 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
+
+<% end %>
