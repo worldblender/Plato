@@ -50,6 +50,7 @@ function zOrderRotator() {
     var zIndex = (i + zIndexTop) % allPlayers.length;
     allPlayers[i][5].setZIndex(zIndex);
   }
+  setTimeout("zOrderRotator()", 1000);
 }
 
 /*
