@@ -134,15 +134,14 @@ function drawAllPlayers() {
     });
 
     console.log("user " + i + " has been alive <%= Time.now - current_user.createtime %>");
-    if (user.created_at - user.deadtime < 1000) {
-      var bombInfoWindow = new google.maps.InfoWindow({
-        content: allPlayers[i][2]
-      }); // TODO(Jeff): only Brad gets an InfoWindow. why?
 
-      google.maps.event.addListener(marker, 'click', function() {
-        bombInfoWindow.open(map, marker);
-      });
-    }
+    var bombInfoWindow = new google.maps.InfoWindow({git
+      content: allPlayers[i][2]
+    }); // TODO(Jeff): only Brad gets an InfoWindow. why?
+
+    google.maps.event.addListener(marker, 'click', function() {
+      bombInfoWindow.open(map, marker);
+    });
 
     console.log("drew player " + i + " at (" + location.lat() + "," + location.lng() + ")");
   }
@@ -159,10 +158,12 @@ function createBomb(location) {
     draggable: true,
     zIndex: 1
   });
-  var infoWindow = new google.maps.InfoWindow({
-    content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
-  });
-  infoWindow.open(map, marker);
+  <%- if Time.now - current_user.createtime < 1000 do -%>
+    var infoWindow = new google.maps.InfoWindow({
+      content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
+    });
+    infoWindow.open(map, marker);
+  <%- end -%>
   google.maps.event.addListener(marker, "dragend", function() {
     console.log("bomb moved to " + marker.getPosition());
   });
