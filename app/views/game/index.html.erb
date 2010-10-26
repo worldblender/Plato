@@ -20,9 +20,7 @@ var allPlayers = [
   <% if @players.first!=user %>
     ,
   <% end %>
-  [
-    <%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>
-  ]
+  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>]
 <%- end %>
 ];
 var allBombs = [
@@ -30,9 +28,7 @@ var allBombs = [
   <% if @bombs.first!=bomb%>
     ,
   <% end %>
-  [
-    <%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>
-  ]
+  [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft %>]
 <%- end %>
 ];
 
@@ -78,6 +74,7 @@ function tick(i, isOwner) {
     var timeoutStatement = "tick(" + i + "," +  isOwner + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
   } else {
+    allBombs[i][4].clear();
     allBombs[i][3].setIcon("http://tibia.looki.de/images/magic/ultimateexplosion.gif");
     allBombs[i][3].setVisible(true);
     if (isOwner) {
