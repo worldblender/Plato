@@ -44,9 +44,10 @@ function initialize() {
 }
 
 function zOrderRotator() {
+  console.log("Rotating zOrder with zIndexTop = " + zIndexTop);
   zIndexTop++;
   for (i = 0; i < allPlayers.length; ++i) {
-    var zIndex = i + zIndexTop % allPlayers.length;
+    var zIndex = (i + zIndexTop) % allPlayers.length;
     allPlayers[i][5].setZIndex(zIndex);
   }
 }
