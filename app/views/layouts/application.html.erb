@@ -10,7 +10,6 @@
 <body>
     <%- if user_signed_in? %>
       <%= "Signed in as #{current_user.name}. Not you?" %>
-      <%= link_to 'Sign out', destroy_user_session_path %>
       <%= yield %>
     <%- else %>
       <%= link_to 'Sign in with Facebook', user_oauth_authorize_url(:facebook) %>
