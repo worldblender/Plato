@@ -133,12 +133,14 @@ function drawAllPlayers() {
       zIndex: 0
     });
 
-    var infoWindow = new google.maps.InfoWindow({
+    console.log("user " + i + " has been alive <%= Time.now - current_user.createtime %>");
+
+    var bombInfoWindow = new google.maps.InfoWindow({
       content: allPlayers[i][2]
     }); // TODO(Jeff): only Brad gets an InfoWindow. why?
 
     google.maps.event.addListener(marker, 'click', function() {
-      infoWindow.open(map, marker);
+      bombInfoWindow.open(map, marker);
     });
 
     console.log("drew player " + i + " at (" + location.lat() + "," + location.lng() + ")");
@@ -156,10 +158,12 @@ function createBomb(location) {
     draggable: true,
     zIndex: 1
   });
-  var infoWindow = new google.maps.InfoWindow({
-    content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
-  });
-  infoWindow.open(map, marker);
+  <%- if Time.now - current_user.createtime < 1000 -%>
+    var infoWindow = new google.maps.InfoWindow({
+      content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
+    });
+    infoWindow.open(map, marker);
+  <%- end -%>
   google.maps.event.addListener(marker, "dragend", function() {
     console.log("bomb moved to " + marker.getPosition());
   });
