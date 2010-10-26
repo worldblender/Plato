@@ -158,7 +158,7 @@ function createBomb(location) {
     draggable: true,
     zIndex: 1
   });
-  <%- if Time.now - current_user.createtime < 1000 do -%>
+  <%- if Time.now - current_user.createtime < 1000 -%>
     var infoWindow = new google.maps.InfoWindow({
       content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
     });
