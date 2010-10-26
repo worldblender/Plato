@@ -7,7 +7,7 @@ class Bomb < ActiveRecord::Base
   acts_as_mappable
   def explode(curTime)
     # cause this bomb to blow, kill people caught in radius
-    User.where(:deadtime => nil).within(BOMB_RADIUS, :origin => [self.latitude,self.longitude]).each do |user|
+    self.usersInRange.each do |user|
       user.deadtime = curTime
       user.save
     end
@@ -18,6 +18,10 @@ class Bomb < ActiveRecord::Base
       u.bomb_id = nil
       u.save
     end
+  end
+
+  def usersInRange
+    return User.where(:deadtime => nil).within(BOMB_RADIUS, :origin => [self.latitude,self.longitude])
   end
 
   def timeLeft
