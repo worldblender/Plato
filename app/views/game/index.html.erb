@@ -13,8 +13,6 @@ var BOMB_TIME = <%= BOMB_TIME * 1000 %>; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters - we should move this to the constant
 var map;
-//var allPlayers = [[47.6209923, -122.32814827, "Jeff", 1900876], [47.6063889, -122.3308333, "Mike", 500065665], [47.6100, -122.3304333, "Pete", 1924170], [47.6213778,-122.335423, "Zach", 1194565532], [47.6235393,-122.3359711, "Brad", 504503972]];
-//var allBombs = [[47.6209023, -122.32717827, 15000], [47.6063789, -122.3297322, 10000], [47.6000, -122.3116333, 6000]];
 var allPlayers = [
 <%- @players.each do |user| %>
   <% if @players.first!=user %>
@@ -35,7 +33,7 @@ var allBombs = [
 function initialize() {
   console.log("initialize called");
   var mapOptions = {
-    zoom: 14,
+    zoom: 13,
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     navigationControl: false,
     mapTypeControl: false,
