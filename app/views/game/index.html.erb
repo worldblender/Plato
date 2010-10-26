@@ -171,7 +171,7 @@ function createBomb(location) {
     title: "Drop this bomb anywhere!",
     icon: "http://www.tzaclan.net/forum/images/Shop/Items/icon_bomb_32.png",
     draggable: true,
-    zIndex: 1
+    zIndex: 100000
   });
   <%- if Time.now - current_user.createtime < 1000 -%>
     var infoWindow = new google.maps.InfoWindow({
