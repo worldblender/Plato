@@ -36,7 +36,7 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setTimeout("hideCopyright()", 1000);
-  console.log(<%= current_user.id %>);
+  console.log(<%= "Current User: " + current_user.id %>);
 }
 
 function hideCopyright() {
