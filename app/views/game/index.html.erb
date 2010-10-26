@@ -13,7 +13,7 @@
 
 var BOMB_TIME = <%= BOMB_TIME * 1000 %>; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
-var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters - we should move this to the constant
+var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters
 var map;
 var allPlayers = [<%- @players.each do |user| -%>
   <%- if @players.first != user -%>,<%- end -%>
@@ -135,12 +135,12 @@ function drawAllPlayers() {
 
     console.log("user " + i + " has been alive <%= Time.now - current_user.createtime %>");
 
-    var bombInfoWindow = new google.maps.InfoWindow({
+    var playerInfoWindow = new google.maps.InfoWindow({
       content: allPlayers[i][2]
     }); // TODO(Jeff): only Brad gets an InfoWindow. why?
 
     google.maps.event.addListener(marker, 'click', function() {
-      bombInfoWindow.open(map, marker);
+      playerInfoWindow.open(map, marker);
     });
 
     console.log("drew player " + i + " at (" + location.lat() + "," + location.lng() + ")");
@@ -196,8 +196,8 @@ function setMapLocation() {
     var watchId = navigator.geolocation.watchPosition(function(position) {
       pushData = new Image();
       pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
-      // TODO(jeff): redraw player in new location
       console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
+      window.location.reload(true);
     });
   } else {
     alert("No navigator.geolocation");
