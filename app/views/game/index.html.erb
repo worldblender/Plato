@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html>
-<head>
+<% content_for :head do %>
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 <style type="text/css">
   html { height: 100% }
@@ -200,7 +199,7 @@ function setMapLocation() {
 }
 
 </script>
-</head>
+<% end %>
 <body onload="initialize()">
   <div id="map_canvas"></div>
 </body>
