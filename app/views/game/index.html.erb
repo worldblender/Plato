@@ -40,17 +40,18 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   //setTimeout("hideCopyright()", 1000);
-  setTimeout("zOrderRotator()", 1000);
+  setTimeout("zOrderRotator()", 2000);
 }
 
 function zOrderRotator() {
-  console.log("Rotating zOrder with zIndexTop = " + zIndexTop);
+  //console.log("Rotating zOrder with zIndexTop = " + zIndexTop);
   zIndexTop++;
   for (i = 0; i < allPlayers.length; ++i) {
-    var zIndex = (i + zIndexTop) % allPlayers.length;
-    allPlayers[i][5].setZIndex(zIndex);
+    var zIndex = (i + zIndexTop) % allPlayers.length + 1;
+    if (!allPlayers[i][5])
+      allPlayers[i][5].setZIndex(zIndex);
   }
-  setTimeout("zOrderRotator()", 1000);
+  setTimeout("zOrderRotator()", 2000);
 }
 
 /*
@@ -174,7 +175,7 @@ function createBomb(location) {
   });
   <%- if Time.now - current_user.createtime < 1000 -%>
     var infoWindow = new google.maps.InfoWindow({
-      content: "Drag your bomb to where you want to drop it,<br> and then double-click to light the fuse!"
+      content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!"
     });
     infoWindow.open(map, marker);
   <%- end -%>
