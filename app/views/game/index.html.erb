@@ -87,11 +87,11 @@ function tick(i) {
     var red = Math.round(255 - 255 * tmpTime / BOMB_TIME).toString(16);
     if (red.length <= 1)
       red = "0" + red;
-    var fillC = strokeC = "#" + red + green + "00";
+    var fillC = "#" + red + green + "00";
     //console.log("fillC in tick is " + fillC);
     allBombs[i][4].setOptions({
       fillColor: fillC,
-      strokeColor: strokeC
+      strokeColor: fillC
     });
     var timeoutStatement = "tick(" + i + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
@@ -113,7 +113,7 @@ function placeBomb(location, i, isOwner) {
     icon: "/images/litBomb.gif",
     zIndex: 0.5
   });
-  var fillColor = strokeColor = "#00FF00";
+  var fillColor = "#00FF00";
   //if (isOwner) {
   //  var fillColor = strokeColor = "#0000FF";
   //}
@@ -122,7 +122,7 @@ function placeBomb(location, i, isOwner) {
     center: bomb.getPosition(),
     fillColor: fillColor,
     fillOpacity: 0.2,
-    strokeColor: strokeColor,
+    strokeColor: fillColor,
     strokeOpacity: 0.8,
     strokeWeight: 2,
     radius: BOMB_RADIUS
