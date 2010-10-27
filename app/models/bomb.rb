@@ -4,7 +4,18 @@ class Bomb < ActiveRecord::Base
                    :distance_field_name => :distance,
                    :lat_column_name => :latitude,
                    :lng_column_name => :longitude
-  acts_as_mappable
+  def after_create
+    self.duration = calculateDuration([self.owner.latitude,self.owner.longitude],[self.latitude,self.longitude])
+  end
+
+  def calculateDuration(bombLoc, userLoc)
+
+  end
+
+  def isExploded?
+    return self.detonatetime == nil
+  end
+
   def explode(curTime)
     # cause this bomb to blow, kill people caught in radius
     self.usersInRange.each do |user|
@@ -32,6 +43,8 @@ class Bomb < ActiveRecord::Base
       return timeLeft
     end
   end
+
+
 
   scope :explodeDurring, lambda{|startTime,endTime| where({:createtime => (startTime-BOMB_TIME.seconds)..(endTime-BOMB_TIME.seconds)})}
 end
