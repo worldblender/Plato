@@ -88,7 +88,7 @@ function tick(i) {
     if (red.length <= 1)
       red = "0" + red;
     var fillC = strokeC = "#" + red + green + "00";
-    console.log("fillC in tick is " + fillC);
+    //console.log("fillC in tick is " + fillC);
     allBombs[i][4].setOptions({
       fillColor: fillC,
       strokeColor: strokeC
@@ -97,7 +97,7 @@ function tick(i) {
     setTimeout(timeoutStatement, TICK_INTERVAL);
   } else {
     allBombs[i][4].setMap(null);
-    allBombs[i][3].setIcon("http://tibia.looki.de/images/magic/ultimateexplosion.gif");
+    allBombs[i][3].setIcon("/images/explosion.gif");
     allBombs[i][3].setVisible(true);
     window.location.reload(true);
   }
@@ -110,7 +110,7 @@ function placeBomb(location, i, isOwner) {
     position: location,
     map: map,
     title: "Bomb",
-    icon: "http://www.qweas.com/icon/bomb-patrol.gif",
+    icon: "/images/litBomb.gif",
     zIndex: 0.5
   });
   var fillColor = strokeColor = "#00FF00";
@@ -149,7 +149,7 @@ function drawAllPlayers() {
   console.log("drawAllPlayers called");
   for (i = 0; i < allPlayers.length; ++i) {
     if (allPlayers[i][4])
-      icon = "http://freepages.genealogy.rootsweb.ancestry.com/~larsonmorgan/gifs/tombstone.gif";
+      icon = "/images/tombstone.gif";
     else
       icon = "http://graph.facebook.com/" + allPlayers[i][3] + "/picture";
     var location = new google.maps.LatLng(allPlayers[i][0], allPlayers[i][1]);
@@ -184,7 +184,7 @@ function createBomb(location) {
     position: location,
     map: map,
     title: "Drop this bomb anywhere!",
-    icon: "http://www.tzaclan.net/forum/images/Shop/Items/icon_bomb_32.png",
+    icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000
   });
