@@ -4,6 +4,10 @@ class GameController < ApplicationController
     @players = User.all
   end
 
+  def restart
+    current_user.resurrect
+  end
+
   def dropBomb
     if current_user.bomb_id == nil && current_user.deadtime == nil
       bomb = Bomb.new
