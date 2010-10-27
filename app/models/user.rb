@@ -54,9 +54,8 @@ class User < ActiveRecord::Base
   end
 
   def kill
-    varCurScore = curScore
-    if(self.top_score == nil || self.top_score < varCurScore)
-      self.top_score = self.curscore
+    if(self.top_score == nil || self.top_score < curScore)
+      self.top_score = self.curScore
     end
     self.deadtime = curTime
     self.save
