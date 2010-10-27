@@ -1,4 +1,4 @@
-<%if current_user %>
+<% if current_user %>
 <% content_for :head do %>
 
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -24,6 +24,11 @@ var allBombs = [<%- @bombs.each do |bomb| -%>
     [<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>],
   <%- end -%>
 <%- end -%>];
+
+/*function createButton() {
+  var controlDiv = document.createElement('DIV');
+  controlDiv.style.padding = '5px';
+}*/
 
 function initialize() {
   console.log("initialize called");
@@ -216,5 +221,5 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
-
+<div>test</div>
 <% end %>
