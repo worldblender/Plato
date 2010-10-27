@@ -63,6 +63,13 @@ class User < ActiveRecord::Base
     self.save
   end
 
+  def resurrect
+    self.bomb_id = nil
+    self.deadtime = nil
+    self.createtime = DateTime.now
+    self.save
+  end
+
   def sendText(message,recipient)
     account = Twilio::RestAccount.new(ACCOUNT_SID, ACCOUNT_TOKEN)
     data = {

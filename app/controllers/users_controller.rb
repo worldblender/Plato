@@ -41,9 +41,7 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     @user = User.new(params[:user])
-    @user.createtime = DateTime.now
-    @user.deadtime = nil
-    @user.bomb_id = nil
+    @user.ressurect
 
     respond_to do |format|
       if @user.save
@@ -61,9 +59,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     @user.update_attributes(params[:user])
-    @user.createtime = DateTime.now
-    @user.deadtime = nil
-    @user.bomb_id = nil
+    @user.ressurect
 
     respond_to do |format|
       if @user.save
