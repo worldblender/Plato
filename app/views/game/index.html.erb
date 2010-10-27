@@ -40,7 +40,7 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   //setTimeout("hideCopyright()", 1000);
-  setTimeout("zOrderRotator()", 2000);
+  setTimeout("zOrderRotator()", 2500);
 }
 
 function zOrderRotator() {
@@ -48,11 +48,11 @@ function zOrderRotator() {
   zIndexTop++;
   for (i = 0; i < allPlayers.length; ++i) {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
-    if (allPlayers[i][4])
+    if (allPlayers[i][4] != "")
       continue;
     allPlayers[i][5].setZIndex(zIndex);
   }
-  setTimeout("zOrderRotator()", 2000);
+  setTimeout("zOrderRotator()", 2500);
 }
 
 /*
