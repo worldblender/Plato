@@ -24,7 +24,7 @@ class Bomb < ActiveRecord::Base
   end
 
   def isExploded?
-    return self.detonatetime < DateTime.now
+    return self.detonatetime <= DateTime.now
   end
 
   def explode(curTime)
