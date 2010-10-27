@@ -30,7 +30,7 @@ class Bomb < ActiveRecord::Base
   def explode(curTime)
     # cause this bomb to blow, kill people caught in radius
     self.usersInRange.each do |user|
-      user.kill
+      user.kill(curTime)
     end
     User.where(:bomb_id => self.id).each do |u|
       u.bomb_id = nil
