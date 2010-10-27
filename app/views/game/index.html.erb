@@ -28,7 +28,10 @@ var allBombs = [<%- @bombs.each do |bomb| -%>
 function createButton() {
   var controlDiv = document.createElement('DIV');
   controlDiv.style.padding = '5px';
-  controlDiv.innerHTML = "something";
+  controlDiv.innerHTML = "<img src='/images/restart.png'>";
+  google.maps.event.addDomListener(controlDiv, 'click', function() {
+    alert('hi!');
+  });
   map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
 }
 
