@@ -21,11 +21,9 @@ class User < ActiveRecord::Base
     else
       # Create an user with a stub password.
       user = User.create!(:email => data["email"], :password => Devise.friendly_token)
-      user.createtime = DateTime.now
-      user.deadtime = nil
-      user.bomb_id = nil
       user.facebook_id = data['id']
       user.name = data['name']
+      user.resurrect
       user.save
       user
     end
@@ -63,7 +61,16 @@ class User < ActiveRecord::Base
     self.save
   end
 
+  def hitWith(dmg)
+    self.hp -= dmg
+    if hp<0
+      self.kill
+    end
+    self.save
+  end
+
   def resurrect
+    self.hp = 1
     self.bomb_id = nil
     self.deadtime = nil
     self.createtime = DateTime.now
