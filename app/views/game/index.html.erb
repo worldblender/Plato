@@ -31,7 +31,8 @@ function createButton() {
   controlDiv.innerHTML = "<img src='/images/restart.png'>";
   controlDiv.style.display = "none";
   google.maps.event.addDomListener(controlDiv, 'click', function() {
-    alert('hi!');
+    pushData = new Image();
+    pushData.src = "/game/restart';
   });
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
   return controlDiv;
