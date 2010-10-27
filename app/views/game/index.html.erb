@@ -72,11 +72,22 @@ function tick(i) {
   allBombs[i][2] -= TICK_INTERVAL;
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
-    var fillO = allBombs[i][2] / BOMB_TIME * 0.2;
+    /*var fillO = allBombs[i][2] / BOMB_TIME * 0.2;
     var strokeO = allBombs[i][2] / BOMB_TIME * 0.8;
     allBombs[i][4].setOptions({
       fillOpacity: fillO,
       strokeOpacity: strokeO
+    });*/
+    var green = (255 * allBombs[i][2] / BOMB_TIME).toString(16);
+    if (green.length <= 1)
+      green = "0" + green;
+    var red = (255 - 255 * allBombs[i][2] / BOMB_TIME).toString(16);
+    if (red.length <= 1)
+      red = "0" + red;
+    var fillC = strokeC = "#" + red + green + "00";
+    allBombs[i][4].setOptions({
+      fillColor: fillC,
+      strokeColor: strokeC
     });
     var timeoutStatement = "tick(" + i + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
@@ -98,10 +109,10 @@ function placeBomb(location, i, isOwner) {
     icon: "http://www.qweas.com/icon/bomb-patrol.gif",
     zIndex: 0.5
   });
-  var fillColor = strokeColor = "#FF0000";
-  if (isOwner) {
-    var fillColor = strokeColor = "#0000FF";
-  }
+  var fillColor = strokeColor = "#00FF00";
+  //if (isOwner) {
+  //  var fillColor = strokeColor = "#0000FF";
+  //}
   var bombFallout = new google.maps.Circle({
     map: map,
     center: bomb.getPosition(),
