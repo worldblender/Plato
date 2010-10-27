@@ -11,7 +11,7 @@ module BombsHelper
   def clientCalcDuration
     # this should return a function which is the 'duration' function so it can be called in javascript from the client
     timeStr = "(-#{VELOCITY}+Math.sqrt(#{VELOCITY}*#{VELOCITY}+2*#{ACCELERATION}*distance))/(#{ACCELERATION})"
-    timeStr = time + "/10" # TODO(jeff): remove this for the real game, this is for debugging
+    timeStr = timeStr + "/10" # TODO(jeff): remove this for the real game, this is for debugging
     return timeStr
   end
 
