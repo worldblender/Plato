@@ -31,7 +31,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def score
+  def curScore
+    return DateTime.now-self.createtime
   end
 
   def photoUrl
@@ -50,6 +51,14 @@ class User < ActiveRecord::Base
       # send an email
       Dmailer.send_text(textMessage,self).deliver
     end
+  end
+
+  def kill
+    if(self.top_score < self.curScore)
+      self.top_score = self.curscore
+    end
+    self.deadtime = curTime
+    self.save
   end
 
   def sendText(message,recipient)
