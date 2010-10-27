@@ -152,7 +152,8 @@ function drawAllPlayers() {
 
     allPlayers[i][5] = marker;
 
-    google.maps.event.addListener(marker, 'click', function() {
+    google.maps.event.addListener(marker, 'click', function(i) {
+      var marker = allPlayers[i][5];
       var playerInfoWindow = new google.maps.InfoWindow({
         content: marker.getTitle()
       });
