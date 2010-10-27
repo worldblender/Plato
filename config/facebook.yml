@@ -7,5 +7,5 @@ test:
   secret: 541a431aedf96a9d53f2f9fc27afae04
 
 production:
-  apikey: 161468663876503
-  secret: 62e42895de8f353c8b27e64f7e3bdd15
+  apikey: 101960589873725
+  secret: ed99e9c521e2ae4f03dcc68f588cf1ab
