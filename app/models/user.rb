@@ -31,6 +31,9 @@ class User < ActiveRecord::Base
     end
   end
 
+  def score
+  end
+
   def photoUrl
     return "http://graph.facebook.com/" + self[:facebook_id] + "/picture"
   end
