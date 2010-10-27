@@ -81,10 +81,10 @@ function tick(i) {
     var tmpTime = allBombs[i][2];
     if (tmpTime > BOMB_TIME)
       tmpTime = BOMB_TIME
-    var green = (Math.round(255 * tmpTime / BOMB_TIME)).toString(16);
+    var green = Math.round(255 * tmpTime / BOMB_TIME).toString(16);
     if (green.length <= 1)
       green = "0" + green;
-    var red = (Math.round(255 - 255 * tmpTime / BOMB_TIME).toString(16);
+    var red = Math.round(255 - 255 * tmpTime / BOMB_TIME).toString(16);
     if (red.length <= 1)
       red = "0" + red;
     var fillC = strokeC = "#" + red + green + "00";
