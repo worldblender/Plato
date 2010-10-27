@@ -1,5 +1,5 @@
 class Bomb < ActiveRecord::Base
-  include BombHelper
+  include BombsHelper
 
   acts_as_mappable :default_units => :kms,
                    :default_formula => :sphere,
