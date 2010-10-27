@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
       if @@lastResolve == nil
         @@lastResolve = curTime - 1.day
       end
-      explodingBombs = Bomb.where(:detonatetime => nil).explodeDurring(@@lastResolve,curTime)
+      explodingBombs = Bomb.explodeDurring(@@lastResolve,curTime)
       @@lastResolve = curTime
       explodingBombs.each do |bomb|
         # select all users in range of this bomb who are alive and kill them

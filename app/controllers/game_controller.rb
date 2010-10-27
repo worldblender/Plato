@@ -10,11 +10,10 @@ class GameController < ApplicationController
       bomb.createtime = DateTime.now
       bomb.latitude = params[:lat]
       bomb.longitude = params[:lng]
-      bomb.detonatetime = nil
       bomb.save
       current_user.bomb_id = bomb.id
-      bomb.setDuration
       current_user.save
+      bomb.setDuration
       bomb.usersInRange.each do |u|
         u.notify("bomb incoming, it will detonate on you in " + BOMB_TIME.to_s + " seconds unless you move")
       end

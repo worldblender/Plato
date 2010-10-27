@@ -9,6 +9,7 @@ class Bomb < ActiveRecord::Base
   def setDuration
     self.owner_id = User.where(:bomb_id => self.id).first.id
     self.duration = calculateDuration
+    self.detonatetime = self.createtime + self.duration.seconds
     self.save
   end
 
@@ -23,7 +24,7 @@ class Bomb < ActiveRecord::Base
   end
 
   def isExploded?
-    return self.detonatetime != nil
+    return self.detonatetime < DateTime.now
   end
 
   def explode(curTime)
@@ -32,9 +33,6 @@ class Bomb < ActiveRecord::Base
       user.deadtime = curTime
       user.save
     end
-    # set the detonatetime
-    self.detonatetime = curTime
-    self.save
     User.where(:bomb_id => self.id).each do |u|
       u.bomb_id = nil
       u.save
@@ -56,5 +54,5 @@ class Bomb < ActiveRecord::Base
 
 
 
-  scope :explodeDurring, lambda{|startTime,endTime| where({:createtime => (startTime-self.duration.seconds)..(endTime-self.duration.seconds)})}
+  scope :explodeDurring, lambda{|startTime,endTime| where({:detonatetime => startTime..endTime})}
 end
