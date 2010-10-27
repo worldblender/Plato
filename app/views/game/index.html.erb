@@ -34,6 +34,7 @@ function createButton() {
     alert('hi!');
   });
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
+  return controlDiv;
 }
 
 function initialize() {
@@ -50,7 +51,7 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setTimeout("zOrderRotator()", 2500);
-  createButton();
+  var controlDiv = createButton();
   <%- if current_user.deadtime -%>
     controlDiv.style.display = "block";
   <%- end -%>
