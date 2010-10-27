@@ -38,7 +38,6 @@ function initialize() {
   setMapLocation();
   drawAllPlayers();
   drawAllBombs();
-  //setTimeout("hideCopyright()", 1000);
   setTimeout("zOrderRotator()", 2500);
 }
 
@@ -54,30 +53,11 @@ function zOrderRotator() {
   setTimeout("zOrderRotator()", 2500);
 }
 
-/*
-function hideCopyright() {
-  // currently not used
-  console.log('hideCopyright called');
-  var logo = document.getElementById("map_canvas").firstChild.firstChild.nextSibling;
-  if (!logo) {
-    setTimeout("hideCopyright()", 1000);
-    return;
-  }
-  logo.style.display = "none";
-  logo.nextSibling.style.display = "none";
-}*/
-
 function tick(i) {
   //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
   allBombs[i][2] -= TICK_INTERVAL;
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
-    /*var fillO = allBombs[i][2] / BOMB_TIME * 0.2;
-    var strokeO = allBombs[i][2] / BOMB_TIME * 0.8;
-    allBombs[i][4].setOptions({
-      fillOpacity: fillO,
-      strokeOpacity: strokeO
-    });*/
     var tmpTime = allBombs[i][2];
     if (tmpTime > BOMB_TIME)
       tmpTime = BOMB_TIME
