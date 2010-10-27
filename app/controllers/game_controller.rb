@@ -17,7 +17,6 @@ class GameController < ApplicationController
       bomb.usersInRange.each do |u|
         u.notify("bomb incoming, it will detonate on you in " + BOMB_TIME.to_s + " seconds unless you move")
       end
-      current_user.notify("you just placed a bomb")
     end
   end
 
