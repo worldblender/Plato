@@ -207,10 +207,8 @@ function createBomb(location) {
     var bombLat1 = marker.getPosition().lat();
     var bombLng1 = marker.getPosition().lng();
     var distance = haversineDistance(<%= current_user.latitude %>, <%= current_user.longitude %>, bombLat1, bombLng1);
-    alert("distance: " + distance);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     console.log("bombTime: " + bombTime);
-    alert("bombTime: " + bombTime);
     allBombs.push([bombLat1, bombLng1, bombTime]);
     pushData = new Image();
     pushData.src = "/game/dropBomb?lat=" + marker.getPosition().lat() + "&lng=" + marker.getPosition().lng();
