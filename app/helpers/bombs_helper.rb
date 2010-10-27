@@ -3,6 +3,7 @@ module BombsHelper
   ACCELERATION = 0.00868055554 #  accel = meter/second/second, this means that in 60 seconds is will have increased m/s by 16.67 m/s if a=.2778
   def serverCalcDuration(distance)
     time = (-VELOCITY+Math.sqrt(VELOCITY*VELOCITY+2*ACCELERATION*distance))/(ACCELERATION)
+    time = time / 10 # TODO(jeff): remove this for the real game, this is for debugging
     return time
   end
 
