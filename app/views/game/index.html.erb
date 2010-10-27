@@ -25,10 +25,12 @@ var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- end -%>
 <%- end -%>];
 
-/*function createButton() {
+function createButton() {
   var controlDiv = document.createElement('DIV');
   controlDiv.style.padding = '5px';
-}*/
+  controlDiv.innerHTML = "something";
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+}
 
 function initialize() {
   console.log("initialize called");
@@ -37,8 +39,7 @@ function initialize() {
     mapTypeId: google.maps.MapTypeId.TERRAIN,
     navigationControl: false,
     mapTypeControl: false,
-    streetViewControl: false,
-    noClear: true
+    streetViewControl: false
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
   setMapLocation();
@@ -221,5 +222,5 @@ window.onload = initialize;
 </script>
 <% end %>
 
-<div id="map_canvas"><div style="position:aboslute; left:5px; top:5px">test</div></div>
+<div id="map_canvas">Map is loading...</div>
 <% end %>
