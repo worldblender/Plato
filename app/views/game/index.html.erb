@@ -110,7 +110,7 @@ function tick(i) {
   }
 }
 
-function placeBomb(location, i, isOwner) {
+function placeBomb(location, i) {
   console.log("placing bomb at: " + location);
 
   var bomb = new google.maps.Marker({
@@ -144,7 +144,7 @@ function drawAllBombs() {
   for (i = 0; i < allBombs.length; ++i) {
     var location = new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     if (allBombs[i][2] > 0) {
-      placeBomb(location, i, false);
+      placeBomb(location, i);
     }
   }
 }
@@ -207,10 +207,11 @@ function createBomb(location) {
     var bombLng1 = marker.getPosition().lng();
     var distance = haversineDistance(<%= current_user.latitude %>, <%= current_user.longitude %>, bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
+    console.log("bombTime: " + bombTime);
     allBombs.push([bombLat1, bombLng1, bombTime]);
     pushData = new Image();
     pushData.src = "/game/dropBomb?lat=" + marker.getPosition().lat() + "&lng=" + marker.getPosition().lng();
-    placeBomb(marker.getPosition(), allBombs.length-1, true);
+    placeBomb(marker.getPosition(), allBombs.length-1);
   });
 }
 
