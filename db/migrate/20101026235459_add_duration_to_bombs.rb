@@ -1,6 +1,6 @@
 class AddDurationToBombs < ActiveRecord::Migration
   def self.up
-    add_column :bombs, :duration, :integer
+    add_column :bombs, :duration, :float
   end
 
   def self.down

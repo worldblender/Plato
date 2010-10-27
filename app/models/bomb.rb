@@ -1,19 +1,29 @@
 class Bomb < ActiveRecord::Base
+  VELOCITY = 2.08333333 # the number of meters traveled per second, so 500 meters covered in 30 seconds => 1000 m/min = 16.67 m/s
+  ACCELERATION = 0.00868055554 #  accel = meter/second/second, this means that in 60 seconds is will have increased m/s by 16.67 m/s if a=.2778
   acts_as_mappable :default_units => :kms,
                    :default_formula => :sphere,
                    :distance_field_name => :distance,
                    :lat_column_name => :latitude,
                    :lng_column_name => :longitude
-  def after_create
-    self.duration = calculateDuration([self.owner.latitude,self.owner.longitude],[self.latitude,self.longitude])
+  def setDuration
+    self.owner_id = User.where(:bomb_id => self.id).first.id
+    self.duration = calculateDuration
+    self.save
   end
 
-  def calculateDuration(bombLoc, userLoc)
+  def calculateDuration
+    distance = self.distance_from(User.find(self.owner_id), :units => :kms) * 1000
+    time = (-VELOCITY+Math.sqrt(VELOCITY*VELOCITY+2*ACCELERATION*distance))/(ACCELERATION)
+    return time
+  end
 
+  def shouldExplode?(curTime)
+    return (self.createtime + duration.seconds) > curTime
   end
 
   def isExploded?
-    return self.detonatetime == nil
+    return self.detonatetime != nil
   end
 
   def explode(curTime)
@@ -36,7 +46,7 @@ class Bomb < ActiveRecord::Base
   end
 
   def timeLeft
-    timeLeft = BOMB_TIME.seconds-(Time.now-self.createtime) # this will result in the timeLeft, but in days as a float
+    timeLeft = BOMB_TIME.seconds-(Time.now-self.createtime) # this will result in the seconds left till it explodes
     if(timeLeft < 0)
       return 0
     else
@@ -46,5 +56,5 @@ class Bomb < ActiveRecord::Base
 
 
 
-  scope :explodeDurring, lambda{|startTime,endTime| where({:createtime => (startTime-BOMB_TIME.seconds)..(endTime-BOMB_TIME.seconds)})}
+  scope :explodeDurring, lambda{|startTime,endTime| where({:createtime => (startTime-self.duration.seconds)..(endTime-self.duration.seconds)})}
 end

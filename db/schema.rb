@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101026235459) do
+ActiveRecord::Schema.define(:version => 20101027025015) do
 
   create_table "bombs", :force => true do |t|
     t.float    "latitude"
@@ -19,7 +19,8 @@ ActiveRecord::Schema.define(:version => 20101026235459) do
     t.datetime "detonatetime"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "duration"
+    t.float    "duration"
+    t.integer  "owner_id"
   end
 
   create_table "users", :force => true do |t|
