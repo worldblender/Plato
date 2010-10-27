@@ -29,7 +29,7 @@ function createButton() {
   var controlDiv = document.createElement('DIV');
   controlDiv.style.padding = '5px';
   controlDiv.innerHTML = "<img src='/images/restart.png'>";
-  controlDiv.style.visible = false;
+  controlDiv.style.visibility = "false";
   google.maps.event.addDomListener(controlDiv, 'click', function() {
     alert('hi!');
   });
@@ -52,7 +52,7 @@ function initialize() {
   setTimeout("zOrderRotator()", 2500);
   createButton();
   <%- if current_user.deadtime -%>
-    controlDiv.style.visible = true;
+    controlDiv.style.visibility = "true";
   <%- end -%>
 }
 
