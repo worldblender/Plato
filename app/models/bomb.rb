@@ -1,6 +1,6 @@
 class Bomb < ActiveRecord::Base
-  VELOCITY = 2.08333333 # the number of meters traveled per second, so 500 meters covered in 30 seconds => 1000 m/min = 16.67 m/s
-  ACCELERATION = 0.00868055554 #  accel = meter/second/second, this means that in 60 seconds is will have increased m/s by 16.67 m/s if a=.2778
+  include BombsHelper
+
   acts_as_mappable :default_units => :kms,
                    :default_formula => :sphere,
                    :distance_field_name => :distance,
@@ -8,7 +8,7 @@ class Bomb < ActiveRecord::Base
                    :lng_column_name => :longitude
   def setDuration
     self.owner_id = User.where(:bomb_id => self.id).first.id
-    self.duration = calculateDuration
+    self.duration = serverCalcDuration(self.distance_from(User.find(self.owner_id), :units => :kms) * 1000)
     self.detonatetime = self.createtime + self.duration.seconds
     self.save
   end
@@ -30,8 +30,7 @@ class Bomb < ActiveRecord::Base
   def explode(curTime)
     # cause this bomb to blow, kill people caught in radius
     self.usersInRange.each do |user|
-      user.deadtime = curTime
-      user.save
+      user.kill
     end
     User.where(:bomb_id => self.id).each do |u|
       u.bomb_id = nil
