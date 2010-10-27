@@ -32,7 +32,7 @@ class User < ActiveRecord::Base
   end
 
   def curScore
-    return DateTime.now-self.createtime
+    return Time.now-self.createtime
   end
 
   def photoUrl
