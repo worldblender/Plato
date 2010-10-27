@@ -95,7 +95,7 @@ function tick(i) {
     if (red.length <= 1)
       red = "0" + red;
     var fillC = "#" + red + green + "00";
-    console.log("fillC in tick is " + fillC);
+    //console.log("fillC in tick is " + fillC);
     allBombs[i][4].setOptions({
       fillColor: fillC,
       strokeColor: fillC
@@ -208,6 +208,7 @@ function createBomb(location) {
     var distance = haversineDistance(<%= current_user.latitude %>, <%= current_user.longitude %>, bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     console.log("bombTime: " + bombTime);
+    alert("bombTime: " + bombTime);
     allBombs.push([bombLat1, bombLng1, bombTime]);
     pushData = new Image();
     pushData.src = "/game/dropBomb?lat=" + marker.getPosition().lat() + "&lng=" + marker.getPosition().lng();
