@@ -62,6 +62,9 @@ class User < ActiveRecord::Base
   end
 
   def hitWith(dmg)
+    if (self.hp == nil)
+      self.hp=1
+    end
     self.hp -= dmg
     if hp<0
       self.kill
