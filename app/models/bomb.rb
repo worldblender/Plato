@@ -44,7 +44,7 @@ class Bomb < ActiveRecord::Base
   end
 
   def timeLeft
-    timeLeft = BOMB_TIME.seconds-(Time.now-self.createtime) # this will result in the seconds left till it explodes
+    timeLeft = self.duration.seconds-(Time.now-self.createtime) # this will result in the seconds left till it explodes
     if(timeLeft < 0)
       return 0
     else
