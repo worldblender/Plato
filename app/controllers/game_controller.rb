@@ -19,7 +19,7 @@ class GameController < ApplicationController
       current_user.save
       bomb.setDuration
       bomb.usersInRange.each do |u|
-        u.notify("bomb incoming, it will detonate on you in " + BOMB_TIME.to_s + " seconds unless you move")
+        u.notify("bomb incoming, it will detonate on you in " + bomb.duration.to_s + " seconds unless you move")
       end
     end
   end

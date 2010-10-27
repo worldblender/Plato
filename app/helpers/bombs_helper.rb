@@ -10,4 +10,10 @@ module BombsHelper
   def clientCalcDuration
     # this should return a function which is the 'duration' function so it can be called in javascript from the client
   end
+
+  def damageFor(distance)
+    # the danage dealt across the BOMB_RADIUS changes from 1 to 0 as one moves away from the epicenter
+    # so a perfect direct hit will kill a person instantly, but any little bit off, and they will take at least another shot
+    distance/BOMB_RADIUS
+  end
 end

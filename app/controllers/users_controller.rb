@@ -41,7 +41,7 @@ class UsersController < ApplicationController
   # POST /users.xml
   def create
     @user = User.new(params[:user])
-    @user.ressurect
+    @user.resurrect
 
     respond_to do |format|
       if @user.save
@@ -59,7 +59,7 @@ class UsersController < ApplicationController
   def update
     @user = User.find(params[:id])
     @user.update_attributes(params[:user])
-    @user.ressurect
+    @user.resurrect
 
     respond_to do |format|
       if @user.save
