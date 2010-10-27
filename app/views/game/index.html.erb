@@ -10,7 +10,7 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript">
 
-var BOMB_TIME = <%= BOMB_TIME * 1000 %>; // in milliseconds
+var BOMB_TIME = 60*10*1000; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters
 var map;
@@ -78,10 +78,13 @@ function tick(i) {
       fillOpacity: fillO,
       strokeOpacity: strokeO
     });*/
-    var green = (Math.round(255 * allBombs[i][2] / BOMB_TIME)).toString(16);
+    var tmpTime = allBombs[i][2];
+    if (tmpTime > BOMB_TIME)
+      tmpTime = BOMB_TIME
+    var green = (Math.round(255 * tmpTime / BOMB_TIME)).toString(16);
     if (green.length <= 1)
       green = "0" + green;
-    var red = (Math.round(255 - 255 * allBombs[i][2]) / BOMB_TIME).toString(16);
+    var red = (Math.round(255 - 255 * tmpTime / BOMB_TIME).toString(16);
     if (red.length <= 1)
       red = "0" + red;
     var fillC = strokeC = "#" + red + green + "00";
@@ -196,7 +199,7 @@ function createBomb(location) {
   });
   google.maps.event.addListener(marker, "dblclick", function() {
     marker.setMap(null);
-    allBombs.push([marker.getPosition().lat(), marker.getPosition().lng(), BOMB_TIME]);
+    allBombs.push([marker.getPosition().lat(), marker.getPosition().lng(), BOMB_TIME]); // TODO(jeff): change this formula
     pushData = new Image();
     pushData.src = "/game/dropBomb?lat=" + marker.getPosition().lat() + "&lng=" + marker.getPosition().lng();
     placeBomb(marker.getPosition(), allBombs.length-1, true);
