@@ -154,9 +154,9 @@ function drawAllPlayers() {
 
     google.maps.event.addListener(marker, 'click', function() {
       var playerInfoWindow = new google.maps.InfoWindow({
-        content: marker.getTitle()
+        content: this.getTitle()
       });
-      playerInfoWindow.open(map, marker);
+      playerInfoWindow.open(map, this);
     });
 
     console.log("drew player " + i + " at (" + location.lat() + "," + location.lng() + ")");
