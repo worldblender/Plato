@@ -29,10 +29,11 @@ function createButton() {
   var controlDiv = document.createElement('DIV');
   controlDiv.style.padding = '5px';
   controlDiv.innerHTML = "<img src='/images/restart.png'>";
+  controlDiv.style.visible = false;
   google.maps.event.addDomListener(controlDiv, 'click', function() {
     alert('hi!');
   });
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
+  map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
 }
 
 function initialize() {
@@ -50,6 +51,9 @@ function initialize() {
   drawAllBombs();
   setTimeout("zOrderRotator()", 2500);
   createButton();
+  <%- if current_user.deadtime -%>
+    controlDiv.style.visible = true;
+  <%- end -%>
 }
 
 function zOrderRotator() {
@@ -226,5 +230,5 @@ window.onload = initialize;
 </script>
 <% end %>
 
-<div id="map_canvas">Map is loading...</div>
+<div id="map_canvas"></div>
 <% end %>
