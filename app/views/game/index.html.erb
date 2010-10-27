@@ -78,10 +78,10 @@ function tick(i) {
       fillOpacity: fillO,
       strokeOpacity: strokeO
     });*/
-    var green = (255 * allBombs[i][2] / BOMB_TIME).toString(16);
+    var green = (Math.round(255 * allBombs[i][2] / BOMB_TIME)).toString(16);
     if (green.length <= 1)
       green = "0" + green;
-    var red = ((255 - 255 * allBombs[i][2]) / BOMB_TIME).toString(16);
+    var red = (Math.round(255 - 255 * allBombs[i][2]) / BOMB_TIME).toString(16);
     if (red.length <= 1)
       red = "0" + red;
     var fillC = strokeC = "#" + red + green + "00";
