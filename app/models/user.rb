@@ -31,8 +31,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def curScore
-    return Time.now-self.createtime
+  def curScore(curTime)
+    return curTime-self.createtime
   end
 
   def photoUrl
@@ -53,7 +53,8 @@ class User < ActiveRecord::Base
     end
   end
 
-  def kill(curTime)
+  def kill
+    curTime = Time.now
     thisScore = curScore(curTime)
     if(self.top_score == nil || self.top_score < thisScore)
       self.top_score = thisScore
