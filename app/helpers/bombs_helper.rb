@@ -1,2 +1,12 @@
 module BombsHelper
+  VELOCITY = 2.08333333 # the number of meters traveled per second, so 500 meters covered in 30 seconds => 1000 m/min = 16.67 m/s
+  ACCELERATION = 0.00868055554 #  accel = meter/second/second, this means that in 60 seconds is will have increased m/s by 16.67 m/s if a=.2778
+  def serverCalcDuration(distance)
+    time = (-VELOCITY+Math.sqrt(VELOCITY*VELOCITY+2*ACCELERATION*distance))/(ACCELERATION)
+    return time
+  end
+
+  def clientCalcDuration
+    # this should return a function which is the 'duration' function so it can be called in javascript from the client
+  end
 end
