@@ -1,4 +1,19 @@
-This is a high scores page for War Games<br/>
-<% User.all.each do |u| %>
-  <%= "#{u.scoreChartScore} was scored by #{u.name}" %><br/>
-<% end %>
+<h1>This is a high scores page for War Games</h1>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Top Score</th>
+        <th>Current Score</th>
+        <th>Current Hp</th>
+        <th>Time for an attack from me to reach them</th>
+      </tr>
+    <% orderedScoreChart.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.top_score %></td>
+        <td><%= user.curScore(Time.now) %></td>
+        <td><%= user.hp %></td>
+        <td><%= serverCalcDuration(current_user.distance_from(user)) %></td>
+      </tr>
+    <% end %>
+  </table>

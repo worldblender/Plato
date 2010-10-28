@@ -15,12 +15,13 @@ class User < ActiveRecord::Base
   def scoreChartScore
     score = 0
     if(self.top_score != nil)
-      score = u.top_score
+      score = self.top_score
     end
     aScore = self.curScore(Time.now)
     if(aScore > score)
       score = aScore
     end
+    return score
   end
 
   def self.find_for_facebook_oauth(access_token, signed_in_resource=nil)
