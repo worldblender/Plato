@@ -23,8 +23,8 @@ class User < ActiveRecord::Base
       user = User.create!(:email => data["email"], :password => Devise.friendly_token)
       user.facebook_id = data['id']
       user.name = data['name']
-      user.resurrect
       user.save
+      user.resurrect
       user
     end
   end
