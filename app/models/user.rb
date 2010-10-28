@@ -41,7 +41,7 @@ class User < ActiveRecord::Base
     end
   end
 
-  def curScore(curTime)
+  def curScore(curTime = Time.now)
     return curTime-self.createtime
   end
 
