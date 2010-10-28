@@ -174,9 +174,10 @@ function drawAllPlayers() {
 
     allPlayers[i][5] = marker;
 
+    marker.info = allPlayers[i];
     google.maps.event.addListener(marker, 'click', function() {
       var playerInfoWindow = new google.maps.InfoWindow({
-        content: this.getTitle()
+        content: this.getTitle() + " : " + this.info[5] + "hp"
       });
       playerInfoWindow.open(map, this);
     });
