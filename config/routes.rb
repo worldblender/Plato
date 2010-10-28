@@ -1,4 +1,6 @@
 Plato::Application.routes.draw do
+  get "facebook/index"
+
   get "game/index"
 
   devise_for :users
