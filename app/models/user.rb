@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
     if(aScore > score)
       score = aScore
     end
+    return score
   end
 
   def self.find_for_facebook_oauth(access_token, signed_in_resource=nil)
