@@ -1,4 +1,4 @@
-<%if current_user %>
+<% if current_user %>
 <% content_for :head do %>
 
 <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
@@ -10,7 +10,7 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript">
 
-var BOMB_TIME = 60*10*1000; // in milliseconds
+var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters
 var map;
@@ -25,6 +25,30 @@ var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- end -%>
 <%- end -%>];
 
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  var R = 6371 * 1000; // meters;
+  var dLat = (lat2-lat1) * Math.PI / 180;
+  var dLon = (lon2-lon1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+  return d;
+}
+
+function createButton() {
+  var controlDiv = document.createElement('DIV');
+  controlDiv.style.padding = '5px';
+  controlDiv.innerHTML = "<img src='/images/restart.png'>";
+  controlDiv.style.display = "none";
+  google.maps.event.addDomListener(controlDiv, 'click', function() {
+    pushData = new Image();
+    pushData.src = "/game/restart";
+    window.location.reload(true);
+  });
+  map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
+  return controlDiv;
+}
+
 function initialize() {
   console.log("initialize called");
   var mapOptions = {
@@ -38,8 +62,11 @@ function initialize() {
   setMapLocation();
   drawAllPlayers();
   drawAllBombs();
-  //setTimeout("hideCopyright()", 1000);
-  setTimeout("zOrderRotator()", 2500);
+  zOrderRotator();
+  var controlDiv = createButton();
+  <%- if current_user.deadtime -%>
+    controlDiv.style.display = "block";
+  <%- end -%>
 }
 
 function zOrderRotator() {
@@ -54,75 +81,53 @@ function zOrderRotator() {
   setTimeout("zOrderRotator()", 2500);
 }
 
-/*
-function hideCopyright() {
-  // currently not used
-  console.log('hideCopyright called');
-  var logo = document.getElementById("map_canvas").firstChild.firstChild.nextSibling;
-  if (!logo) {
-    setTimeout("hideCopyright()", 1000);
-    return;
-  }
-  logo.style.display = "none";
-  logo.nextSibling.style.display = "none";
-}*/
-
 function tick(i) {
-  //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
-  allBombs[i][2] -= TICK_INTERVAL;
+  console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
-    /*var fillO = allBombs[i][2] / BOMB_TIME * 0.2;
-    var strokeO = allBombs[i][2] / BOMB_TIME * 0.8;
-    allBombs[i][4].setOptions({
-      fillOpacity: fillO,
-      strokeOpacity: strokeO
-    });*/
     var tmpTime = allBombs[i][2];
-    if (tmpTime > BOMB_TIME)
-      tmpTime = BOMB_TIME
-    var green = Math.round(255 * tmpTime / BOMB_TIME).toString(16);
+    if (tmpTime > MAX_BOMB_TIME)
+      tmpTime = MAX_BOMB_TIME;
+    var green = Math.round(255 * tmpTime / MAX_BOMB_TIME).toString(16);
     if (green.length <= 1)
       green = "0" + green;
-    var red = Math.round(255 - 255 * tmpTime / BOMB_TIME).toString(16);
+    var red = Math.round(255 - 255 * tmpTime / MAX_BOMB_TIME).toString(16);
     if (red.length <= 1)
       red = "0" + red;
-    var fillC = strokeC = "#" + red + green + "00";
-    console.log("fillC in tick is " + fillC);
+    var fillC = "#" + red + green + "00";
+    //console.log("fillC in tick is " + fillC);
     allBombs[i][4].setOptions({
       fillColor: fillC,
-      strokeColor: strokeC
+      strokeColor: fillC
     });
     var timeoutStatement = "tick(" + i + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
   } else {
     allBombs[i][4].setMap(null);
-    allBombs[i][3].setIcon("http://tibia.looki.de/images/magic/ultimateexplosion.gif");
+    allBombs[i][3].setIcon("/images/explosion.gif");
     allBombs[i][3].setVisible(true);
     window.location.reload(true);
   }
+  allBombs[i][2] -= TICK_INTERVAL;
 }
 
-function placeBomb(location, i, isOwner) {
+function placeBomb(location, i) {
   console.log("placing bomb at: " + location);
 
   var bomb = new google.maps.Marker({
     position: location,
     map: map,
     title: "Bomb",
-    icon: "http://www.qweas.com/icon/bomb-patrol.gif",
+    icon: "/images/litBomb.gif",
     zIndex: 0.5
   });
-  var fillColor = strokeColor = "#00FF00";
-  //if (isOwner) {
-  //  var fillColor = strokeColor = "#0000FF";
-  //}
+  var fillColor = "#00FF00";
   var bombFallout = new google.maps.Circle({
     map: map,
     center: bomb.getPosition(),
     fillColor: fillColor,
     fillOpacity: 0.2,
-    strokeColor: strokeColor,
+    strokeColor: fillColor,
     strokeOpacity: 0.8,
     strokeWeight: 2,
     radius: BOMB_RADIUS
@@ -132,7 +137,7 @@ function placeBomb(location, i, isOwner) {
   allBombs[i][4] = bombFallout;
   var timeoutStatement = "tick(" + i + ")";
   console.log("setting timeout with statement: " + timeoutStatement);
-  setTimeout(timeoutStatement, TICK_INTERVAL);
+  timeoutStatement();
 }
 
 function drawAllBombs() {
@@ -140,7 +145,7 @@ function drawAllBombs() {
   for (i = 0; i < allBombs.length; ++i) {
     var location = new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     if (allBombs[i][2] > 0) {
-      placeBomb(location, i, false);
+      placeBomb(location, i);
     }
   }
 }
@@ -149,7 +154,7 @@ function drawAllPlayers() {
   console.log("drawAllPlayers called");
   for (i = 0; i < allPlayers.length; ++i) {
     if (allPlayers[i][4])
-      icon = "http://freepages.genealogy.rootsweb.ancestry.com/~larsonmorgan/gifs/tombstone.gif";
+      icon = "/images/tombstone.gif";
     else
       icon = "http://graph.facebook.com/" + allPlayers[i][3] + "/picture";
     var location = new google.maps.LatLng(allPlayers[i][0], allPlayers[i][1]);
@@ -184,7 +189,7 @@ function createBomb(location) {
     position: location,
     map: map,
     title: "Drop this bomb anywhere!",
-    icon: "http://www.tzaclan.net/forum/images/Shop/Items/icon_bomb_32.png",
+    icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000
   });
@@ -199,10 +204,15 @@ function createBomb(location) {
   });
   google.maps.event.addListener(marker, "dblclick", function() {
     marker.setMap(null);
-    allBombs.push([marker.getPosition().lat(), marker.getPosition().lng(), BOMB_TIME]); // TODO(jeff): change this formula
+    var bombLat1 = marker.getPosition().lat();
+    var bombLng1 = marker.getPosition().lng();
+    var distance = haversineDistance(<%= current_user.latitude %>, <%= current_user.longitude %>, bombLat1, bombLng1);
+    var bombTime = 1000 * <%= clientCalcDuration %>;
+    console.log("bombTime: " + bombTime);
+    allBombs.push([bombLat1, bombLng1, bombTime]);
     pushData = new Image();
     pushData.src = "/game/dropBomb?lat=" + marker.getPosition().lat() + "&lng=" + marker.getPosition().lng();
-    placeBomb(marker.getPosition(), allBombs.length-1, true);
+    placeBomb(marker.getPosition(), allBombs.length-1);
   });
 }
 
@@ -239,5 +249,4 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
-
 <% end %>
