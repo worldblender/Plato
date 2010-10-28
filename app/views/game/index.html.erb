@@ -14,6 +14,7 @@ var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters
 var map;
+var myLocation;
 var playerNeedsDrawing = 0;
 var zIndexTop = 0;
 var allPlayers = [<%- @players.each do |user| -%><%- if @players.first != user -%>,<%- end -%>
@@ -204,7 +205,7 @@ function createBomb(location) {
     this.setMap(null);
     var bombLat1 = this.getPosition().lat();
     var bombLng1 = this.getPosition().lng();
-    var distance = haversineDistance(location.latitude, location.longitude, bombLat1, bombLng1);
+    var distance = haversineDistance(myLocation.latitude, myLocation.longitude, bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     console.log("bombTime: " + bombTime);
     allBombs.push([bombLat1, bombLng1, bombTime]);
@@ -217,6 +218,7 @@ function createBomb(location) {
 function gotPositionCallback(position) {
   console.log("gotPositionCallback called");
   var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  myLocation = initialLocation;
   map.setCenter(initialLocation);
   <%- if !current_user.deadtime and !current_user.bomb_id -%>
     createBomb(initialLocation);
