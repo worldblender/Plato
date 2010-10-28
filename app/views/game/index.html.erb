@@ -62,7 +62,7 @@ function initialize() {
   setMapLocation();
   drawAllPlayers();
   drawAllBombs();
-  setTimeout("zOrderRotator()", 2500);
+  zOrderRotator();
   var controlDiv = createButton();
   <%- if current_user.deadtime -%>
     controlDiv.style.display = "block";
@@ -83,7 +83,6 @@ function zOrderRotator() {
 
 function tick(i) {
   console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
-  allBombs[i][2] -= TICK_INTERVAL;
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
     var tmpTime = allBombs[i][2];
@@ -109,6 +108,7 @@ function tick(i) {
     allBombs[i][3].setVisible(true);
     window.location.reload(true);
   }
+  allBombs[i][2] -= TICK_INTERVAL;
 }
 
 function placeBomb(location, i) {
@@ -137,7 +137,7 @@ function placeBomb(location, i) {
   allBombs[i][4] = bombFallout;
   var timeoutStatement = "tick(" + i + ")";
   console.log("setting timeout with statement: " + timeoutStatement);
-  setTimeout(timeoutStatement, TICK_INTERVAL);
+  timeoutStatement();
 }
 
 function drawAllBombs() {
