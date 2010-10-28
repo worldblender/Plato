@@ -44,7 +44,7 @@ function createButton() {
   google.maps.event.addDomListener(controlDiv, 'click', function() {
     pushData = new Image();
     pushData.src = "/game/restart";
-    if (confirm("You will be given a new life!"))
+    if (confirm("You will be given a new life!")) // hack
       window.location.reload(true);
   });
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
