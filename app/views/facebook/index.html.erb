@@ -10,7 +10,7 @@
       <tr>
         <td><%= user.name %></td>
         <td><%= user.top_score %></td>
-        <td><%= user.curScore %></td>
+        <td><%= user.curScore(Time.now) %></td>
         <td><%= serverCalcDuration(current_user.distance_from(user)) %></td>
       </tr>
     <% end %>
