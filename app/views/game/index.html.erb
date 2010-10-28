@@ -44,13 +44,12 @@ function createButton() {
   google.maps.event.addDomListener(controlDiv, 'click', function() {
     pushData = new Image();
     pushData.src = "/game/restart";
-    pushData.onLoad = reload;
+    if (confirm("You will be given a new life!"))
+      window.location.reload(true);
   });
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
   return controlDiv;
 }
-
-function reload() { window.location.reload(true); }
 
 function initialize() {
   console.log("initialize called");
