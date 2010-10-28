@@ -12,6 +12,16 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me, :latitude, :longitude, :bomb_id, :deadtime
 
+  def scoreChartScore
+    score = 0
+    if(self.top_score != nil)
+      score = u.top_score
+    end
+    if(self.curScore > score)
+      score = curScore
+    end
+  end
+
   def self.find_for_facebook_oauth(access_token, signed_in_resource=nil)
     # Get the user email info from Facebook for sign up
     # You'll have to figure this part out from the json you get back
