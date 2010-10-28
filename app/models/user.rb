@@ -17,8 +17,9 @@ class User < ActiveRecord::Base
     if(self.top_score != nil)
       score = u.top_score
     end
-    if(self.curScore > score)
-      score = curScore
+    aScore = self.curScore(Time.now)
+    if(aScore > score)
+      score = aScore
     end
   end
 
