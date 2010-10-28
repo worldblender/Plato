@@ -206,6 +206,7 @@ function createBomb() {
     var bombLat1 = this.getPosition().lat();
     var bombLng1 = this.getPosition().lng();
     var distance = haversineDistance(myLocation.latitude, myLocation.longitude, bombLat1, bombLng1);
+    console.log("disance: " + distance);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     console.log("bombTime: " + bombTime);
     allBombs.push([bombLat1, bombLng1, bombTime]);
