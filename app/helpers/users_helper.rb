@@ -7,4 +7,5 @@ module UsersHelper
     if(self.curScore > score)
       score = curScore
     end
+  end
 end
