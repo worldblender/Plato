@@ -44,7 +44,7 @@ function createButton() {
   google.maps.event.addDomListener(controlDiv, 'click', function() {
     pushData = new Image();
     pushData.src = "/game/restart";
-    pushData.onLoad = window.location.reload(true);
+    pushData.onLoad = function() { window.location.reload(true); }
   });
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
   return controlDiv;
