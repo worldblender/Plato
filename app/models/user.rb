@@ -15,7 +15,7 @@ class User < ActiveRecord::Base
   def scoreChartScore
     score = 0
     if(self.top_score != nil)
-      score = u.top_score
+      score = self.top_score
     end
     aScore = self.curScore(Time.now)
     if(aScore > score)
