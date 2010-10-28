@@ -89,8 +89,8 @@ function tick(i) {
     if (tmpTime > MAX_BOMB_TIME)
       tmpTime = MAX_BOMB_TIME;
     allBombs[i][4].setOptions({
-      fillOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.2,
-      strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
+      fillOpacity: tmpTime / MAX_BOMB_TIME * 0.2,
+      strokeOpacity: tmpTime / MAX_BOMB_TIME * 0.8
     });
     var timeoutStatement = "tick(" + i + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
