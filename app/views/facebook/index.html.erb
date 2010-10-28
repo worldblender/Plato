@@ -1,2 +1,4 @@
-<h1>Facebook#index</h1>
-<p>Find me in app/views/facebook/index.html.erb</p>
+This is a high scores page for War Games
+<% User.each do |u| %>
+  <%= "#{u.top_score} was scored by #{u.name}" %>
+<% end %>
