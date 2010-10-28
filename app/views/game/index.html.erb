@@ -199,17 +199,14 @@ function createBomb(location) {
     });
     infoWindow.open(map, marker);
   <%- end -%>
-  google.maps.event.addListener(marker, "dragend", function() {
-    console.log("bomb moved to " + marker.getPosition());
-  });
   google.maps.event.addListener(marker, "dblclick", function() {
     marker.setMap(null);
     var bombLat1 = marker.getPosition().lat();
     var bombLng1 = marker.getPosition().lng();
-    //var distance = haversineDistance(<%= current_user.latitude %>, <%= current_user.longitude %>, bombLat1, bombLng1);
-    //var bombTime = 1000 * <%= clientCalcDuration %>;
-    //console.log("bombTime: " + bombTime);
-    //allBombs.push([bombLat1, bombLng1, bombTime]);
+    var distance = haversineDistance(location.latitude, location.longitude, bombLat1, bombLng1);
+    var bombTime = 1000 * <%= clientCalcDuration %>;
+    console.log("bombTime: " + bombTime);
+    allBombs.push([bombLat1, bombLng1, bombTime]);
     pushData = new Image();
     pushData.src = "/game/dropBomb?lat=" + marker.getPosition().lat() + "&lng=" + marker.getPosition().lng();
     placeBomb(marker.getPosition(), allBombs.length-1);
