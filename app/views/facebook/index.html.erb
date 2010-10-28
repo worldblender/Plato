@@ -1,4 +1,4 @@
 This is a high scores page for War Games
-<% User.each do |u| %>
+<% User.all.each do |u| %>
   <%= "#{u.top_score} was scored by #{u.name}" %>
 <% end %>
