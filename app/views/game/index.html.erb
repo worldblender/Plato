@@ -184,11 +184,11 @@ function drawAllPlayers() {
   }
 }
 
-function createBomb(location) {
-  console.log("creating bomb at: " + location);
+function createBomb() {
+  console.log("creating bomb at: " + myLocation);
 
   var marker = new google.maps.Marker({
-    position: location,
+    position: myLocation,
     map: map,
     title: "Drop this bomb anywhere!",
     icon: "/images/dragBomb.png",
@@ -217,11 +217,10 @@ function createBomb(location) {
 
 function gotPositionCallback(position) {
   console.log("gotPositionCallback called");
-  var initialLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-  myLocation = initialLocation;
-  map.setCenter(initialLocation);
+  myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  map.setCenter(myLocation);
   <%- if !current_user.deadtime and !current_user.bomb_id -%>
-    createBomb(initialLocation);
+    createBomb();
   <%- end -%>
 
   if (playerNeedsDrawing) {
