@@ -137,7 +137,7 @@ function placeBomb(location, i) {
   allBombs[i][4] = bombFallout;
   var timeoutStatement = "tick(" + i + ")";
   console.log("setting timeout with statement: " + timeoutStatement);
-  timeoutStatement();
+  tick(i);
 }
 
 function drawAllBombs() {
