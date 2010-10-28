@@ -88,17 +88,9 @@ function tick(i) {
     var tmpTime = allBombs[i][2];
     if (tmpTime > MAX_BOMB_TIME)
       tmpTime = MAX_BOMB_TIME;
-    var green = Math.round(255 * tmpTime / MAX_BOMB_TIME).toString(16);
-    if (green.length <= 1)
-      green = "0" + green;
-    var red = Math.round(255 - 255 * tmpTime / MAX_BOMB_TIME).toString(16);
-    if (red.length <= 1)
-      red = "0" + red;
-    var fillC = "#" + red + green + "00";
-    //console.log("fillC in tick is " + fillC);
     allBombs[i][4].setOptions({
-      fillColor: fillC,
-      strokeColor: fillC
+      fillOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.2,
+      strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
     });
     var timeoutStatement = "tick(" + i + ")";
     setTimeout(timeoutStatement, TICK_INTERVAL);
@@ -121,13 +113,12 @@ function placeBomb(location, i) {
     icon: "/images/litBomb.gif",
     zIndex: 0.5
   });
-  var fillColor = "#00FF00";
   var bombFallout = new google.maps.Circle({
     map: map,
     center: bomb.getPosition(),
-    fillColor: fillColor,
+    fillColor: "#FF0000",
     fillOpacity: 0.2,
-    strokeColor: fillColor,
+    strokeColor: "#FF0000",
     strokeOpacity: 0.8,
     strokeWeight: 2,
     radius: BOMB_RADIUS
