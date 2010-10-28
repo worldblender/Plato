@@ -18,7 +18,7 @@ var myLocation;
 var playerNeedsDrawing = 0;
 var zIndexTop = 0;
 var allPlayers = [<%- @players.each do |user| -%>
-  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= (100 * user.hp).round %>, <%= user.curScore %>],
+  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= (100 * user.hp).round %>, <%= user.curScore.round %>],
 <%- end -%>];
 var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>],<%- end -%>
@@ -175,7 +175,7 @@ function drawAllPlayers() {
     marker.info = allPlayers[i];
     google.maps.event.addListener(marker, 'click', function() {
       var playerInfoWindow = new google.maps.InfoWindow({
-        content: this.getTitle() + " : " + this.info[6] + "hp, " + this.info[7] + "points"
+        content: this.getTitle() + "<br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
       });
       playerInfoWindow.open(map, this);
     });
