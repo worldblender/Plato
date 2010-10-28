@@ -1,6 +1,6 @@
 module FacebookHelper
   def orderedScoreChart
-    users = User.all.sort!{|a,b| a.scoreChartScore <=> b.scoreChartScore }
+    users = User.all.sort!{|a,b| b.scoreChartScore <=> a.scoreChartScore }
     return users
   end
 end
