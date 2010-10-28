@@ -11,7 +11,7 @@ Plato::Application.routes.draw do
   resources :users
 
   resources :bombs
-  match "facebook" => "facebok#index"
+  match "facebook" => "facebook#index"
   root :to => "game#index"
 
   # The priority is based upon order of creation:
