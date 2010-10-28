@@ -1,4 +1,4 @@
 This is a high scores page for War Games<br/>
-<% User.all.sort!{|a,b| a.scoreChartScore <=> b.scoreChartScore }.each do |user| %>
+<% orderedScoreChart.each do |user| %>
   <%= "#{user.scoreChartScore} was scored by #{user.name}" %><br/>
 <% end %>
