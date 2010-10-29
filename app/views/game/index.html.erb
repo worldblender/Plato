@@ -111,7 +111,7 @@ function placeBomb(location, i) {
     map: map,
     title: "Bomb",
     icon: "/images/litBomb.gif",
-    zIndex: 0.5
+    zIndex: 50000
   });
   var bombFallout = new google.maps.Circle({
     map: map,
@@ -186,7 +186,7 @@ function createBomb() {
     draggable: true,
     zIndex: 100000
   });
-  <%- if Time.now - current_user.createtime < 1000 -%>
+  <%- if current_user.curScore < 100 -%>
     var infoWindow = new google.maps.InfoWindow({
       content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!"
     });
