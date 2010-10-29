@@ -53,13 +53,13 @@ class User < ActiveRecord::Base
     return self.phone != nil
   end
 
-  def notify(textMessage)
+  def notify(textMessage,title = 'Game notification from ' + GAME_NAME)
     if self.acceptText?
       # send a text message
       sendText(textMessage,self)
     else
       # send an email
-      Dmailer.send_text(textMessage,self).deliver
+      Dmailer.send_text(textMessage,self,title).deliver
     end
   end
 
