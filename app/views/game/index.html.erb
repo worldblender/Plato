@@ -74,7 +74,7 @@ function zOrderRotator() {
 }
 
 function tick(i) { // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
-  console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
+  //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
     var tmpTime = allBombs[i][2];
