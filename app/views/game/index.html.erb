@@ -18,7 +18,7 @@ var myLocation;
 var playerNeedsDrawing = 0;
 var zIndexTop = 0;
 var allPlayers = [<%- @players.each do |user| -%>
-  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= (100 * user.hp).round %>, <%= user.curScore.round %>],
+  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
 var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>],<%- end -%>
@@ -39,12 +39,6 @@ function createButton() {
   controlDiv.style.padding = '5px';
   controlDiv.innerHTML = "<a href='/game/restart'><img src='/images/restart.png'></a>";
   controlDiv.style.display = "none";
-  /*google.maps.event.addDomListener(controlDiv, 'click', function() {
-    pushData = new Image();
-    pushData.src = "/game/restart";
-    if (confirm("You will be given a new life!")) // hack
-      window.location.reload(true);
-  });*/
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
   return controlDiv;
 }
@@ -70,7 +64,6 @@ function initialize() {
 }
 
 function zOrderRotator() {
-  //console.log("Rotating zOrder with zIndexTop = " + zIndexTop);
   zIndexTop++;
   for (i = 0; i < allPlayers.length; ++i) {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
@@ -78,7 +71,7 @@ function zOrderRotator() {
       continue;
     allPlayers[i][5].setZIndex(zIndex);
   }
-  setTimeout("zOrderRotator()", 2500);
+  setTimeout("zOrderRotator()", 2000);
 }
 
 function tick(i) { // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
@@ -199,9 +192,10 @@ function createBomb() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     allBombs.push([bombLat1, bombLng1, bombTime]);
-    pushData = new Image();
-    pushData.src = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
     placeBomb(this.getPosition(), allBombs.length-1);
+    var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
+    pushData = new Image();
+    pushData.src = targetUrl;
   });
 }
 
@@ -222,6 +216,13 @@ function gotPositionCallback(position) {
       zIndex: 0
     });
   }
+
+  var watchId = navigator.geolocation.watchPosition(function(position) {
+    pushData = new Image();
+    pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
+    console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
+    //window.location.reload(true);
+  });
 }
 
 function setMapLocation() {
@@ -230,14 +231,8 @@ function setMapLocation() {
     navigator.geolocation.getCurrentPosition(gotPositionCallback,
       function(error) {
         alert("Geolocation failed: " + error.message);
-      }, {timeout: 5000}
+      }, {timeout: 8000}
     );
-    var watchId = navigator.geolocation.watchPosition(function(position) {
-      pushData = new Image();
-      pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
-      console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
-      //window.location.reload(true);
-    });
   } else {
     alert("No navigator.geolocation");
   }

@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
 
   def hitWith(dmg)
     if (self.hp == nil)
-      self.hp=1
+      self.hp=USER_HITPOINTS
     end
     tempHp = self.hp-dmg
     if tempHp<=0
@@ -92,7 +92,7 @@ class User < ActiveRecord::Base
   end
 
   def resurrect
-    self.hp = 1
+    self.hp = USER_HITPOINTS
     self.bomb_id = nil
     self.deadtime = nil
     self.createtime = DateTime.now

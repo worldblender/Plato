@@ -32,7 +32,7 @@ class Bomb < ActiveRecord::Base
     self.usersInRange.each do |user|
       damage = damageFor(self.distance_from(user, :units => :kms))
       user.hitWith(damage)
-      user.notify(sprintf("You just got hit by a bomb which was thrown by %s.  This did %.1f damage to you and you now have %.1f hitpoints left", User.find(self.owner_id).name, damage*USER_HITPOINTS,user.hp*USER_HITPOINTS))
+      user.notify(sprintf("You just got hit by a bomb which was thrown by %s.  This did %d damage to you and you now have %d hitpoints left", User.find(self.owner_id).name, damage, user.hp))
     end
     User.where(:bomb_id => self.id).each do |u|
       u.bomb_id = nil
@@ -52,8 +52,6 @@ class Bomb < ActiveRecord::Base
       return timeLeft
     end
   end
-
-
 
   scope :explodeDurring, lambda{|startTime,endTime| where({:detonatetime => startTime..endTime})}
 end
