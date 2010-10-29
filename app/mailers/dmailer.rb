@@ -7,6 +7,6 @@ class Dmailer < ActionMailer::Base
     from "WorldBlender <customer-service@worldblender.com>"
     subject title
     sent_on Time.now
-    body :user => user
+    body
   end
 end
