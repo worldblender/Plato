@@ -220,7 +220,8 @@ function gotPositionCallback(position) {
     pushData = new Image();
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
     console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
-    // TODO(Jeff): change your location on the map
+    myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    allPlayers[playerIndex][5].setPosition(myLocation);
     //window.location.reload(true);
   });
 
