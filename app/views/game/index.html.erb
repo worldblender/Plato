@@ -212,12 +212,15 @@ function gotPositionCallback(position) {
     createBomb();
   <%- end -%>
 
+  allPlayers[playerIndex][0] = position.coords.latitude;
+  allPlayers[playerIndex][1] = position.coords.longitude;
   drawPlayer(playerIndex);
 
   var watchId = navigator.geolocation.watchPosition(function(position) {
     pushData = new Image();
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
     console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
+    // TODO(Jeff): change your location on the map
     //window.location.reload(true);
   });
 
