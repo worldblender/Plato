@@ -6,6 +6,7 @@ class GameController < ApplicationController
 
   def restart
     current_user.resurrect
+    redirect_to '/game/index'
   end
 
   def dropBomb

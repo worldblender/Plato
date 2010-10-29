@@ -37,14 +37,14 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
 function createButton() {
   var controlDiv = document.createElement('DIV');
   controlDiv.style.padding = '5px';
-  controlDiv.innerHTML = "<img src='/images/restart.png'>";
+  controlDiv.innerHTML = "<a href="/game/restart"><img src='/images/restart.png'></a>";
   controlDiv.style.display = "none";
-  google.maps.event.addDomListener(controlDiv, 'click', function() {
+  /*google.maps.event.addDomListener(controlDiv, 'click', function() {
     pushData = new Image();
     pushData.src = "/game/restart";
     if (confirm("You will be given a new life!")) // hack
       window.location.reload(true);
-  });
+  });*/
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
   return controlDiv;
 }
