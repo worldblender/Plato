@@ -222,6 +222,13 @@ function gotPositionCallback(position) {
       zIndex: 0
     });
   }
+
+  var watchId = navigator.geolocation.watchPosition(function(position) {
+     pushData = new Image();
+    pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
+    console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
+    //window.location.reload(true);
+  });
 }
 
 function setMapLocation() {
@@ -230,14 +237,8 @@ function setMapLocation() {
     navigator.geolocation.getCurrentPosition(gotPositionCallback,
       function(error) {
         alert("Geolocation failed: " + error.message);
-      }, {timeout: 5000}
+      }, {timeout: 8000}
     );
-    var watchId = navigator.geolocation.watchPosition(function(position) {
-      pushData = new Image();
-      pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
-      console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
-      //window.location.reload(true);
-    });
   } else {
     alert("No navigator.geolocation");
   }
