@@ -39,12 +39,6 @@ function createButton() {
   controlDiv.style.padding = '5px';
   controlDiv.innerHTML = "<a href='/game/restart'><img src='/images/restart.png'></a>";
   controlDiv.style.display = "none";
-  /*google.maps.event.addDomListener(controlDiv, 'click', function() {
-    pushData = new Image();
-    pushData.src = "/game/restart";
-    if (confirm("You will be given a new life!")) // hack
-      window.location.reload(true);
-  });*/
   map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
   return controlDiv;
 }
@@ -198,9 +192,9 @@ function createBomb() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     allBombs.push([bombLat1, bombLng1, bombTime]);
-    pushData = new Image();
-    pushData.src = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
     placeBomb(this.getPosition(), allBombs.length-1);
+    var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
+    window.location = targetUrl;
   });
 }
 
@@ -223,7 +217,7 @@ function gotPositionCallback(position) {
   }
 
   var watchId = navigator.geolocation.watchPosition(function(position) {
-     pushData = new Image();
+    pushData = new Image();
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
     console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
     //window.location.reload(true);

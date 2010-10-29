@@ -25,6 +25,7 @@ class GameController < ApplicationController
         u.notify(sprintf("bomb incoming, it will detonate on you in %.1f seconds unless you move, and do %d damage reducing you to %f hitpoints",bomb.duration.to_s[0,4,],damage*USER_HITPOINTS,(u.hp-damage)*USER_HITPOINTS))
       end
     end
+    redirect_to '/'
   end
 
   def playerMoved
