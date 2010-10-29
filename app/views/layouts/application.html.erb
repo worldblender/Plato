@@ -10,9 +10,9 @@
       <%= yield %>
     <%- else %>
       <style type="text/css">
-      body { background-image:url("/images/ScorchedWorld.jpeg"); background-repeat:no-repeat; font-color: white; }
+      body { background-image:url("/images/ScorchedWorld.jpeg"); background-repeat:no-repeat; color: white; }
       </style>
-      <h1>Welcome to Scorched World</h1>
+      <h2>Welcome to Scorched World</h2>
       <a href="<%= user_oauth_authorize_url(:facebook) %>"><img src="/images/login.png"></a>
     <%- end %>
   <% if false %>
