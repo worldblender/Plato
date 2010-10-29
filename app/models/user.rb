@@ -82,10 +82,12 @@ class User < ActiveRecord::Base
     if (self.hp == nil)
       self.hp=1
     end
-    self.hp = self.hp-dmg
-    if hp<=0
+    tempHp = self.hp-dmg
+    if tempHp<=0
       self.kill
+      tempHp= 0
     end
+    self.hp = tempHp
     self.save
   end
 
