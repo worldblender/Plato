@@ -70,7 +70,6 @@ function initialize() {
 }
 
 function zOrderRotator() {
-  //console.log("Rotating zOrder with zIndexTop = " + zIndexTop);
   zIndexTop++;
   for (i = 0; i < allPlayers.length; ++i) {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
@@ -78,7 +77,7 @@ function zOrderRotator() {
       continue;
     allPlayers[i][5].setZIndex(zIndex);
   }
-  setTimeout("zOrderRotator()", 2500);
+  setTimeout("zOrderRotator()", 2000);
 }
 
 function tick(i) { // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
