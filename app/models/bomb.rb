@@ -19,6 +19,14 @@ class Bomb < ActiveRecord::Base
     return time
   end
 
+  def isExploded?
+    if self.did_explode == nil || self.did_explode == false
+      return false
+    else
+      return true
+    end
+  end
+
   def explode(curTime)
     # cause this bomb to blow, kill people caught in radius
     self.usersInRange.each do |user|
@@ -45,5 +53,5 @@ class Bomb < ActiveRecord::Base
     end
   end
 
-  scope :explodeDurring, lambda{|startTime,endTime| where({:detonatetime => startTime..endTime,:did_explode => false})}
+  scope :explodeDurring, lambda{|startTime,endTime| where({:detonatetime => startTime..endTime,:did_explode => [false,nil]})}
 end
