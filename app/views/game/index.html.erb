@@ -56,7 +56,6 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setMapLocation();
-  zOrderRotator();
   var controlDiv = createButton();
   <%- if current_user.deadtime -%>
     controlDiv.style.display = "block";
@@ -221,6 +220,8 @@ function gotPositionCallback(position) {
     console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
     //window.location.reload(true);
   });
+
+  zOrderRotator();
 }
 
 function setMapLocation() {
