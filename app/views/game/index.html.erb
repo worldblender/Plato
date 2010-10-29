@@ -222,6 +222,7 @@ function gotPositionCallback(position) {
     console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     allPlayers[playerIndex][5].setPosition(myLocation);
+    // map.setCenter(myLocation); // maybe?
     //window.location.reload(true);
   });
 

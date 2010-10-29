@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   def resolveStatus
     # explode the bombs which need to explode, and kill ppl caught in the radius
     curTime = DateTime.now
+    puts "LR" + @@lastResolve.to_s + " CT" + curTime.to_s
     if(@@lastResolve == nil || curTime-@@lastResolve > 5.seconds)
       if @@lastResolve == nil
         @@lastResolve = curTime - 1.day
