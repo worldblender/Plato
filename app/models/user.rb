@@ -58,12 +58,13 @@ class User < ActiveRecord::Base
   end
 
   def notify(textMessage,title = 'Game notification from ' + GAME_NAME)
+    puts("called with " + textMessage + " as my data")
     if self.acceptText?
       # send a text message
       sendText(textMessage,self)
     else
       # send an email
-      Dmailer.send_text(textMessage,self,title).deliver
+      Dmailer.send_text(textMessage,self.id,title).deliver
     end
   end
 
@@ -81,10 +82,12 @@ class User < ActiveRecord::Base
     if (self.hp == nil)
       self.hp=USER_HITPOINTS
     end
-    self.hp = self.hp-dmg
-    if hp<=0
+    tempHp = self.hp-dmg
+    if tempHp<=0
       self.kill
+      tempHp= 0
     end
+    self.hp = tempHp
     self.save
   end
 
