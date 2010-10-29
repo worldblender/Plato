@@ -8,6 +8,7 @@ class ApplicationController < ActionController::Base
     curTime = DateTime.now
     puts "LR" + @@lastResolve.to_s + " CT" + curTime.to_s
     if(@@lastResolve == nil || curTime-@@lastResolve > 5.seconds)
+      puts "Resolving..."
       if @@lastResolve == nil
         @@lastResolve = curTime - 1.day
       end
