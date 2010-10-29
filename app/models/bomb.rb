@@ -41,7 +41,7 @@ class Bomb < ActiveRecord::Base
   end
 
   def usersInRange
-    return User.where(:deadtime => nil).within(BOMB_RADIUS, :origin => [self.latitude,self.longitude])
+    return User.where(["hp > 0"]).within(BOMB_RADIUS, :origin => [self.latitude,self.longitude])
   end
 
   def timeLeft
