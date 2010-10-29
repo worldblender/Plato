@@ -12,7 +12,7 @@
       <tr>
         <td><%= user.name %></td>
         <td><%= user.top_score %></td>
-        <td><%= sprintf("%1f",user.curScore(Time.now)) %></td>
+        <td><%= sprintf("%.1f",user.curScore(Time.now)) %></td>
         <td><%= sprintf("%.1f", user.hp) %></td>
         <td><%= sprintf("%.1f seconds",serverCalcDuration(current_user.distance_from(user, :units => :kms)*1000)) %></td>
       </tr>
