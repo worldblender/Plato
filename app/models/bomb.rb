@@ -30,7 +30,9 @@ class Bomb < ActiveRecord::Base
   def explode(curTime)
     # cause this bomb to blow, kill people caught in radius
     self.usersInRange.each do |user|
-      user.hitWith(damageFor(self.distance_from(user, :units => :kms)))
+      damage = damageFor(self.distance_from(user, :units => :kms))
+      user.hitWith(damage)
+      user.notify(sprintf("You just got hit by a bomb which was thrown by %s.  This did %.1f damage to you and you now have %.1f hitpoints left", User.find(self.owner_id).name, damage,user.hp))
     end
     User.where(:bomb_id => self.id).each do |u|
       u.bomb_id = nil
