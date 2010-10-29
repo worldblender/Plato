@@ -34,6 +34,8 @@ class Bomb < ActiveRecord::Base
       user.hitWith(damage)
       user.notify(sprintf("You just got hit by a bomb which was thrown by %s.  This did %d damage to you and you now have %d hitpoints left", User.find(self.owner_id).name, damage, user.hp))
     end
+    self.did_explode=true
+    self.save
     User.where(:bomb_id => self.id).each do |u|
       u.bomb_id = nil
       u.save
