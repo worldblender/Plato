@@ -9,6 +9,9 @@
     <%- if user_signed_in? %>
       <%= yield %>
     <%- else %>
+      <style type="text/css">
+      body { background:"/images/ScorchedWorld.jpeg" }
+      </style>
       <%= link_to 'Sign in with Facebook', user_oauth_authorize_url(:facebook) %>
     <%- end %>
   <% if false %>
