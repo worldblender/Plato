@@ -16,6 +16,6 @@ module BombsHelper
   def damageFor(distance)
     # the damage dealt across the BOMB_RADIUS changes from 1 to 0 as one moves away from the epicenter
     # so a perfect direct hit will kill a person instantly, but any little bit off, and they will take at least another shot
-    (100 * (BOMB_RADIUS - distance) / BOMB_RADIUS).ceil / 100
+    (USER_HITPOINTS * (BOMB_RADIUS - distance) / BOMB_RADIUS).ceil
   end
 end
