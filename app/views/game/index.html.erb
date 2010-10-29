@@ -194,7 +194,8 @@ function createBomb() {
     allBombs.push([bombLat1, bombLng1, bombTime]);
     placeBomb(this.getPosition(), allBombs.length-1);
     var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
-    window.location = targetUrl;
+    pushData = new Image();
+    pushData.src = targetUrl;
   });
 }
 
