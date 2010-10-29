@@ -45,5 +45,5 @@ class Bomb < ActiveRecord::Base
     end
   end
 
-  scope :explodeDurring, lambda{|startTime,endTime| where({:detonatetime => startTime..endTime AND :did_explode => false})}
+  scope :explodeDurring, lambda{|startTime,endTime| where({:detonatetime => startTime..endTime,:did_explode => false})}
 end
