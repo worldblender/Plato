@@ -200,6 +200,7 @@ function createBomb() {
     var bombTime = 1000 * <%= clientCalcDuration %>;
     alert(bombTime);
     this.labelContent = bombTime + "s";
+    this.setContent();
   });
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
