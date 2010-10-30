@@ -100,7 +100,7 @@ function tick(i) { // TODO(Jeff): optimization: if bomb will not explode within 
 function placeBomb(location, i) {
   console.log("placing bomb at: " + location);
 
-  var bomb = new google.maps.Marker({
+  var bomb = new MarkerWithLabel({
     position: location,
     map: map,
     title: "Bomb",
