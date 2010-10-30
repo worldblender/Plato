@@ -58,9 +58,10 @@ function initialize() {
   drawAllBombs();
   setMapLocation();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/'><img src='/images/leaderboard.gif'></a>");
+  leaderboardButton.style.display = "block";
   var restartButton = createButton("<a href='/game/restart'><img src='/images/restart.png'></a>");
   <%- if current_user.deadtime -%>
-    var controlDiv = createButton("<a href='/game/restart'><img src='/images/restart.png'></a>");.style.display = "block";
+    restartButton.style.display = "block";
   <%- end -%>
 }
 
