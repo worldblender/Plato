@@ -47,7 +47,6 @@ class User < ActiveRecord::Base
     else
       return 0
     end
-    end
   end
 
   def photoUrl
