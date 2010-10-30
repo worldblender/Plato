@@ -7,9 +7,11 @@ class ApplicationController < ActionController::Base
     # explode the bombs which need to explode, and kill ppl caught in the radius
     curTime = DateTime.now
     if(@@lastResolve == nil || curTime-@@lastResolve > 5.seconds)
-      puts "last time we resolved: " + @@lastResolve
       if @@lastResolve == nil
         @@lastResolve = curTime - 1.day
+        puts "@@lastResolve is nil"
+      else
+        puts "@@lastResolve is " + @@lastResolve
       end
       explodingBombs = Bomb.explodeDurring(@@lastResolve,curTime)
       @@lastResolve = curTime
