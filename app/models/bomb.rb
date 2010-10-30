@@ -19,12 +19,12 @@ class Bomb < ActiveRecord::Base
     return time
   end
 
-  def shouldExplode?(curTime)
-    return (self.createtime + duration.seconds) > curTime
-  end
-
   def isExploded?
-    return self.detonatetime <= DateTime.now
+    if self.did_explode == nil || self.did_explode == false
+      return false
+    else
+      return true
+    end
   end
 
   def explode(curTime)
@@ -34,6 +34,8 @@ class Bomb < ActiveRecord::Base
       user.hitWith(damage)
       user.notify(sprintf("You just got hit by a bomb which was thrown by %s.  This did %d damage to you and you now have %d hitpoints left", User.find(self.owner_id).name, damage, user.hp))
     end
+    self.did_explode=true
+    self.save
     User.where(:bomb_id => self.id).each do |u|
       u.bomb_id = nil
       u.save
@@ -52,6 +54,5 @@ class Bomb < ActiveRecord::Base
       return timeLeft
     end
   end
-
-  scope :explodeDurring, lambda{|startTime,endTime| where({:detonatetime => startTime..endTime})}
+  scope :explodeBefore, lambda{|endTime| where(["detonatetime < ? and did_explode = false",endTime])}
 end
