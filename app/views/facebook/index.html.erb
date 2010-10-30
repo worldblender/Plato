@@ -1,3 +1,34 @@
+<% content_for :head do %>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.js"></script>
+  <script type="text/javascript" src="http://js.bigdoor.com/tags/4655/bigdoor.toolbar.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="http://js.bigdoor.com/tags/4655/css/jquery.toolbar.css" />
+  <script type="text/javascript">
+    jQuery(document).ready(function() {
+      BDM.include.jsonp('97e72766c9e046579cbfcbdd9b288f3b');
+      jQuery.toolbar({
+        auth: {
+          id: <%= current_user.facebook_id %>,
+          name: ''
+        },
+        badge: {
+          unearned: true
+        },
+        balance: {
+          display: [2323, 2324, 2325, 2326],
+          primary: 2323
+        },
+        leaderboard: {
+          currency: 2323,
+        relative_to: true
+      },
+      personalize: {
+        logo: ''
+        }
+      });
+    });
+  </script>
+<% end %>
+
 <% if current_user %>
   <h1>This is a high scores page for War Games</h1>
     <table>
