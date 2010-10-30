@@ -42,12 +42,11 @@ class User < ActiveRecord::Base
   end
 
   def curScore(curTime = Time.now)
-    if self != nil
-      if self.hp > 0
-        return curTime-self.createtime
-      else
-        return 0
-      end
+    if self.hp != nil && self.hp > 0
+      return curTime-self.createtime
+    else
+      return 0
+    end
     end
   end
 
