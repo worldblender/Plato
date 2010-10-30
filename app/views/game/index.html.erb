@@ -7,11 +7,34 @@
   body { height: 100%; margin: 0px; padding: 0px }
   #map_canvas { width:100%; height: 100% }
   #lb { font: bold 0.6em Verdana; text-decoration: none; color: #444; }
-word-spacing: normal;
-text-align: left;
-letter-spacing: 0;
-line-height: 1.2em;
-font-size: 1em;}
+
+.black_overlay {
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index:1001;
+	-moz-opacity: 0.8;
+	opacity:.80;
+	filter: alpha(opacity=80);
+}
+
+.white_content {
+	display: none;
+	position: absolute;
+	top: 25%;
+	left: 25%;
+	width: 50%;
+	height: 50%;
+	padding: 16px;
+	border: 16px solid orange;
+	background-color: white;
+	z-index:1002;
+	overflow: auto;
+}
 </style>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
@@ -51,7 +74,6 @@ function createButton(html) {
 }
 
 function initialize() {
-  console.log("initialize called");
   var mapOptions = {
     zoom: 16,
     mapTypeId: google.maps.MapTypeId.ROADMAP, // TERRAIN looks better but is it slower?
@@ -69,6 +91,14 @@ function initialize() {
   <%- if current_user.deadtime -%>
     restartButton.style.display = "block";
   <%- end -%>
+  <%- if current_user.top_score and current_user.curScore and current_user.top_score < 10 and current_user.curScore < 10 -%>
+    showRules();
+  <%- end -%>
+}
+
+function showRules() {
+  document.getElementById('rules').style.display = 'block';
+  document.getElementById('fade').style.display = 'block';
 }
 
 function zOrderRotator() {
@@ -106,8 +136,6 @@ function tick(i) { // TODO(Jeff): optimization: if bomb will not explode within 
 }
 
 function placeBomb(location, i) {
-  console.log("placing bomb at: " + location);
-
   var bomb = new MarkerWithLabel({
     position: location,
     map: map,
@@ -127,15 +155,13 @@ function placeBomb(location, i) {
     strokeWeight: 2,
     radius: BOMB_RADIUS
   });
-  console.log("drew bomb " + i + " at (" + location.lat() + "," + location.lng() + ")");
+  //console.log("drew bomb " + i + " at (" + location.lat() + "," + location.lng() + ")");
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
-  console.log("setting timeout with statement: tick(" + i + ")");
   tick(i);
 }
 
 function drawAllBombs() {
-  console.log("drawAllBombs called");
   for (i = 0; i < allBombs.length; ++i) {
     var location = new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     if (allBombs[i][2] > 0) {
@@ -170,11 +196,10 @@ function drawPlayer(i) {
     playerInfoWindow.open(map, this);
   });
 
-  console.log("drew player " + i + " at (" + location.lat() + "," + location.lng() + ")");
+  //console.log("drew player " + i + " at (" + location.lat() + "," + location.lng() + ")");
 }
 
 function drawAllPlayers() {
-  console.log("drawAllPlayers called");
   for (var i = 0; i < allPlayers.length; ++i) {
     if (allPlayers[i][3] == <%= current_user.facebook_id %>) {
       playerIndex = i;
@@ -186,7 +211,7 @@ function drawAllPlayers() {
 }
 
 function createBomb() {
-  console.log("creating bomb at: " + myLocation);
+  //console.log("creating bomb at: " + myLocation);
 
   var marker = new MarkerWithLabel({
     position: myLocation,
@@ -226,7 +251,7 @@ function createBomb() {
 }
 
 function gotPositionCallback(position) {
-  console.log("gotPositionCallback called");
+  //console.log("gotPositionCallback called");
   myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   map.setCenter(myLocation);
   <%- if !current_user.deadtime and !current_user.bomb_id -%>
@@ -240,7 +265,7 @@ function gotPositionCallback(position) {
   var watchId = navigator.geolocation.watchPosition(function(position) {
     pushData = new Image();
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
-    console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
+    //console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     allPlayers[playerIndex][5].setPosition(myLocation);
     // map.setCenter(myLocation); // maybe?
@@ -250,7 +275,7 @@ function gotPositionCallback(position) {
 }
 
 function setMapLocation() {
-  console.log("setMapLocation called");
+  //console.log("setMapLocation called");
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(gotPositionCallback,
       function(error) {
@@ -267,4 +292,18 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
+<div id="rules" class="white_content" onclick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';">
+Welcome to <%= GAME_NAME %>!<br><br>
+Instructions:<br>
+1) You get one bomb at a time.<br>
+2) Drag it to where you want. The number underneath indicates how many seconds it will take to detonate if you light it.<br>
+3) Double click the bomb to light it.<br>
+4) The further away you drop a bomb, the longer it takes to detonate.<br>
+5) You start with 100hp and take damage the closer you are to an exploding bomb (even your own).<br>
+6) Move around in the (real) world to escape bombs.<br>
+7) A restart button appears when you die.<br>
+8) Whoever scores the most points by staying alive longest, wins.
+</div>
+<div id="fade" class="black_overlay"></div>
+
 <% end %>
