@@ -40,7 +40,7 @@
         <th>Time for an attack from me to reach them</th>
       </tr>
       <% orderedScoreChart.each do |user| %>
-        <% if user.latitude != nil && user.longitude &= nil && user.latitude != 0 && user.longitude != 0 %>
+        <% if user.latitude != nil && user.longitude != nil && user.latitude != 0 && user.longitude != 0 %>
         
       <tr>
         <td><%= user.name %></td>
