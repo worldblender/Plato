@@ -105,7 +105,9 @@ function placeBomb(location, i) {
     map: map,
     title: "Bomb",
     icon: "/images/litBomb.gif",
-    zIndex: 50000
+    zIndex: 50000,
+    labelAnchor: myLocation,
+    labelStyle: {opacity: 0.7}
   });
   var bombFallout = new google.maps.Circle({
     map: map,
