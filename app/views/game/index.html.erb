@@ -190,6 +190,11 @@ function createBomb() {
     });
     infoWindow.open(map, marker);
   <%- end -%>
+  google.maps.event.addListener(marker, "dragend", function() {
+    var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
+    var bombTime = 1000 * <%= clientCalcDuration %>;
+    alert(bombTime);
+  }
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
     var bombLat1 = this.getPosition().lat();
@@ -223,7 +228,6 @@ function gotPositionCallback(position) {
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     allPlayers[playerIndex][5].setPosition(myLocation);
     // map.setCenter(myLocation); // maybe?
-    //window.location.reload(true);
   });
 
   zOrderRotator();
