@@ -35,12 +35,12 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   return d;
 }
 
-function createButton() {
+function createButton(html) {
   var controlDiv = document.createElement('DIV');
   controlDiv.style.padding = '5px';
-  controlDiv.innerHTML = "<a href='/game/restart'><img src='/images/restart.png'></a>";
+  controlDiv.innerHTML = html;
   controlDiv.style.display = "none";
-  map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
   return controlDiv;
 }
 
@@ -57,9 +57,10 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setMapLocation();
-  var controlDiv = createButton();
+  var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/'><img src='/images/leaderboard.gif'></a>");
+  var restartButton = createButton("<a href='/game/restart'><img src='/images/restart.png'></a>");
   <%- if current_user.deadtime -%>
-    controlDiv.style.display = "block";
+    var controlDiv = createButton("<a href='/game/restart'><img src='/images/restart.png'></a>");.style.display = "block";
   <%- end -%>
 }
 
@@ -157,7 +158,7 @@ function drawPlayer(i) {
   marker.info = allPlayers[i];
   google.maps.event.addListener(marker, 'click', function() {
     var playerInfoWindow = new google.maps.InfoWindow({
-      content: this.getTitle() + "<br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
+      content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
     });
     playerInfoWindow.open(map, this);
   });
@@ -187,7 +188,7 @@ function createBomb() {
     icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000,
-    labelContent: "0s",
+    labelContent: "",
     labelAnchor: myLocation,
     labelStyle: {opacity: 0.7}
   });
