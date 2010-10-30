@@ -184,9 +184,9 @@ function createBomb() {
     icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000,
-    labelContent: "$425K",
+    labelContent: "0s",
     labelAnchor: myLocation,
-    labelStyle: {opacity: 0.75}
+    labelStyle: {font-weight: bold;}
   });
 
   <%- if current_user.curScore < 100 -%>
@@ -195,16 +195,11 @@ function createBomb() {
     });
     infoWindow.open(map, marker);
   <%- end -%>
-  /*google.maps.event.addListener(marker, "dragend", function() {
+  google.maps.event.addListener(marker, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
     var bombTime = 1000 * <%= clientCalcDuration %>;
-    var bomb = new google.maps.Marker({
-      position: this.getPosition(),
-      map: map,
-      title: bombTime.toString(),
-      zIndex: 60000
-    });
-  });*/
+    marker.setContent(bombTime + "s");
+  });
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
     var bombLat1 = this.getPosition().lat();
