@@ -6,8 +6,15 @@
   html { height: 100% }
   body { height: 100%; margin: 0px; padding: 0px }
   #map_canvas { width:100%; height: 100% }
+  #lb { font: bold 0.6em Verdana; text-decoration: none; color: #444; }
+word-spacing: normal;
+text-align: left;
+letter-spacing: 0;
+line-height: 1.2em;
+font-size: 1em;}
 </style>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript">
 
 var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
@@ -34,12 +41,12 @@ function haversineDistance(lat1, lon1, lat2, lon2) {
   return d;
 }
 
-function createButton() {
+function createButton(html) {
   var controlDiv = document.createElement('DIV');
   controlDiv.style.padding = '5px';
-  controlDiv.innerHTML = "<a href='/game/restart'><img src='/images/restart.png'></a>";
+  controlDiv.innerHTML = html;
   controlDiv.style.display = "none";
-  map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(controlDiv);
   return controlDiv;
 }
 
@@ -56,9 +63,11 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setMapLocation();
-  var controlDiv = createButton();
+  var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' id='lb'><img src='/images/leaderboard.gif'><br>Leaderboard</a>");
+  leaderboardButton.style.display = "block";
+  var restartButton = createButton("<a href='/game/restart'><img src='/images/restart.png'></a>");
   <%- if current_user.deadtime -%>
-    controlDiv.style.display = "block";
+    restartButton.style.display = "block";
   <%- end -%>
 }
 
@@ -77,6 +86,7 @@ function tick(i) { // TODO(Jeff): optimization: if bomb will not explode within 
   //console.log("tick called: " + i + " with " + allBombs[i][2] + "ms remaining.");
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
+    allBombs[i][3].setOptions({labelContent: Math.round(allBombs[i][2] / 1000) + "s"});
     var tmpTime = allBombs[i][2];
     if (tmpTime > MAX_BOMB_TIME)
       tmpTime = MAX_BOMB_TIME;
@@ -98,12 +108,14 @@ function tick(i) { // TODO(Jeff): optimization: if bomb will not explode within 
 function placeBomb(location, i) {
   console.log("placing bomb at: " + location);
 
-  var bomb = new google.maps.Marker({
+  var bomb = new MarkerWithLabel({
     position: location,
     map: map,
     title: "Bomb",
     icon: "/images/litBomb.gif",
-    zIndex: 50000
+    zIndex: 50000,
+    labelAnchor: myLocation,
+    labelStyle: {opacity: 0.7}
   });
   var bombFallout = new google.maps.Circle({
     map: map,
@@ -153,7 +165,7 @@ function drawPlayer(i) {
   marker.info = allPlayers[i];
   google.maps.event.addListener(marker, 'click', function() {
     var playerInfoWindow = new google.maps.InfoWindow({
-      content: this.getTitle() + "<br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
+      content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
     });
     playerInfoWindow.open(map, this);
   });
@@ -176,20 +188,29 @@ function drawAllPlayers() {
 function createBomb() {
   console.log("creating bomb at: " + myLocation);
 
-  var marker = new google.maps.Marker({
+  var marker = new MarkerWithLabel({
     position: myLocation,
     map: map,
     title: "Drop this bomb anywhere!",
     icon: "/images/dragBomb.png",
     draggable: true,
-    zIndex: 100000
+    zIndex: 100000,
+    labelContent: "",
+    labelAnchor: myLocation,
+    labelStyle: {opacity: 0.7}
   });
+
   <%- if current_user.curScore < 100 -%>
     var infoWindow = new google.maps.InfoWindow({
       content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!"
     });
     infoWindow.open(map, marker);
   <%- end -%>
+  google.maps.event.addListener(marker, "dragend", function() {
+    var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
+    var displayedBombTime = Math.round(<%= clientCalcDuration %>);
+    this.setOptions({labelContent: displayedBombTime + "s"});
+  });
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
     var bombLat1 = this.getPosition().lat();
@@ -220,8 +241,9 @@ function gotPositionCallback(position) {
     pushData = new Image();
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
     console.log("your location has changed to (" + position.coords.latitude + "," + position.coords.longitude + ")");
-    // TODO(Jeff): change your location on the map
-    //window.location.reload(true);
+    myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    allPlayers[playerIndex][5].setPosition(myLocation);
+    // map.setCenter(myLocation); // maybe?
   });
 
   zOrderRotator();
