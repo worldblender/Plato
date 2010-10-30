@@ -194,7 +194,7 @@ function createBomb() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
     var bombTime = 1000 * <%= clientCalcDuration %>;
     alert(bombTime);
-  }
+  });
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
     var bombLat1 = this.getPosition().lat();
