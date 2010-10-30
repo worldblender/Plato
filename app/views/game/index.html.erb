@@ -8,6 +8,7 @@
   #map_canvas { width:100%; height: 100% }
 </style>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript">
 
 var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
@@ -176,21 +177,25 @@ function drawAllPlayers() {
 function createBomb() {
   console.log("creating bomb at: " + myLocation);
 
-  var marker = new google.maps.Marker({
+  var marker = new MarkerWithLabel({
     position: myLocation,
     map: map,
     title: "Drop this bomb anywhere!",
     icon: "/images/dragBomb.png",
     draggable: true,
-    zIndex: 100000
+    zIndex: 100000,
+    labelContent: "$425K",
+    labelAnchor: myLocation,
+    labelStyle: {opacity: 0.75}
   });
+
   <%- if current_user.curScore < 100 -%>
     var infoWindow = new google.maps.InfoWindow({
       content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!"
     });
     infoWindow.open(map, marker);
   <%- end -%>
-  google.maps.event.addListener(marker, "dragend", function() {
+  /*google.maps.event.addListener(marker, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
     var bombTime = 1000 * <%= clientCalcDuration %>;
     var bomb = new google.maps.Marker({
@@ -199,7 +204,7 @@ function createBomb() {
       title: bombTime.toString(),
       zIndex: 60000
     });
-  });
+  });*/
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
     var bombLat1 = this.getPosition().lat();
