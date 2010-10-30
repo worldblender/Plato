@@ -290,12 +290,17 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
-<div id="rules" class="white_content" onclick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';">Test
-foo
-yu
-erg
-er
-g
+<div id="rules" class="white_content" onclick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';">
+Welcome to <%= GAME_NAME %>!<br><br>
+Instructions:<br>
+1) You get one bomb at a time.<br>
+2) Drag it to where you want. The number underneath indicates how many seconds it will take to detonate if you light it.<br>
+3) Double click the bomb to light it.<br>
+4) The further away you drop a bomb, the longer it takes to detonate.<br>
+5) You start with 100hp and take damage the closer you are to an exploding bomb (even your own).<br>
+6) Move around in the (real) world to escape bombs.<br>
+7) A restart button appears when you die.<br>
+8) Whoever scores the most points by staying alive longest, wins.
 </div>
 <div id="fade" class="black_overlay"></div>
 
