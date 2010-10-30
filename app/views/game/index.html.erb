@@ -198,7 +198,7 @@ function createBomb() {
   google.maps.event.addListener(marker, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
     var bombTime = 1000 * <%= clientCalcDuration %>;
-    marker.setContent(bombTime + "s");
+    this.setContent(bombTime + "s");
   });
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
