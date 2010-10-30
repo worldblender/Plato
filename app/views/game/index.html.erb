@@ -91,7 +91,7 @@ function initialize() {
   <%- if current_user.deadtime -%>
     restartButton.style.display = "block";
   <%- end -%>
-  <%- current_user.curScore and (current_user.top_score == nil or current_user.top_score < 10) and current_user.curScore < 10 -%>
+  <%- if current_user.curScore and (current_user.top_score == nil or current_user.top_score < 10) and current_user.curScore < 10 -%>
     showRules();
   <%- end -%>
 }
