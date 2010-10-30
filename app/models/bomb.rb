@@ -55,5 +55,5 @@ class Bomb < ActiveRecord::Base
     end
   end
 
-  scope :explodeBefore, lambda{|endTime| where(["detonatetime < ?",endTime],:did_explode => [false,nil])}
+  scope :explodeBefore, lambda{|endTime| where(["detonatetime < (?)",endTime],:did_explode => [false,nil])}
 end
