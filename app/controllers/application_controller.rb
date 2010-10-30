@@ -7,17 +7,14 @@ class ApplicationController < ActionController::Base
     # explode the bombs which need to explode, and kill ppl caught in the radius
     curTime = DateTime.now
     puts "LR" + @@lastResolve.to_s + " CT" + curTime.to_s
-    if(@@lastResolve == nil || curTime-@@lastResolve > 5.seconds)
-      puts "Resolving..."
-      if @@lastResolve == nil
-        @@lastResolve = curTime - 1.day
-      end
-      explodingBombs = Bomb.explodeDurring(@@lastResolve,curTime)
-      @@lastResolve = curTime
-      explodingBombs.each do |bomb|
-        # select all users in range of this bomb who are alive and kill them
-        bomb.explode(curTime)
-      end
+    if @@lastResolve == nil
+      @@lastResolve = curTime - 1.day # TODO(jeff): hack
+    end
+    explodingBombs = Bomb.explodeDurring(@@lastResolve,curTime)
+    @@lastResolve = curTime
+    explodingBombs.each do |bomb|
+      # select all users in range of this bomb who are alive and kill them
+      bomb.explode(curTime)
     end
   end
 end
