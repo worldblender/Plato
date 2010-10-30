@@ -14,10 +14,8 @@ class ApplicationController < ActionController::Base
       @@lastResolve = curTime
       explodingBombs.each do |bomb|
         # select all users in range of this bomb who are alive and kill them
-        if bomb.did_explode == false
+        if bomb.did_explode == false || bomb.did_explode == nil
           bomb.explode(curTime)
-          bomb.did_explode = true
-          bomb.save
         end
       end
     end
