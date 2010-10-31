@@ -86,6 +86,7 @@ function initialize() {
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' id='lb'><img src='/images/leaderboard.gif'><br>Leaderboard</a>");
   leaderboardButton.style.display = "block";
   var rulesButton = createButton("<a href='void(0);' onclick='showRules()'><img src='/images/rules.jpg'></a>");
+  rulesButton.style.display = "block";
   var restartButton = createButton("<a href='/game/restart'><img src='/images/restart.png'></a>");
   <%- if current_user.deadtime -%>
     restartButton.style.display = "block";
