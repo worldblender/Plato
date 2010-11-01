@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101205731) do
+ActiveRecord::Schema.define(:version => 20101101212655) do
 
   create_table "bombs", :force => true do |t|
     t.float    "latitude"
@@ -60,6 +60,7 @@ ActiveRecord::Schema.define(:version => 20101101205731) do
     t.integer  "top_score"
     t.float    "hp"
     t.string   "notifio_account"
+    t.boolean  "notifio_configured"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

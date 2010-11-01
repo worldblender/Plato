@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  require 'notifo'
   acts_as_mappable :default_units => :kms,
                    :default_formula => :sphere,
                    :distance_field_name => :distance,
@@ -57,14 +58,22 @@ class User < ActiveRecord::Base
     return self.phone != nil
   end
 
+  def acceptNotifo?
+    return self.notifo_account != nil
+  end
+
   def notify(textMessage,title = 'Game notification from ' + GAME_NAME)
     puts("called with " + textMessage + " as my data")
     if self.acceptText?
       # send a text message
       sendText(textMessage,self)
     else
-      # send an email
-      Dmailer.send_text(textMessage,self.id,title).deliver
+      if self.acceptNotifo?
+        sendNotifo(textMessage,self)
+      else
+        # send an email
+        Dmailer.send_text(textMessage,self.id,title).deliver
+      end
     end
   end
 
@@ -97,6 +106,15 @@ class User < ActiveRecord::Base
     self.deadtime = nil
     self.createtime = DateTime.now
     self.save
+  end
+
+  def sendNotifo(message, recipient)
+    notifo = Notifo.new("wargames", "a83e0a7f7bd18ef712b4776dac84b6f55de7254f")
+    if(recipient.notifo_configured == nil || recipient.notifo_configured == false)
+      notifo.subscribe_user(recipient.notifo_account)
+    end
+    notifo.post(recipient.notifo_account,message)
+    #notifo.verify_webhook_signature(post_params_hash)
   end
 
   def sendText(message,recipient)
