@@ -13,11 +13,6 @@ class Bomb < ActiveRecord::Base
     self.save
   end
 
-  def calculateDuration
-    distance = self.distance_from(User.find(self.owner_id), :units => :kms) * 1000
-    time = (-VELOCITY+Math.sqrt(VELOCITY*VELOCITY+2*ACCELERATION*distance))/(ACCELERATION)
-    return time
-  end
 
   def isExploded?
     if self.did_explode == nil || self.did_explode == false
