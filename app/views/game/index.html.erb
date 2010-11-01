@@ -49,7 +49,7 @@ var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
 var allBombs = [<%- @bombs.each do |bomb| -%>
-  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>],<%- end -%>
+  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, <%= User.where(:id => bomb.owner_id).name %>],<%- end -%>
 <%- end -%>];
 
 function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -145,6 +145,7 @@ function placeBomb(location, i) {
     labelAnchor: myLocation,
     labelStyle: { opacity: 0.8 }
   });
+  bomb.owner = allBombs[i][5];
   // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
   var bombFallout = new google.maps.Circle({
     map: map,
@@ -158,6 +159,14 @@ function placeBomb(location, i) {
   });
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
+
+  google.maps.event.addListener(bomb, 'click', function() {
+    var bombInfoWindow = new google.maps.InfoWindow({
+      content: this.owner
+    });
+    bombInfoWindow.open(map, this);
+  });
+
   tick(i);
 }
 
