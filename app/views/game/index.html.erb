@@ -162,7 +162,7 @@ function placeBomb(location, i) {
 
   google.maps.event.addListener(bomb, 'click', function() {
     var bombInfoWindow = new google.maps.InfoWindow({
-      content: this.owner
+      content: this.owner + "'s bomb"
     });
     bombInfoWindow.open(map, this);
   });
