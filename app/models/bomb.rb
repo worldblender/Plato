@@ -7,7 +7,6 @@ class Bomb < ActiveRecord::Base
                    :lat_column_name => :latitude,
                    :lng_column_name => :longitude
   def setDuration
-    self.owner_id = User.where(:bomb_id => self.id).first.id
     self.duration = serverCalcDuration(self.distance_from(User.find(self.owner_id), :units => :kms) * 1000)
     self.detonatetime = self.createtime + self.duration.seconds
     self.save
