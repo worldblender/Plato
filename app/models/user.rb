@@ -59,7 +59,7 @@ class User < ActiveRecord::Base
   end
 
   def acceptNotifo?
-    return self.notifo_account != nil
+    return self.notifio_account != nil
   end
 
   def notify(textMessage,title = 'Game notification from ' + GAME_NAME)
@@ -111,9 +111,9 @@ class User < ActiveRecord::Base
   def sendNotifo(message, recipient)
     notifo = Notifo.new("wargames", "a83e0a7f7bd18ef712b4776dac84b6f55de7254f")
     if(recipient.notifo_configured == nil || recipient.notifo_configured == false)
-      notifo.subscribe_user(recipient.notifo_account)
+      notifo.subscribe_user(recipient.notifio_account)
     end
-    notifo.post(recipient.notifo_account,message)
+    notifo.post(recipient.notifio_account,message)
     #notifo.verify_webhook_signature(post_params_hash)
   end
 
