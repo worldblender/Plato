@@ -83,11 +83,11 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setMapLocation();
-  var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' id='lb'><img src='/images/leaderboard.gif'><br>Leaderboard</a>");
+  var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores' id='lb'><img src='/images/leaderboard.gif'><br>Top Scores</a>");
   leaderboardButton.style.display = "block";
-  var rulesButton = createButton("<a href='@' onclick='showRules(); return false'><img src='/images/rules.jpg'></a>");
+  var rulesButton = createButton("<a href='#' title='Show Rules' onclick='showRules(); return false'><img src='/images/rules.jpg'></a>");
   rulesButton.style.display = "block";
-  var restartButton = createButton("<a href='/game/restart'><img src='/images/restart.png'></a>");
+  var restartButton = createButton("<a href='/game/restart' title='Restart Game'><img src='/images/restart.png'></a>");
   <%- if current_user.deadtime -%>
     restartButton.style.display = "block";
   <%- end -%>
@@ -143,7 +143,7 @@ function placeBomb(location, i) {
     icon: "/images/litBomb.gif",
     zIndex: 50000,
     labelAnchor: myLocation,
-    labelStyle: {opacity: 0.7}
+    labelStyle: { opacity: 0.8 }
   });
   var bombFallout = new google.maps.Circle({
     map: map,
