@@ -108,15 +108,18 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def sendNotifo(message, recipient)
-    notifo = Notifo.new("wargames", "a83e0a7f7bd18ef712b4776dac84b6f55de7254f")
-    if(recipient.notifio_configured == nil || recipient.notifio_configured == false)
-      notifo.subscribe_user(recipient.notifio_account)
-      recipient.notifio_configured = true
+  def notifoSibscribe(notifo_object)
+    if(recipient.notifo_configured == nil || recipient.notifo_configured == false)
+      notifo_object.subscribe_user(recipient.notifo_account)
+      recipient.notifo_configured = true
       recipient.save
     end
-    notifo.post(recipient.notifio_account,message)
-    #notifo.verify_webhook_signature(post_params_hash)
+  end
+
+  def sendNotifo(message, recipient)
+    notifo = Notifo.new("wargames", "a83e0a7f7bd18ef712b4776dac84b6f55de7254f")
+    self.notifoSibscribe(notifo)
+    notifo.post(recipient.notifo_account,message)
   end
 
   def sendText(message,recipient)
