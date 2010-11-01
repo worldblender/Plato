@@ -265,7 +265,7 @@ function gotPositionCallback(position) {
   drawPlayer(playerIndex);
 
   var watchId = navigator.geolocation.watchPosition(function(position) {
-    console.log("position: " + position.coords.latitude + ',' + position.coords.longitude + '; myLocation: ' + myLocation.lat() + ', ' + myLocation.lat());
+    console.log("position: " + position.coords.latitude + ',' + position.coords.longitude + '; myLocation: ' + myLocation.lat() + ', ' + myLocation.lng());
   	if (myLocation.lat() == position.coords.latitude && myLocation.lng() == position.coords.longitude)
   	  return;
     pushData = new Image();
