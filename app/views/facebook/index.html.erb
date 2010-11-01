@@ -49,7 +49,8 @@
         <td><%= user.hp %></td>
         <td><%= sprintf("%.1f seconds",serverCalcDuration(current_user.distance_from(user, :units => :kms)*1000)) %></td>
       </tr>
-    <%end %>
+        <%end %>
     <% end %>
   </table>
-<% end %>
+  <%= link_to "Game", :controller => "game", :action => "index" %>
+  <% end %>
