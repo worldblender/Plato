@@ -256,6 +256,8 @@ function gotPositionCallback(position) {
   drawPlayer(playerIndex);
 
   var watchId = navigator.geolocation.watchPosition(function(position) {
+  	if (myLocation.lat() == position.coords.latitude && myLocation.long() == position.coords.longitude)
+  	  return;
     pushData = new Image();
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
