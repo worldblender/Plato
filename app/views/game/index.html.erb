@@ -49,7 +49,7 @@ var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
 var allBombs = [<%- @bombs.each do |bomb| -%>
-  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.where(:id => bomb.owner_id).name %>"],<%- end -%>
+  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.where(:id => bomb.owner_id).first.name %>"],<%- end -%>
 <%- end -%>];
 
 function haversineDistance(lat1, lon1, lat2, lon2) {
