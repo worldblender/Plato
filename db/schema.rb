@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101029231741) do
+ActiveRecord::Schema.define(:version => 20101101204136) do
 
   create_table "bombs", :force => true do |t|
     t.float    "latitude"
@@ -22,6 +22,19 @@ ActiveRecord::Schema.define(:version => 20101029231741) do
     t.float    "duration"
     t.integer  "owner_id"
     t.boolean  "did_explode",  :default => false
+  end
+
+  create_table "event_types", :force => true do |t|
+    t.string   "event_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "events", :force => true do |t|
+    t.integer  "event_type"
+    t.string   "data"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "users", :force => true do |t|
