@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  event_type: 1
+  data: MyString
+
+two:
+  event_type: 1
+  data: MyString

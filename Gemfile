@@ -10,6 +10,7 @@ gem 'oauth2', :require => 'oauth2'
 gem 'devise', :git => 'git://github.com/plataformatec/devise.git'
 gem 'geokit-rails3'
 gem 'twiliolib', :require => 'twiliolib'
+gem 'notifo'
 
 # Use unicorn as the web server
 # gem 'unicorn'
