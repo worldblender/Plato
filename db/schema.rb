@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(:version => 20101101212655) do
     t.string   "phone"
     t.integer  "top_score"
     t.float    "hp"
-    t.string   "notifio_account"
-    t.boolean  "notifio_configured"
+    t.string   "notifo_account"
+    t.boolean  "notifo_configured"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
