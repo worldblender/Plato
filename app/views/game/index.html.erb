@@ -143,7 +143,7 @@ function placeBomb(location, i) {
     title: "Bomb",
     icon: "/images/litBomb.gif",
     zIndex: 50000,
-    labelAnchor: myLocation,
+    labelAnchor: myLocation
   });
   bomb.owner = allBombs[i][5];
   // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
@@ -224,8 +224,7 @@ function createBomb() {
     draggable: true,
     zIndex: 100000,
     labelContent: "",
-    labelAnchor: myLocation,
-    labelStyle: {opacity: 0.7}
+    labelAnchor: myLocation
   });
 
   <%- if current_user.curScore < 100 -%>
