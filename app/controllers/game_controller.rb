@@ -1,5 +1,6 @@
 class GameController < ApplicationController
   include BombsHelper
+  include ApplicationHelper
   def index
     @bombs = Bomb.all
     @players = User.all
