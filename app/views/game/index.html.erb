@@ -291,7 +291,7 @@ function setMapLocation() {
 function savePhone(t) {
   t.disabled = true;
   pushData = new Image();
-  pushData.src = '/game/savePhone?num=' + document.getElementById('phone');
+  pushData.src = '/game/savePhone?num=' + document.getElementById('phone').value;
   t.value = "Saved";
 }
 
