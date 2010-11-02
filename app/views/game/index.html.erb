@@ -95,19 +95,6 @@ function initialize() {
   <%- if current_user.curScore and (current_user.top_score == nil or current_user.top_score < 10) and current_user.curScore < 10 -%>
     showRules();
   <%- end -%>
-  setTimeout("hideCopyright()", 1000);
-}
-
-function hideCopyright() {
-  // currently not used
-  console.log('hideCopyright called');
-  var logo = document.getElementById("map_canvas").firstChild.firstChild.nextSibling;
-  if (!logo) {
-    setTimeout("hideCopyright()", 1000);
-    return;
-  }
-  logo.style.display = "none";
-  logo.nextSibling.style.display = "none";
 }
 
 function showRules() {
