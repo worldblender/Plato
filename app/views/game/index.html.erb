@@ -288,11 +288,11 @@ function setMapLocation() {
   }
 }
 
-function savePhone() {
-  this.disabled = true;
+function savePhone(t) {
+  t.disabled = true;
   pushData = new Image();
   pushData.src = '/game/savePhone?num=' + document.getElementById('phone');
-  this.value = "Saved";
+  t.value = "Saved";
 }
 
 window.onload = initialize;
@@ -310,7 +310,7 @@ Instructions:<br>
 5) Move around in the (real) world to escape bombs.<br>
 6) Scores points by staying alive.<br>
 <br>
-Enter your phone number to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone()">
+Enter your phone number to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone(this)">
 <br><br>
 <input type="button" value="Continue" onClick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';">
 </div>
