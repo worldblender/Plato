@@ -35,4 +35,9 @@ class GameController < ApplicationController
     event(:type => 'move', :data => 'lat: ' + current_user.latitude.to_s + '; long: ' + current_user.longitude.to_s + '; id:' + current_user.id.to_s + ';')
     current_user.save
   end
+
+  def savePhone
+    current_user.phone = params[:num]
+    current_user.save
+  end
 end

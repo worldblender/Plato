@@ -74,7 +74,7 @@ function createButton(html) {
 function initialize() {
   var mapOptions = {
     zoom: 16,
-    mapTypeId: google.maps.MapTypeId.TERRAIN,
+    mapTypeId: google.maps.MapTypeId.SATELLITE,
     navigationControl: false,
     mapTypeControl: false,
     streetViewControl: false
@@ -288,6 +288,13 @@ function setMapLocation() {
   }
 }
 
+function savePhone() {
+  this.disabled = true;
+  pushData = new Image();
+  pushData.src = '/game/savePhone?num=' + document.getElementById('phone');
+  this.value = "Saved";
+}
+
 window.onload = initialize;
 </script>
 <% end %>
@@ -302,6 +309,8 @@ Instructions:<br>
 4) Being near an exploding bomb (even your own) will damage you.<br>
 5) Move around in the (real) world to escape bombs.<br>
 6) Scores points by staying alive.<br>
+<br>
+Enter your phone number to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone()">
 <br>
 Click anywhere to continue.
 </div>

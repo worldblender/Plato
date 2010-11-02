@@ -1,13 +1,13 @@
 Plato::Application.routes.draw do
   get "facebook/index"
 
-
   devise_for :users
 
   get "game/index"
   get "game/dropBomb"
   get "game/playerMoved"
   get "game/restart"
+  get "game/savePhone"
 
   resources :users
 
