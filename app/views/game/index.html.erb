@@ -300,7 +300,7 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
-<div id="rules" class="white_content" onclick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';">
+<div id="rules" class="white_content">
 Welcome to <%= GAME_NAME %>!<br><br>
 Instructions:<br>
 1) You get one bomb at a time. Drag it to where you want.<br>
@@ -311,8 +311,8 @@ Instructions:<br>
 6) Scores points by staying alive.<br>
 <br>
 Enter your phone number to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone()">
-<br>
-Click anywhere to continue.
+<br><br>
+<input type="button" value="Continue" onClick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';">
 </div>
 <div id="fade" class="black_overlay"></div>
 <%- end -%>
