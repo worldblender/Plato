@@ -83,6 +83,7 @@ class User < ActiveRecord::Base
     if(self.top_score == nil || self.top_score < thisScore)
       self.top_score = thisScore
     end
+    event(:type => 'die', :data => 'lat: ' + self.latitude.to_s + '; long: ' + self.longitude.to_s + '; id:' + self.id + ';');
     self.deadtime = curTime
     self.save
   end
@@ -105,6 +106,7 @@ class User < ActiveRecord::Base
     self.bomb_id = nil
     self.deadtime = nil
     self.createtime = DateTime.now
+    event(:type => 'respawn', :data => 'lat: ' + self.latitude.to_s + '; long: ' + self.longitude.to_s + '; id:' + self.id + ';')
     self.save
   end
 

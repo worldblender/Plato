@@ -26,6 +26,11 @@ class Bomb < ActiveRecord::Base
     self.usersInRange.each do |user|
       damage = damageFor(self.distance_from(user, :units => :kms))
       user.hitWith(damage)
+      if user.hp <= 0
+        event(:type => 'kill', :data => 'lat: ' + self.latitude.to_s + '; long: ' + self.longitude.to_s + '; target_id: ' + user.id + '; bomb_id: ' + self.id + ';');
+      else
+        event(:type => 'hit', :data => damage.to_s + '; hp: ' + user.hp.to_s + '; lat: ' + user.latitude.to_s + '; long: ' + user.longitude.to_s + '; target_id:' + user.id + '; bomb_id: ' + self.id + ';')
+      end
       user.notify(sprintf("You just got hit by a bomb which was thrown by %s.  This did %d damage to you and you now have %d hitpoints left", User.find(self.owner_id).name, damage, user.hp))
     end
     self.did_explode=true

@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(:version => 20101101212655) do
 
   create_table "events", :force => true do |t|
     t.integer  "event_type"
-    t.string   "data"
+    t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
