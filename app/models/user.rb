@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
     self.bomb_id = nil
     self.deadtime = nil
     self.createtime = DateTime.now
-    event(:type => 'respawn', :data => 'lat: ' + self.latitude.to_s + '; long: ' + self.longitude.to_s + '; id:' + self.id.to_s + ';')
+    event({:type => 'respawn', :data => 'lat: ' + self.latitude.to_s + '; long: ' + self.longitude.to_s + '; id:' + self.id.to_s + ';'})
     self.save
   end
 
