@@ -3,7 +3,7 @@ BOMB_TIME = 30 # seconds to explode a bomb
 RAD_PER_DEG = 0.017453293  # pi/180
 Rkm = 6371
 Rmeters = Rkm * 1000     # radius in meters
-GAME_NAME = 'Scorched World'
+GAME_NAME = 'Wargames'
 USER_HITPOINTS = 100
 
 #Twillio tokens
