@@ -60,7 +60,7 @@ class User < ActiveRecord::Base
   end
 
   def acceptNotifo?
-    return self.notifio_account != nil
+    return self.notifo_account != nil
   end
 
   def notify(textMessage,title = 'Game notification from ' + GAME_NAME)
