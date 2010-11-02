@@ -282,7 +282,7 @@ function gotPositionCallback(position) {
 
 function setMapLocation() {
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(gotPositionCallback);
+    navigator.geolocation.getCurrentPosition(gotPositionCallback); // TODO(jeff): catch on error
   } else {
     alert("Your browser does not support geolocation. Please try a different browser.");
   }
