@@ -23,10 +23,10 @@
 .white_content {
 	display: none;
 	position: absolute;
-	top: 15%;
-	left: 15%;
-	width: 70%;
-	height: 70%;
+	top: 7%;
+	left: 7%;
+	width: 80%;
+	height: 80%;
 	padding: 6px;
 	border: 6px solid orange;
 	background-color: white;
@@ -300,7 +300,6 @@ window.onload = initialize;
 
 <div id="map_canvas"></div>
 <div id="rules" class="white_content">
-Welcome to <%= GAME_NAME %>!<br><br>
 Instructions:<br>
 1) You get one bomb at a time. Drag it to where you want.<br>
 2) Double click the bomb to light it.<br>
@@ -309,7 +308,7 @@ Instructions:<br>
 5) Move around in the (real) world to escape bombs.<br>
 6) Scores points by staying alive.<br>
 <br>
-Enter your phone number to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone(this)">
+Enter your phone # to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone(this)">
 <br><br>
 <input type="button" value="Continue" onClick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';">
 </div>
