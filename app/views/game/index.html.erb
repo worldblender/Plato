@@ -229,7 +229,7 @@ function createBomb() {
   <%- if current_user.curScore < 100 -%>
     var infoWindow = new google.maps.InfoWindow({
       content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
-      maxWidth: 300
+      maxWidth: 250
     });
     infoWindow.open(map, marker);
   <%- end -%>
