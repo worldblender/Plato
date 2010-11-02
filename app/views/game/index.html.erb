@@ -156,6 +156,8 @@ function placeBomb(location, i) {
     strokeWeight: 2,
     radius: BOMB_RADIUS
     });
+  var canvas_context=document.getElemtnById("bombpathcanvas").getContext('2d');
+  canvas_context.fillRect(50,25,150,100);
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
 
@@ -298,7 +300,9 @@ window.onload = initialize;
 </script>
 <% end %>
 
-<div id="map_canvas"></div>
+<div id="map_canvas">
+  <canvas id="bombpathcanvas" width="300" height="225"></canvas>
+</div>
 <div id="rules" class="white_content">
 Welcome to <%= GAME_NAME %>!<br><br>
 Instructions:<br>
