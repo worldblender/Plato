@@ -111,7 +111,7 @@ class User < ActiveRecord::Base
     self.save
   end
 
-  def notifoSibscribe(notifo_object)
+  def notifoSubscribe(notifo_object, recipient)
     if(recipient.notifo_configured == nil || recipient.notifo_configured == false)
       notifo_object.subscribe_user(recipient.notifo_account)
       recipient.notifo_configured = true
@@ -121,7 +121,7 @@ class User < ActiveRecord::Base
 
   def sendNotifo(message, recipient)
     notifo = Notifo.new("wargames", "a83e0a7f7bd18ef712b4776dac84b6f55de7254f")
-    self.notifoSibscribe(notifo)
+    self.notifoSubscribe(notifo, recipient)
     notifo.post(recipient.notifo_account,message)
   end
 
