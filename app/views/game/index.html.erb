@@ -49,7 +49,7 @@ var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
 var allBombs = [<%- @bombs.each do |bomb| -%>
-  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.where(:id => bomb.owner_id).first.name %>"],<%- end -%>
+  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
 <%- end -%>];
 
 function haversineDistance(lat1, lon1, lat2, lon2) {
@@ -156,7 +156,7 @@ function placeBomb(location, i) {
     strokeOpacity: 0.8,
     strokeWeight: 2,
     radius: BOMB_RADIUS
-  });
+    });
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
 

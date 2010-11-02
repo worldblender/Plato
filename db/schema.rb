@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101101212655) do
+ActiveRecord::Schema.define(:version => 20101102231803) do
 
   create_table "bombs", :force => true do |t|
     t.float    "latitude"
@@ -22,6 +22,8 @@ ActiveRecord::Schema.define(:version => 20101101212655) do
     t.float    "duration"
     t.integer  "owner_id"
     t.boolean  "did_explode",  :default => false
+    t.float    "srcLat"
+    t.float    "srcLng"
   end
 
   create_table "event_types", :force => true do |t|
@@ -32,7 +34,7 @@ ActiveRecord::Schema.define(:version => 20101101212655) do
 
   create_table "events", :force => true do |t|
     t.integer  "event_type"
-    t.text     "data"
+    t.string   "data"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -59,8 +61,8 @@ ActiveRecord::Schema.define(:version => 20101101212655) do
     t.string   "phone"
     t.integer  "top_score"
     t.float    "hp"
-    t.string   "notifo_account"
-    t.boolean  "notifo_configured"
+    t.string   "notifio_account"
+    t.boolean  "notifio_configured"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
