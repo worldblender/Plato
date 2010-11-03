@@ -77,7 +77,7 @@ function drawHTML5() {
   var div = document.createElement("div");
   div.style.position = "absolute";
   div.innerHTML = "<div><canvas id='test' width='150' height='150'></canvas></div>";
-  p = map.fromLatLngToDivPixel(map.center());
+  p = map.fromLatLngToDivPixel(map.getCenter());
   div.style.left = p.x+'px';
   div.style.top = p.y+'px';
   map.floatPane.appendChild(div);
