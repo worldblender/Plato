@@ -114,7 +114,7 @@ function zOrderRotator() {
 function tick(i) {
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
-    allBombs[i][3].setOptions({labelContent: Math.round(allBombs[i][2] / 1000) + "s"});
+    allBombs[i][3].setOptions({labelContent: Math.round(allBombs[i][2] / 1000)});
     var tmpTime = allBombs[i][2];
     if (tmpTime > MAX_BOMB_TIME) {
       tmpTime = MAX_BOMB_TIME;
@@ -234,7 +234,7 @@ function createBomb() {
   google.maps.event.addListener(marker, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
     var displayedBombTime = Math.round(<%= clientCalcDuration %>);
-    this.setOptions({labelContent: displayedBombTime + "s"});
+    this.setOptions({labelContent: displayedBombTime});
   });
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
