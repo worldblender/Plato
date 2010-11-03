@@ -5,7 +5,6 @@
   html { height: 100% }
   body { height: 100%; margin: 0px; padding: 0px; font-family: Verdana; font-size: 0.7em }
   #map_canvas { width:80%; height: 80% }
-  #lb { font: bold 0.6em Verdana; text-decoration: none; color: #444; }
 .black_overlay {
 	display: none;
 	position: absolute;
@@ -88,8 +87,8 @@ function createButton(html) {
 
 function initialize() {
   var mapOptions = {
-    zoom: 16,
-    mapTypeId: google.maps.MapTypeId.SATELLITE,
+    zoom: 14,
+    mapTypeIds: [google.maps.MapTypeId.TERRAIN, "platoMap"],
     navigationControl: true,
     navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
     mapTypeControl: false,
@@ -99,7 +98,7 @@ function initialize() {
   drawAllPlayers();
   drawAllBombs();
   setMapLocation();
-  var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores' id='lb'><img src='/images/leaderboard.gif'></a>");
+  var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.gif'></a>");
   leaderboardButton.style.display = "block";
   var rulesButton = createButton("<a href='#' title='Show Rules' onclick='showRules(); return false'><img src='/images/rules.png'></a>");
   rulesButton.style.display = "block";
@@ -110,6 +109,81 @@ function initialize() {
   <%- if current_user.curScore and (current_user.top_score == nil or current_user.top_score < 10) and current_user.curScore < 10 -%>
     showRules();
   <%- end -%>
+  mapTypeExperiment();
+}
+
+function mapTypeExperiment() {
+  var platoMapStyles = [
+  {
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      { visibility: "simplified" },
+      { hue: "#f6ff00" },
+      { gamma: 0.38 }
+    ]
+  },{
+    featureType: "water",
+    elementType: "all",
+    stylers: [
+      { lightness: 36 }
+    ]
+  },{
+    featureType: "road.highway",
+    elementType: "all",
+    stylers: [
+      { visibility: "simplified" },
+      { gamma: 0.76 }
+    ]
+  },{
+    featureType: "all",
+    elementType: "labels",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "road.local",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "transit",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "administrative",
+    elementType: "labels",
+    stylers: [
+      { visibility: "on" },
+      { gamma: 0.39 },
+      { lightness: -4 },
+      { saturation: 100 }
+    ]
+  },{
+    featureType: "landscape.man_made",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "all",
+    elementType: "all",
+    stylers: [
+      { invert_lightness: true }
+    ]
+  },{
+    featureType: "poi",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  }];
+  var platoMap = new google.maps.StyledMapType(platoMapStyles, {name: "Plato Style" });
+  map.mapTypes.set('platoMap', platoMap);
+  map.setMapTypeId('platoMap');
 }
 
 function showRules() {
@@ -131,7 +205,7 @@ function zOrderRotator() {
 function tick(i) {
   if (allBombs[i][2] > 0) {
     allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
-    allBombs[i][3].setOptions({labelContent: Math.round(allBombs[i][2] / 1000) + "s"});
+    allBombs[i][3].setOptions({labelContent: Math.round(allBombs[i][2] / 1000)});
     var tmpTime = allBombs[i][2];
     if (tmpTime > MAX_BOMB_TIME) {
       tmpTime = MAX_BOMB_TIME;
@@ -229,7 +303,6 @@ function drawAllPlayers() {
       playerIndex = i;
       continue;
     }
-
     drawPlayer(i);
   }
 }
@@ -238,7 +311,7 @@ function createBomb() {
   var marker = new MarkerWithLabel({
     position: myLocation,
     map: map,
-    title: "Drop this bomb anywhere!",
+    title: "You bomb",
     icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000,
@@ -256,7 +329,7 @@ function createBomb() {
   google.maps.event.addListener(marker, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
     var displayedBombTime = Math.round(<%= clientCalcDuration %>);
-    this.setOptions({labelContent: displayedBombTime + "s"});
+    this.setOptions({labelContent: displayedBombTime});
   });
   google.maps.event.addListener(marker, "dblclick", function() {
     this.setMap(null);
