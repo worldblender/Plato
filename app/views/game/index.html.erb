@@ -54,6 +54,7 @@ var allPlayers = [<%- @players.each do |user| -%>
 var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
 <%- end -%>];
+var bombPathOverlay;
 function haversineDistance(lat1, lon1, lat2, lon2) {
   var R = 6371 * 1000; // meters;
   var dLat = (lat2-lat1) * Math.PI / 180;
@@ -73,15 +74,75 @@ function createButton(html) {
   return b;
 }
 
-function drawHTML5() {
-  var div = document.createElement("div");
+BombPathOverlay.prototype = new google.maps.OverlayView();
+
+function BombPathOverlay(bounds, map) {
+
+  // Now initialize all properties.
+  this.bounds_ = bounds;
+  this.map_ = map;
+
+  // We define a property to hold the image's
+  // div. We'll actually create this div
+  // upon receipt of the add() method so we'll
+  // leave it null for now.
+  this.div_ = null;
+
+  // Explicitly call setMap() on this overlay
+  this.setMap(map);
+}
+
+BombPathOverlay.prototype.draw = function() {
+
+  // Size and position the overlay. We use a southwest and northeast
+  // position of the overlay to peg it to the correct position and size.
+  // We need to retrieve the projection from this overlay to do this.
+  var overlayProjection = this.getProjection();
+
+  // Retrieve the southwest and northeast coordinates of this overlay
+  // in latlngs and convert them to pixels coordinates.
+  // We'll use these coordinates to resize the DIV.
+  var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+  var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+
+  // Resize the image's DIV to fit the indicated dimensions.
+  var div = this.div_;
+  div.style.left = sw.x + 'px';
+  div.style.top = ne.y + 'px';
+  div.style.width = (ne.x - sw.x) + 'px';
+  div.style.height = (sw.y - ne.y) + 'px';
+  drawHTML5();
+}
+
+BombPathOverlay.prototype.onAdd = function() {
+
+  // Note: an overlay's receipt of onAdd() indicates that
+  // the map's panes are now available for attaching
+  // the overlay to the map via the DOM.
+
+  // Create the DIV and set some basic attributes.
+  var div = document.createElement('DIV');
+  div.style.border = "none";
+  div.style.borderWidth = "0px";
   div.style.position = "absolute";
   div.innerHTML = "<div><canvas id='test' width='150' height='150'></canvas></div>";
-  p = map.fromLatLngToDivPixel(map.getCenter());
-  div.style.left = p.x+'px';
-  div.style.top = p.y+'px';
-  map.floatPane.appendChild(div);
 
+  // Create an IMG element and attach it to the DIV.
+  img.src = this.image_;
+  img.style.width = "100%";
+  img.style.height = "100%";
+  div.appendChild(img);
+
+  // Set the overlay's div_ property to this DIV
+  this.div_ = div;
+
+  // We add an overlay to a map via one of the map's panes.
+  // We'll add this overlay to the overlayImage pane.
+  var panes = this.getPanes();
+  panes.overlayLayer.appendChild(div);
+}
+
+functino drawHTML5() {
   var canvas=document.getElementById('test');
   if(canvas.getContext)
   {
@@ -91,6 +152,10 @@ function drawHTML5() {
     ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
     ctx.fillRect (30, 30, 55, 50);
   }
+}
+
+function addOverlay() {
+  overlay = new BombPathOverlay(map.getBounds(), map);
 }
 
 function initialize() {
