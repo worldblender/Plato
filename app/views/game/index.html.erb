@@ -73,8 +73,15 @@ function createButton(html) {
 }
 
 function drawHTML5() {
-  canvas=$('#bombpathcanvas').getContext('2d');
-  canvas.fillRect(50, 25, 150, 100);
+  var canvas=document.getElementById('tutorial');
+  if(canvas.getContext())
+  {
+    var ctx = canvas.getContext('2d');
+    ctx.fillStyle = "rgb(200,0,0)";
+    ctx.fillRect (10, 10, 55, 50);
+    ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
+    ctx.fillRect (30, 30, 55, 50);
+  }
 }
 
 function initialize() {
@@ -383,7 +390,8 @@ window.onload = initialize;
 
 <div id="map_canvas"></div>
 <div id="temp">
-  <canvas id="bombpathcanvas" width="100" height="100"></canvas>
+  <canvas id="tutorial" width="150" height="150">
+  </canvas>
 </div>
 <div id="rules" class="white_content">
 Welcome to <%= GAME_NAME %>!<br><br>
