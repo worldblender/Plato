@@ -72,7 +72,7 @@ function createButton(html) {
 function initialize() {
   var mapOptions = {
     zoom: 16,
-    mapTypeId: google.maps.MapTypeId.SATELLITE,
+    mapTypeId: google.maps.MapTypeId.TERRAIN,
     navigationControl: true,
     navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
     mapTypeControl: false,
@@ -208,7 +208,6 @@ function drawAllPlayers() {
       playerIndex = i;
       continue;
     }
-
     drawPlayer(i);
   }
 }
@@ -217,7 +216,7 @@ function createBomb() {
   var marker = new MarkerWithLabel({
     position: myLocation,
     map: map,
-    title: "Drop this bomb anywhere!",
+    title: "You bomb",
     icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000,
