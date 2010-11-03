@@ -4,6 +4,6 @@ class AddNotifioToUsers < ActiveRecord::Migration
   end
 
   def self.down
-    remove_column :users, :notifo_account
+    remove_column :users, :notifio_account
   end
 end
