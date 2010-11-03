@@ -74,7 +74,7 @@ function createButton(html) {
 
 function drawHTML5() {
   var canvas=document.getElementById('tutorial');
-  if(canvas.getContext())
+  if(canvas.getContext)
   {
     var ctx = canvas.getContext('2d');
     ctx.fillStyle = "rgb(200,0,0)";
