@@ -139,7 +139,7 @@ function mapTypeExperiment() {
       { visibility: "off" }
     ]
   },{
-    featureType: "administrative.neighborhood",
+    featureType: "administrative",
     elementType: "labels",
     stylers: [
       { visibility: "on" },
@@ -147,6 +147,12 @@ function mapTypeExperiment() {
       { saturation: 100 },
       { gamma: 4.3 },
       { hue: "#0000ff" }
+    ]
+  },{
+    featureType: "landscape.man_made",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
     ]
   }];
   var platoMap = new google.maps.StyledMapType(platoMapStyles, {name: "Plato Style" });
