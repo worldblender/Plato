@@ -76,10 +76,9 @@ function createButton(html) {
 
 BombPathOverlay.prototype = new google.maps.OverlayView();
 
-function BombPathOverlay(bounds, map) {
+function BombPathOverlay(map) {
 
   // Now initialize all properties.
-  this.bounds_ = bounds;
   this.map_ = map;
 
   // We define a property to hold the image's
@@ -102,15 +101,15 @@ BombPathOverlay.prototype.draw = function() {
   // Retrieve the southwest and northeast coordinates of this overlay
   // in latlngs and convert them to pixels coordinates.
   // We'll use these coordinates to resize the DIV.
-  var sw = overlayProjection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-  var ne = overlayProjection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+  p = map.getCenter();
+  var p = overlayProjection.fromLatLngToDivPixel(map.getCenter());
 
   // Resize the image's DIV to fit the indicated dimensions.
   var div = this.div_;
-  div.style.left = sw.x + 'px';
-  div.style.top = ne.y + 'px';
-  div.style.width = (ne.x - sw.x) + 'px';
-  div.style.height = (sw.y - ne.y) + 'px';
+  div.style.left = p.x + 'px';
+  div.style.top = p.y + 'px';
+  div.style.width = 150 + 'px';
+  div.style.height = 150 + 'px';
   drawHTML5();
 }
 
@@ -155,7 +154,7 @@ function drawHTML5() {
 }
 
 function addOverlay() {
-  overlay = new BombPathOverlay(map.getBounds(), map);
+  overlay = new BombPathOverlay(map);
 }
 
 function initialize() {
