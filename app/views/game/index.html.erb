@@ -171,7 +171,7 @@ function placeBomb(location, i) {
     strokeWeight: 2,
     radius: BOMB_RADIUS
     });
-  var bombPath = new ELabel(map.getCenter(),'<canvas id="bombpathcanvas" width="100" height="100"><\/canvas>,null,new GSize(-50,50));
+  var bombPath = new ELabel(map.getCenter(),'<canvas id="bombpathcanvas" width="100" height="100"><\/canvas>',null,new GSize(-50,50));
   map.addOverlay(bombPath);
   canvas=document.getElemtnById("bombpathcanvas").getContext('2d');
   setInterval("rotBomb()",100);
