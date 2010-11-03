@@ -3,8 +3,8 @@
 
 <style type="text/css">
   html { height: 100% }
-  body { height: 100%; margin: 0px; padding: 0px; font-family: Verdana; font-size: 0.7em }
-  #map_canvas { width:80%; height: 80% }
+  body { height: 100%; margin: 0px; padding: 0px; font-family: Monospace; font-weight: bold; color: #9AFE2E }
+  #map_canvas { width:100%; height: 100% }
 .black_overlay {
 	display: none;
 	position: absolute;
@@ -14,9 +14,9 @@
 	height: 100%;
 	background-color: black;
 	z-index:1001;
-	-moz-opacity: 0.8;
-	opacity: 0.8;
-	filter: alpha(opacity=80);
+	-moz-opacity: 0.7;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
 }
 
 .white_content {
@@ -28,7 +28,7 @@
 	height: 80%;
 	padding: 6px;
 	border: 6px solid orange;
-	background-color: white;
+	background-color: black;
 	z-index: 1000002;
 	overflow: auto;
 }
@@ -36,6 +36,7 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javasctipy" src="/javascripts/jquery.1.3.2.min.js"></script>
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
+<script type="text/javascript" src="/javascripts/infobox.js"></script>
 <script type="text/javascript">
 var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
@@ -220,7 +221,7 @@ function tick(i) {
     allBombs[i][4].setMap(null);
     allBombs[i][3].setIcon("/images/explosion.gif");
     allBombs[i][3].setVisible(true);
-    window.location.reload(true);
+    setTimeout("window.location.reload(true)", 1500);
   }
   allBombs[i][2] -= TICK_INTERVAL;
 }
@@ -287,10 +288,13 @@ function drawPlayer(i) {
 
   marker.info = allPlayers[i];
   google.maps.event.addListener(marker, 'click', function() {
-    var playerInfoWindow = new google.maps.InfoWindow({
-      content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
+    var playerInfobox = new InfoBox({
+      content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points",
+      boxStyle: { width: "200px" },
+      closeBoxURL: ""
     });
-    playerInfoWindow.open(map, this);
+    playerInfobox.open(map, this);
+    setTimeout(function(){playerInfobox.close()}, 4000);
   });
 }
 
@@ -316,12 +320,14 @@ function createBomb() {
     labelAnchor: myLocation
   });
 
-  <%- if current_user.curScore < 100 -%>
-    var infoWindow = new google.maps.InfoWindow({
+  <%- if current_user.curScore and current_user.curScore < 100 -%>
+    var helpInfobox = new InfoBox({
       content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
-      maxWidth: 250
+      boxStyle: { width: "250px" },
+      closeBoxURL: ""
     });
-    infoWindow.open(map, marker);
+    setTimeout(function(){helpInfobox.close()}, 8000);
+    helpInfobox.open(map, marker);
   <%- end -%>
   google.maps.event.addListener(marker, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
@@ -394,14 +400,12 @@ window.onload = initialize;
   </canvas>
 </div>
 <div id="rules" class="white_content">
-Welcome to <%= GAME_NAME %>!<br><br>
-Instructions:<br>
+<%= GAME_NAME %> Instructions:<br>
 1. You get one bomb at a time. Drag it to where you want.<br>
 2. Double click the bomb to light it.<br>
 3. The further away you drop a bomb, the longer it takes to detonate.<br>
 4. Being near an exploding bomb (even your own) will hurt you.<br>
 5. Move around in the (real) world to avoid bombs.<br>
-6. Scores points by staying alive.<br>
 <br>
 Enter your phone# to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone(this)">
 <br><br>
