@@ -52,7 +52,7 @@ var allPlayers = [<%- @players.each do |user| -%>
 var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
 <%- end -%>];
-canvas=document.getElemtnById("bombpathcanvas").getContext('2d');
+canvas=document.getElementById("bombpathcanvas").getContext('2d');
 canvas.fillRect(50, 25, 150, 100);
 
 
