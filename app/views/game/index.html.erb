@@ -108,7 +108,26 @@ BombPathOverlay.prototype.draw = function() {
   div.style.top = ne.y + 'px';
   div.style.width = (ne.x-sw.x)+ 'px';
   div.style.height = (sw.y-ne.y) + 'px';
-  drawHTML5();
+  var overlayProjection = bombPathOverlay.getProjection();
+  var canvas=document.getElementById('test');
+  if(canvas.getContext)
+  {
+    var ctx = canvas.getContext('2d');
+    // draw the lines from launch point to target
+
+    for (i = 0; i < allBombs.length; ++i) {
+      var targetLocation = overlayProjection.fromLatLngToDivPixel(allBombs[i][0], allBombs[i][1]);
+      var launchLocation = overlayProjection.fromLatLngToDivPixel(allBombs[i][6], allBombs[i][7]);
+      if (allBombs[i][2] > 0) {
+        ctx.moveTo(launchLocation.x, launchLocation.y);
+        ctx.lineTo(targetLocation.x, targetLocation.y);
+      }
+    }
+
+    ctx.strokeStyle = "#eee";
+    ctx.stroke();
+  }
+
 }
 
 BombPathOverlay.prototype.onAdd = function() {
@@ -137,33 +156,6 @@ BombPathOverlay.prototype.onAdd = function() {
   // We'll add this overlay to the overlayImage pane.
   var panes = this.getPanes();
   panes.overlayLayer.appendChild(div);
-}
-
-function drawHTML5() {
-  var overlayProjection = bombPathOverlay.getProjection();
-  var canvas=document.getElementById('test');
-  if(canvas.getContext)
-  {
-    var ctx = canvas.getContext('2d');
-    // draw the lines from launch point to target
-
-    for (i = 0; i < allBombs.length; ++i) {
-      var targetLocation = overlayProjection.fromLatLngToDivPixel(allBombs[i][0], allBombs[i][1]);
-      var launchLocation = overlayProjection.fromLatLngToDivPixel(allBombs[i][6], allBombs[i][7]);
-      if (allBombs[i][2] > 0) {
-        context.moveTo(launchLocation.x, launchLocation.y);
-        context.lineTo(targetLocation.x, targetLocation.y);
-      }
-    }
-
-    context.strokeStyle = "#eee";
-    context.stroke();
-
-    ctx.fillStyle = "rgb(200,0,0)";
-    ctx.fillRect (10, 10, 55, 50);
-    ctx.fillStyle = "rgba(0, 0, 200, 0.5)";
-    ctx.fillRect (30, 30, 55, 50);
-  }
 }
 
 function addOverlay() {
