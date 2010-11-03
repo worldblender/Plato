@@ -33,7 +33,6 @@
 	overflow: auto;
 }
 </style>
-<script type="text/javascript" src="/javascripts/elabel.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript">
@@ -246,8 +245,7 @@ function placeBomb(location, i) {
     strokeWeight: 2,
     radius: BOMB_RADIUS
     });
-  var bombPath = new ELabel(map.getCenter(),'<canvas id="bombpathcanvas" width="100" height="100"><\/canvas>',null,new GSize(-50,50));
-  map.addOverlay(bombPath);
+
   canvas=document.getElemtnById("bombpathcanvas").getContext('2d');
   b_context.fillRect(50, 25, 150, 100);
   allBombs[i][3] = bomb;
@@ -392,6 +390,9 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
+<div id="temp">
+  <canvas id="bombpathcanvas" width="100" height="100"></canvas>
+</div>
 <div id="rules" class="white_content">
 Welcome to <%= GAME_NAME %>!<br><br>
 Instructions:<br>
