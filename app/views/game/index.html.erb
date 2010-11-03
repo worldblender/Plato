@@ -98,51 +98,57 @@ function initialize() {
 
 function mapTypeExperiment() {
   var platoMapStyles = [
-    {
-      featureType: "road.highway",
-      elementType: "geometry",
-      stylers: [
-        { hue: "#ff0022" },
-        { saturation: 60 },
-        { lightness: -20 },
-        { visibility: "simplified" }
-      ]
-    },{
-      featureType: "road.arterial",
-      elementType: "all",
-      stylers: [
-        { visibility: "off" }
-      ]
-    },{
-      featureType: "road.local",
-      elementType: "all",
-      stylers: [
-        { visibility: "simplified" }
-      ]
-    },{
-      featureType: "water",
-      elementType: "geometry",
-      stylers: [
-        { saturation: 40 },
-        { lightness: 40 }
-      ]
-    },{
-      featureType: "road.highway",
-      elementType: "labels",
-      stylers: [
-        { visibility: "odd" }
-      ]
-    },{
-      featureType: "administrative.locality",
-      elementType: "labels",
-      stylers: [
-        { hue: "#0022ff" },
-        { saturation: 50 },
-        { lightness: -10 },
-        { gamma: 0.9 }
-      ]
-    }
-  ];
+  {
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      { visibility: "simplified" },
+      { hue: "#ff9900" },
+      { saturation: -36 }
+    ]
+  },{
+    featureType: "water",
+    elementType: "all",
+    stylers: [
+      { lightness: 36 }
+    ]
+  },{
+    featureType: "road.highway",
+    elementType: "geometry",
+    stylers: [
+      { visibility: "simplified" },
+      { hue: "#ff0000" },
+      { saturation: -67 }
+    ]
+  },{
+    featureType: "all",
+    elementType: "labels",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "road.local",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "transit",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "administrative.neighborhood",
+    elementType: "labels",
+    stylers: [
+      { visibility: "on" },
+      { lightness: 6 },
+      { saturation: 100 },
+      { gamma: 4.3 },
+      { hue: "#0000ff" }
+    ]
+  }];
   var platoMap = new google.maps.StyledMapType(platoMapStyles, {name: "Plato Style" });
   map.mapTypes.set('platoMap', platoMap);
   map.setMapTypeId('platoMap');
