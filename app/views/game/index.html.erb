@@ -99,8 +99,8 @@ BombPathOverlay.prototype.draw = function() {
   // Retrieve the southwest and northeast coordinates of this overlay
   // in latlngs and convert them to pixels coordinates.
   // We'll use these coordinates to resize the DIV.
-  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds.getSouthWest());
-  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds.getNorthEast());
+  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
+  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
 
   // Resize the image's DIV to fit the indicated dimensions.
   var div = this.div_;
