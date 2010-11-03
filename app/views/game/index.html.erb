@@ -277,7 +277,7 @@ function drawPlayer(i) {
       closeBoxURL: ""
     });
     playerInfobox.open(map, this);
-    setTimeout(function(){playerInfobox.close()}, 2000);
+    setTimeout(function(){playerInfobox.close()}, 4000);
   });
 }
 
@@ -309,7 +309,7 @@ function createBomb() {
       boxStyle: { width: "250px" },
       closeBoxURL: ""
     });
-    setTimeout(function(){helpInfobox.close()}, 4000);
+    setTimeout(function(){helpInfobox.close()}, 8000);
     helpInfobox.open(map, marker);
   <%- end -%>
   google.maps.event.addListener(marker, "dragend", function() {
