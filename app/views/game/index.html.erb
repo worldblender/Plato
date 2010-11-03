@@ -78,6 +78,7 @@ BombPathOverlay.prototype = new google.maps.OverlayView();
 function BombPathOverlay(map) {
 
   // Now initialize all properties.
+  this.img_ = null;
   this.map_ = map;
   // We define a property to hold the image's
   // div. We'll actually create this div
@@ -124,7 +125,7 @@ BombPathOverlay.prototype.draw = function() {
       }
     }
 
-    ctx.strokeStyle = "#eee";
+    ctx.strokeStyle = "#FFF";
     ctx.stroke();
   }
 
