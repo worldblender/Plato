@@ -304,7 +304,6 @@ function createBomb() {
   });
 
   <%- if current_user.curScore and current_user.curScore < 100 -%>
-    });
     var helpInfobox = new InfoBox({
       content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
       boxStyle: { width: "250px" },
