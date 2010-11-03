@@ -278,6 +278,7 @@ function drawPlayer(i) {
     var playerInfobox = new InfoBox({
       content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
     });
+    playerInfobox.open(map, this);
   });
 }
 
