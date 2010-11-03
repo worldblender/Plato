@@ -103,8 +103,8 @@ function mapTypeExperiment() {
     elementType: "geometry",
     stylers: [
       { visibility: "simplified" },
-      { hue: "#ff9900" },
-      { saturation: -36 }
+      { hue: "#f6ff00" },
+      { gamma: 0.38 }
     ]
   },{
     featureType: "water",
@@ -114,11 +114,10 @@ function mapTypeExperiment() {
     ]
   },{
     featureType: "road.highway",
-    elementType: "geometry",
+    elementType: "all",
     stylers: [
       { visibility: "simplified" },
-      { hue: "#ff0000" },
-      { saturation: -67 }
+      { gamma: 0.76 }
     ]
   },{
     featureType: "all",
@@ -143,13 +142,24 @@ function mapTypeExperiment() {
     elementType: "labels",
     stylers: [
       { visibility: "on" },
-      { lightness: 6 },
-      { saturation: 100 },
-      { gamma: 4.3 },
-      { hue: "#0000ff" }
+      { gamma: 0.39 },
+      { lightness: -4 },
+      { saturation: 100 }
     ]
   },{
     featureType: "landscape.man_made",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "all",
+    elementType: "all",
+    stylers: [
+      { invert_lightness: true }
+    ]
+  },{
+    featureType: "poi",
     elementType: "all",
     stylers: [
       { visibility: "off" }
