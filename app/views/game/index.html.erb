@@ -271,15 +271,13 @@ function drawPlayer(i) {
 
   marker.info = allPlayers[i];
   google.maps.event.addListener(marker, 'click', function() {
-    //var playerInfoWindow = new google.maps.InfoWindow({
-    //  content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points"
-    //});
-    //playerInfoWindow.open(map, this);
     var playerInfobox = new InfoBox({
       content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points",
-      boxStyle: { width: "280px" }
+      boxStyle: { width: "200px" },
+      closeBoxURL: ""
     });
     playerInfobox.open(map, this);
+    setTimeout(function(){playerInfobox.close()}, 3000)
   });
 }
 
