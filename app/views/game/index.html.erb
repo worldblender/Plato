@@ -52,18 +52,9 @@ var allPlayers = [<%- @players.each do |user| -%>
 var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
 <%- end -%>];
+canvas=document.getElemtnById("bombpathcanvas").getContext('2d');
+canvas.fillRect(50, 25, 150, 100);
 
-function rotBomb() {
-  var cosa = Math.cos(angle);
-  var sina = Math.sin(angle);
-  canvas.clearRect(0,0,100,100);
-  canvas.save();
-  canvas.rotate(angle);
-  canvas.translate(50*sina+50*cosa, 50*cosa-50*sina);
-  canvas.drawImage(img,-50,-50);
-  canvas.restore();
-  angle+=.1
-}
 
 function haversineDistance(lat1, lon1, lat2, lon2) {
   var R = 6371 * 1000; // meters;
@@ -246,8 +237,6 @@ function placeBomb(location, i) {
     radius: BOMB_RADIUS
     });
 
-  canvas=document.getElemtnById("bombpathcanvas").getContext('2d');
-  b_context.fillRect(50, 25, 150, 100);
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
 
