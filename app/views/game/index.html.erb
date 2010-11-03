@@ -54,7 +54,7 @@ var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
 <%- end -%>];
 
-function rotBomb{
+function rotBomb() {
   var cosa = Math.cos(angle);
   var sina = Math.sin(angle);
   canvas.clearRect(0,0,100,100);
@@ -174,7 +174,7 @@ function placeBomb(location, i) {
   var bombPath = new ELabel(map.getCenter(),'<canvas id="bombpathcanvas" width="100" height="100"><\/canvas>,null,new GSize(-50,50));
   map.addOverlay(bombPath);
   canvas=document.getElemtnById("bombpathcanvas").getContext('2d');
-  setInterval("rotBomb",100);
+  setInterval("rotBomb()",100);
   allBombs[i][3] = bomb;
   allBombs[i][4] = bombFallout;
 
