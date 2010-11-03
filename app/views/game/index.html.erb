@@ -303,12 +303,15 @@ function createBomb() {
     labelAnchor: myLocation
   });
 
-  <%- if current_user.curScore < 100 -%>
-    var infoWindow = new google.maps.InfoWindow({
-      content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
-      maxWidth: 250
+  <%- if current_user.curScore and current_user.curScore < 100 -%>
     });
-    infoWindow.open(map, marker);
+    var helpInfobox = new InfoBox({
+      content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
+      boxStyle: { width: "250px" },
+      closeBoxURL: ""
+    });
+    setTimeout(function(){helpInfobox.close()}, 4000);
+    helpInfobox.open(map, marker);
   <%- end -%>
   google.maps.event.addListener(marker, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
