@@ -122,7 +122,7 @@ function drawAllInnocents() {
         closeBoxURL: ""
       });
       innocentInfobox.open(map, this);
-      setTimeout(function(){innocent.Infobox.close()}, 5000);
+      setTimeout(function(){innocentInfobox.close()}, 5000);
     });
   }
 }
@@ -271,7 +271,7 @@ function placeBomb(location, i) {
       closeBoxURL: ""
     });
     bombInfobox.open(map, this);
-    setTimeout(function(){bomb.Infobox.close()}, 4000);
+    setTimeout(function(){bombInfobox.close()}, 4000);
   });
 
   tick(i);
