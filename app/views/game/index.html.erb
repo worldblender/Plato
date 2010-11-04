@@ -113,8 +113,9 @@ BombPathOverlay.prototype.draw = function() {
 }
 
 BombPathOverlay.prototype.drawMissles = function() {
+  this._canvas = document.getElementById('gameLayer');
+  this._ctx = this._canvas.getContext('2d');
   var overlayProjection = this.getProjection();
-  this._canvas=document.getElementById('gameLayer');
   for (i = 0; i < allBombs.length; ++i) {
     var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
