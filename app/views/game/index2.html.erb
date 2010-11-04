@@ -20,6 +20,46 @@ var kPixelWidth = 1196;
 var kPixelHeight= 736;
 var bombPathOverlay;
 
+BombPathOverlay.prototype = new google.maps.OverlayView();
+
+function BombPathOverlay(map) {
+  this.setMap(map);
+}
+
+BombPathOverlay.prototype.draw = function() {
+  if (gDrawingContext)
+  {
+    drawGame()
+  }
+}
+
+BombPathOverlay.prototype.onAdd = function() {
+  var overlayProjection = this.getProjection();
+
+  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
+  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
+
+  var div = document.createElement('DIV');
+  div.style.left = sw.x + 'px';
+  div.style.top = ne.y + 'px';
+  div.style.width = (ne.x-sw.x) + 'px';
+  div.style.height = (sw.y-ne.y) + 'px';
+  div.style.border = "none";
+  div.style.borderWidth = "0px";
+  div.style.position = "absolute";
+  div.innerHTML = "<div><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
+
+  var panes = this.getPanes();
+  panes.overlayLayer.appendChild(div);
+  gCanvasElement = document.getElementById('gameLayer');
+  if (gCanvasElement != null && gCanvasElement.getContext)
+  {
+    gCanvasElement.width = gCanvasElement.width;
+    gCanvasElement.height = gCanvasElement.height;
+    gDrawingContext = gCanvasElement.getContext('2d');
+  }
+}
+
 function createBomb() {
   var marker = new MarkerWithLabel({
     position: myLocation,
@@ -232,71 +272,6 @@ function initialize() {
 
 function addOverlay() {
   bombPathOverlay = new BombPathOverlay(map);
-}
-BombPathOverlay.prototype.draw = function() {
-  if (gDrawingContext)
-  {
-    drawGame()
-  }
-}
-
-
-BombPathOverlay.prototype.onAdd = function() {
-  // Size and position the overlay. We use a southwest and northeast
-  // position of the overlay to peg it to the correct position and size.
-  // We need to retrieve the projection from this overlay to do this.
-  var overlayProjection = this.getProjection();
-
-  // Retrieve the southwest and northeast coordinates of this overlay
-  // in latlngs and convert them to pixels coordinates.
-  // We'll use these coordinates to resize the DIV.
-  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
-  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
-
-  // Resize the image's DIV to fit the indicated dimensions.
-
-  // Create the DIV and set some basic attributes.
-  var div = document.createElement('DIV');
-  div.style.left = sw.x + 'px';
-  div.style.top = ne.y + 'px';
-  div.style.width = (ne.x-sw.x) + 'px';
-  div.style.height = (sw.y-ne.y) + 'px';
-  div.style.border = "none";
-  div.style.borderWidth = "0px";
-  div.style.position = "absolute";
-  div.innerHTML = "<div><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
-
-  // Set the overlay's div_ property to this DIV
-  this.div_ = div;
-
-  // We add an overlay to a map via one of the map's panes.
-  // We'll add this overlay to the overlayImage pane.
-  var panes = this.getPanes();
-  panes.overlayLayer.appendChild(div);
-  gCanvasElement = document.getElementById('gameLayer');
-  if (gCanvasElement != null && gCanvasElement.getContext)
-  {
-    gCanvasElement.width = gCanvasElement.width;
-    gCanvasElement.height = gCanvasElement.height;
-    gDrawingContext = gCanvasElement.getContext('2d');
-  }
-}
-
-BombPathOverlay.prototype = new google.maps.OverlayView();
-
-function BombPathOverlay(map) {
-
-  // Now initialize all properties.
-  this.img_ = null;
-  this.map_ = map;
-  // We define a property to hold the image's
-  // div. We'll actually create this div
-  // upon receipt of the add() method so we'll
-  // leave it null for now.
-  this.div_ = null;
-
-  // Explicitly call setMap() on this overlay
-  this.setMap(map);
 }
 
 function haversineDistance(lat1, lon1, lat2, lon2) {
