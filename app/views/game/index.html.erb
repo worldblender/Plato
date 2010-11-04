@@ -132,9 +132,9 @@ BombPathOverlay.prototype.draw = function() {
         missle.onload=function(){
           var cosa = Math.cos(angleRad);
           var sina = Math.sin(angleRad);
-          canvas.save();
-          canvas.rotate(angleRadians);
-          canvas.translate(-x * sina - y * cosa, -x * cosa + y * sina);
+          ctx.save();
+          ctx.rotate(angleRadians);
+          // ctx.translate(-x * sina - y * cosa, -x * cosa + y * sina);
           ctx.drawImage(missle,x,y,-this.width/2,-this.height/2);
           canvas.restore();
         }
