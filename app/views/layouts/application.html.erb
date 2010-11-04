@@ -14,7 +14,7 @@
       body { background-color: black; background-image:url("/images/ScorchedWorld.jpeg"); background-repeat:no-repeat; color: orange; font-family: sans-serif; }
       </style>
       <h2>Welcome to <%= GAME_NAME %></h2>
-      <a href="<%= user_oauth_authorize_url(:facebook) %>"><img src="/images/login.png"></a>
+      <a href="<%= user_oauth_authorize_url(:facebook) + '&display=touch' %>"><img src="/images/login.png"></a>
     <%- end %>
   <% if false %>
     <p class="notice"><%= notice %></p>
