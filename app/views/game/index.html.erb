@@ -97,6 +97,7 @@ function getBearing(source,target)
   var y = Math.sin(target.lng()-source.lng()) * Math.cos(target.lat());
   var x = Math.cos(source.lat())*Math.sin(target.lat()) - Math.sin(source.lat())*Math.cos(target.lat())*Math.cos(target.lng()-source.lng());
   var brng = Math.atan2(y, x);
+  return brng;
 }
 
 BombPathOverlay.prototype.draw = function() {
