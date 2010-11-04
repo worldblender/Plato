@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
     # Get the user email info from Facebook for sign up
     # You'll have to figure this part out from the json you get back
     data = ActiveSupport::JSON.decode(access_token.get('https://graph.facebook.com/me?'))
-    places = ActiveSupport::JSON.decode(access_token.get('https://graph.facebook.com/search?type=checkin'))
+    places = ActiveSupport::JSON.decode(access_token.get('https://graph.facebook.com/search?type=checkin&'))
     puts places
     if user = User.find_by_email(data["email"])
       user
