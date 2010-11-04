@@ -115,7 +115,7 @@ BombPathOverlay.prototype.draw = function() {
   }
 }
 
-BombPathOverlay.prototype.drawMissles () {
+BombPathOverlay.prototype.drawMissles = function() {
   for (i = 0; i < allBombs.length; ++i) {
     var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
