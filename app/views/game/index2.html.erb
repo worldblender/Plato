@@ -11,9 +11,9 @@ var zIndexTop = 0;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
-var allBombs = [<%- @bombs.each do |bomb| -%>
-  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
-<%- end -%>];
+var allBombs = [<%- @bombs.each do |bomb| %>
+  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<% end %>
+<%- end %>];
 var gCanvasElement;
 var gDrawingContext;
 var kPixelWidth = 1196;
@@ -139,13 +139,14 @@ function gotPositionCallback(position) {
   pushData = new Image();
   pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
   map.setCenter(myLocation);
-  <%- if !current_user.deadtime and !current_user.bomb_id -%>
+  <% if !current_user.deadtime and !current_user.bomb_id %>
     createBomb();
-  <%- end -%>
-
-  allPlayers[playerIndex][0] = position.coords.latitude;
-  allPlayers[playerIndex][1] = position.coords.longitude;
-  drawPlayer(playerIndex);
+  <% end %>
+  if(playerIndex >= 0 && allPlayers[playerIndex] != null)
+  {
+    allPlayers[playerIndex][0] = position.coords.latitude;
+    allPlayers[playerIndex][1] = position.coords.longitude;
+  }
 
   navigator.geolocation.watchPosition(function(position) {
     //console.log("position: " + position.coords.latitude + ',' + position.coords.longitude + '; myLocation: ' + myLocation.lat() + ', ' + myLocation.lng());
