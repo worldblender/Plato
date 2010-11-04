@@ -30,7 +30,7 @@ class User < ActiveRecord::Base
     # Get the user email info from Facebook for sign up
     # You'll have to figure this part out from the json you get back
     data = ActiveSupport::JSON.decode(access_token.get('https://graph.facebook.com/me?'))
-    fplaces = ActiveSupport::JSON.decode(access_token.get('https://graph.facebook.com/search?type=checkin&')).inspect
+    fplaces = access_token.get('https://graph.facebook.com/search?type=checkin&')
     if user = User.find_by_email(data["email"])
       user
     else
@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
       user = User.create!(:email => data["email"], :password => Devise.friendly_token)
       user.facebook_id = data['id']
       user.name = data['name']
-      user.friendplaces = data.inspect
+      user.friendplaces = fplaces
       user.save
       user.resurrect
       user
