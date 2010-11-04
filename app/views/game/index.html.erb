@@ -107,7 +107,7 @@ function drawAllInnocents() {
     var fid = innocents.data[i].from.id;
     var innocentLocation = new google.maps.LatLng(innocentLat, innocentLng);
 
-    var bomb = new MarkerWithLabel({
+    var bomb = new google.maps.Marker({
       position: innocentLocation,
       map: map,
       title: fname,
