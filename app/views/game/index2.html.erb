@@ -16,6 +16,7 @@ var allBombs = [<%- @bombs.each do |bomb| %>
 <%- end %>];
 var gCanvasElement;
 var gDrawingContext;
+var gOverlayProjection;
 var kPixelWidth = 1196;
 var kPixelHeight= 736;
 var bombPathOverlay;
@@ -34,10 +35,10 @@ BombPathOverlay.prototype.draw = function() {
 }
 
 BombPathOverlay.prototype.onAdd = function() {
-  var overlayProjection = this.getProjection();
+  gOverlayProjection = this.getProjection();
 
-  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
-  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
+  var sw = gOverlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
+  var ne = gOverlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
 
   var div = document.createElement('DIV');
   div.style.left = sw.x + 'px';
@@ -72,7 +73,7 @@ function createBomb() {
     labelAnchor: myLocation
   });
 
-  <%- if current_user.curScore and current_user.curScore < 100 -%>
+  <% if current_user.curScore and current_user.curScore < 100 %>
     var helpInfobox = new InfoBox({
       content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
       boxStyle: { width: "250px" },
@@ -225,8 +226,8 @@ function drawGame() {
 function drawMissle(b) {
   var targetLatLng=new google.maps.LatLng(b[0], b[1]);
   var sourceLatLng=new google.maps.LatLng(b[6], b[7]);
-  var targetLocation = overlayProjection.fromLatLngToDivPixel(targetLatLng);
-  var launchLocation = overlayProjection.fromLatLngToDivPixel(sourceLatLng);
+  var targetLocation = gOverlayProjection.fromLatLngToDivPixel(targetLatLng);
+  var launchLocation = gOverlayProjection.fromLatLngToDivPixel(sourceLatLng);
   if (b[2] > 0) {
     gDrawingContext.moveTo(launchLocation.x, launchLocation.y);
     gDrawingContext.lineTo(targetLocation.x, targetLocation.y);
@@ -243,7 +244,7 @@ function drawMissle(b) {
   }
 }
 function drawPlayer(p) {
-  var targetLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(p[0], p[1]));
+  var targetLocation = gOverlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(p[0], p[1]));
   var person=new Image();
   if (allPlayers[i][4]) {
     person.src = "/images/tombstone.gif";
