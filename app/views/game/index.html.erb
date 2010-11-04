@@ -94,23 +94,6 @@ function BombPathOverlay(map) {
 
 BombPathOverlay.prototype.draw = function() {
 
-  // Size and position the overlay. We use a southwest and northeast
-  // position of the overlay to peg it to the correct position and size.
-  // We need to retrieve the projection from this overlay to do this.
-  var overlayProjection = this.getProjection();
-
-  // Retrieve the southwest and northeast coordinates of this overlay
-  // in latlngs and convert them to pixels coordinates.
-  // We'll use these coordinates to resize the DIV.
-  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
-  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
-
-  // Resize the image's DIV to fit the indicated dimensions.
-  var div = this.div_;
-  div.style.left = sw.x + 'px';
-  div.style.top = ne.y + 'px';
-  div.style.width = (ne.x-sw.x) + 'px';
-  div.style.height = (sw.y-ne.y) + 'px';
 
   var canvas=document.getElementById('test');
   if(canvas.getContext)
@@ -131,31 +114,38 @@ BombPathOverlay.prototype.draw = function() {
         ctx.lineTo(targetLocation.x, targetLocation.y);
       }
     }
-
     ctx.strokeStyle = "#FFF";
     ctx.stroke();
   }
 }
 
 BombPathOverlay.prototype.onAdd = function() {
+  // Size and position the overlay. We use a southwest and northeast
+  // position of the overlay to peg it to the correct position and size.
+  // We need to retrieve the projection from this overlay to do this.
+  var overlayProjection = this.getProjection();
 
-  // Note: an overlay's receipt of onAdd() indicates that
-  // the map's panes are now available for attaching
-  // the overlay to the map via the DOM.
+  // Retrieve the southwest and northeast coordinates of this overlay
+  // in latlngs and convert them to pixels coordinates.
+  // We'll use these coordinates to resize the DIV.
+  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
+  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
+
+  // Resize the image's DIV to fit the indicated dimensions.
+  var div = this.div_;
+  div.style.left = sw.x + 'px';
+  div.style.top = ne.y + 'px';
+  div.style.width = (ne.x-sw.x) + 'px';
+  div.style.height = (sw.y-ne.y) + 'px';
 
   // Create the DIV and set some basic attributes.
   var div = document.createElement('DIV');
   div.style.border = "none";
   div.style.borderWidth = "0px";
   div.style.position = "absolute";
-  div.innerHTML = "<div><canvas id='test' ></canvas></div>";
+  div.innerHTML = "<div><canvas id='test' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
 
   // Create an IMG element and attach it to the DIV.
-  img.src = this.image_;
-  img.style.width = "100%";
-  img.style.height = "100%";
-  div.appendChild(img);
-
   // Set the overlay's div_ property to this DIV
   this.div_ = div;
 
