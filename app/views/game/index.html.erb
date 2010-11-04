@@ -101,7 +101,7 @@ function getBearing(source,target)
 }
 
 BombPathOverlay.prototype.draw = function() {
-  this._context = document.getElementById('gameLayer');
+  this._canvas = document.getElementById('gameLayer');
   if (this._canvas != null && this._canvas.getContext)
   {
     this._canvas.width = this._canvas.width;
