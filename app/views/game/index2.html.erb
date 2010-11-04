@@ -9,7 +9,7 @@
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript" src="/javascripts/infobox.js"></script>
 <script type="text/javascript">
-var TICK_INTERVAL = 1000; // in milliseconds
+var TICK_INTERVAL = 8000; // in milliseconds
 var map;
 var myLocation;
 var playerIndex = -1;
@@ -226,13 +226,15 @@ function drawGame() {
     }
     gDrawingContext.beginPath();
     for(var j=0;j<allBombs.length;j++) {
-      drawMissle(allBombs[j]);
+      drawMissleAndPath(allBombs[j]);
     }
     gDrawingContext.strokeStyle = "#FFF";
     gDrawingContext.stroke();
   }
 }
-function drawMissle(b) {
+function drawImpactArea(b) {
+}
+function drawMissleAndPaths(b) {
   var targetLatLng=new google.maps.LatLng(b[0], b[1]);
   var sourceLatLng=new google.maps.LatLng(b[6], b[7]);
   var targetLocation = gOverlayProjection.fromLatLngToDivPixel(targetLatLng);
@@ -249,6 +251,10 @@ function drawMissle(b) {
     missle.src="/images/rocket_06.png";
     missle.onload=function(){
       gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
+      // add in the animation for this missle
+    missle.animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+        // animation complete
+        });
     }
   }
 }
