@@ -224,6 +224,7 @@ function drawGame() {
       }
       drawPlayer(allPlayers[i])
     }
+    gDrawingContext.beginPath();
     for(var j=0;j<allBombs.length;j++) {
       drawMissle(allBombs[j]);
     }
