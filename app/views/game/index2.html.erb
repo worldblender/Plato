@@ -124,6 +124,7 @@ function drawMissle(b) {
     missle.onload=function(){
       gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
     }
+  }
 }
 function drawPlayer(p) {
   var targetLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(p[0], p[1]));
