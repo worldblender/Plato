@@ -46,6 +46,8 @@ var angle = Math.PI/2;
 var map;
 var myLocation;
 var playerIndex = -1;
+var gCanvasElement;
+var gDrawingContext;
 var zIndexTop = 0;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
@@ -107,14 +109,14 @@ BombPathOverlay.prototype.draw = function() {
   var div = this.div_;
   div.style.left = sw.x + 'px';
   div.style.top = ne.y + 'px';
-  div.style.width = (ne.x-sw.x)+ 'px';
+  div.style.width = (ne.x-sw.x) + 'px';
   div.style.height = (sw.y-ne.y) + 'px';
 
   var canvas=document.getElementById('test');
   if(canvas.getContext)
   {
-    canvas.width = canvas.width;
     var ctx = canvas.getContext('2d');
+    ctx.clearRect(div.style.left,div.style.top,div.style.width,div.style.height);
     // draw the lines from launch point to target
 
     for (i = 0; i < allBombs.length; ++i) {
@@ -131,7 +133,6 @@ BombPathOverlay.prototype.draw = function() {
     ctx.strokeStyle = "#FFF";
     ctx.stroke();
   }
-
 }
 
 BombPathOverlay.prototype.onAdd = function() {
@@ -145,7 +146,7 @@ BombPathOverlay.prototype.onAdd = function() {
   div.style.border = "none";
   div.style.borderWidth = "0px";
   div.style.position = "absolute";
-  div.innerHTML = "<div><canvas id='test' width='900' height='800'></canvas></div>";
+  div.innerHTML = "<div><canvas id='test' ></canvas></div>";
 
   // Create an IMG element and attach it to the DIV.
   img.src = this.image_;
