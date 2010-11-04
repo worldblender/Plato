@@ -111,14 +111,14 @@ function drawAllInnocents() {
       position: innocentLocation,
       map: map,
       title: fname,
-      //icon: "http://jeffhuang.com/personIcon.png",
-      icon: "http://cdn.iconfinder.net/data/icons/c9d/user_white.png",
+      icon: "/images/innocent.png",
       zIndex: 5
     });
+    innocent.fid = fid;
 
     google.maps.event.addListener(innocent, 'click', function() {
       var innocentInfobox = new InfoBox({
-        content: fname + "<img src='http://graph.facebook.com/" + fid + "/picture'>",
+        content: this.getTitle() + "<img src='http://graph.facebook.com/" + this.fid + "/picture'>",
         closeBoxURL: ""
       });
       innocentInfobox.open(map, this);
