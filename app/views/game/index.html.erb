@@ -115,8 +115,8 @@ BombPathOverlay.prototype.draw = function() {
         var distance = haversineDistance(allBombs[i][0], allBombs[i][1], allBombs[i][6], allBombs[i][7]);
         duration=<%= clientCalcDuration %>*1000;
         dOnPath=allBombs[i][2]/duration;
-        var x = launchLocation.x*(1-dOnPath)+targetLocation.x*dOnPath;
-        var y = launchLocation.y*(1-dOnPath)+targetLocation.y*dOnPath;
+        var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
+        var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
         var missle=new Image();
         missle.src="/images/rocket_03.png";
         missle.onload=function(){
