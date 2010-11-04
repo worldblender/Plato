@@ -104,7 +104,7 @@ BombPathOverlay.prototype.draw = function() {
   var overlayProjection = this.getProjection();
 
   var canvas=document.getElementById('gameLayer');
-  if(canvas.getContext)
+  if (canvas != null && canvas.getContext)
   {
     canvas.width = canvas.width;
     var ctx = canvas.getContext('2d');
