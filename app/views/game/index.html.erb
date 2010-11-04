@@ -119,7 +119,8 @@ BombPathOverlay.prototype.draw = function() {
     for (i = 0; i < allBombs.length; ++i) {
       var targetLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(allBombs[i][0], allBombs[i][1]));
       var launchLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(allBombs[i][6], allBombs[i][7]));
-      ctx.fillRect(launchLocation.x,launchLocation.y,targetLocation.x-launchLocation.x,targetLocation.y-launchLocation.y);
+      b_context.fillRect(50, 25, 150, 100);
+      // ctx.fillRect(launchLocation.x,launchLocation.y,targetLocation.x-launchLocation.x,targetLocation.y-launchLocation.y);
       //if (allBombs[i][2] > 0) {
         //ctx.moveTo(launchLocation.x, launchLocation.y);
         //ctx.lineTo(targetLocation.x, targetLocation.y);
