@@ -101,21 +101,20 @@ function getBearing(source,target)
 }
 
 BombPathOverlay.prototype.draw = function() {
-  var overlayProjection = this.getProjection();
-
-  var canvas=document.getElementById('gameLayer');
-  if (canvas != null && canvas.getContext)
+  this._context = document.getElementById('gameLayer');
+  if (this._canvas != null && this._canvas.getContext)
   {
-    canvas.width = canvas.width;
-    var ctx = canvas.getContext('2d');
-    ctx.clearRect(0,0,canvas.width,canvas.height);
+    this._canvas.width = this._canvas.width;
+    this._ctx = this._canvas.getContext('2d');
+    this._ctx.clearRect(0,0,this._canvas.width,this._canvas.height);
     // draw the lines from launch point to target
     this.drawMissles();
-
   }
 }
 
 BombPathOverlay.prototype.drawMissles = function() {
+  var overlayProjection = this.getProjection();
+  var this._canvas=document.getElementById('gameLayer');
   for (i = 0; i < allBombs.length; ++i) {
     var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
@@ -124,8 +123,8 @@ BombPathOverlay.prototype.drawMissles = function() {
     var w = targetLocation.x-launchLocation.x;
     var h = targetLocation.y-launchLocation.y;
     if (allBombs[i][2] > 0) {
-      ctx.moveTo(launchLocation.x, launchLocation.y);
-      ctx.lineTo(targetLocation.x, targetLocation.y);
+      this._ctx.moveTo(launchLocation.x, launchLocation.y);
+      this._ctx.lineTo(targetLocation.x, targetLocation.y);
       // draw the missle a distance along the path according to how close it is
       var distance = haversineDistance(allBombs[i][0], allBombs[i][1], allBombs[i][6], allBombs[i][7]);
       duration=<%= clientCalcDuration %>*1000;
@@ -141,13 +140,13 @@ BombPathOverlay.prototype.drawMissles = function() {
         //ctx.save();
         //ctx.rotate(angleRad);
         // ctx.translate(-x * sina - y * cosa, -x * cosa + y * sina);
-        ctx.drawImage(missle,x-missle.width/2,y-missle.height/2);
+        this._ctx.drawImage(missle,x-missle.width/2,y-missle.height/2);
         //ctx.restore();
       }
     }
   }
-  ctx.strokeStyle = "#FFF";
-  ctx.stroke();
+  this._ctx.strokeStyle = "#FFF";
+  this._ctx.stroke();
 }
 
 BombPathOverlay.prototype.onAdd = function() {
