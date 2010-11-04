@@ -235,10 +235,12 @@ function placeBomb(location, i) {
   allBombs[i][4] = bombFallout;
 
   google.maps.event.addListener(bomb, 'click', function() {
-    var bombInfoWindow = new google.maps.InfoWindow({
+    var bombInfobox = new InfoBox({
       content: this.owner + "'s bomb"
+      closeBoxURL: ""
     });
-    bombInfoWindow.open(map, this);
+    bombInfobox.open(map, this);
+    setTimeout(function(){bomb.Infobox.close()}, 4000);
   });
 
   tick(i);
@@ -295,7 +297,7 @@ function createBomb() {
   var marker = new MarkerWithLabel({
     position: myLocation,
     map: map,
-    title: "You bomb",
+    title: "Your bomb",
     icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000,
