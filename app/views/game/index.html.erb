@@ -113,8 +113,8 @@ BombPathOverlay.prototype.draw = function() {
         ctx.lineTo(targetLocation.x, targetLocation.y);
         // draw the missle a distance along the path according to how close it is
         var distance = haversineDistance(allBombs[i][0], allBombs[i][1], allBombs[i][6], allBombs[i][7]);
-        durration=<%= clientCalcDuration %>;
-        dOnPath=allBombs[i][2]/durration;
+        duration=<%= clientCalcDuration %>*1000;
+        dOnPath=allBombs[i][2]/duration;
         x = launchLocation.x*(1-dOnPath)+targetLocation.x*dOnPath;
         y = launchLocation.y*(1-dOnPath)+targetLocation.y*dOnPath;
         var missle=new Image();
