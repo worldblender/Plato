@@ -93,7 +93,7 @@ function BombPathOverlay(map) {
 }
 
 BombPathOverlay.prototype.draw = function() {
-
+  var overlayProjection = this.getProjection();
 
   var canvas=document.getElementById('gameLayer');
   if(canvas.getContext)
