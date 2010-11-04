@@ -258,6 +258,7 @@ function placeBomb(location, i) {
   google.maps.event.addListener(bomb, 'click', function() {
     var bombInfobox = new InfoBox({
       content: this.owner + "'s bomb",
+      boxStyle: { width: "200px" },
       closeBoxURL: ""
     });
     bombInfobox.open(map, this);
