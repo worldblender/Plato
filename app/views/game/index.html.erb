@@ -113,6 +113,7 @@ BombPathOverlay.prototype.draw = function() {
   var canvas=document.getElementById('test');
   if(canvas.getContext)
   {
+    canvas.width = canvas.width;
     var ctx = canvas.getContext('2d');
     // draw the lines from launch point to target
 
