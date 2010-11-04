@@ -44,7 +44,7 @@ var map;
 var myLocation;
 var playerIndex = -1;
 var zIndexTop = 0;
-var innocents = <%= current_user.fplaces.html_safe %>;
+var innocents = <%= ActiveSupport::JSON.decode(current_user.fplaces.html_safe).each do |f| %>;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
@@ -81,8 +81,10 @@ function initialize() {
     streetViewControl: false
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+  theme();
   drawAllPlayers();
   drawAllBombs();
+  drawAllInnocents();
   setMapLocation();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.gif'></a>");
   leaderboardButton.style.display = "block";
@@ -95,10 +97,27 @@ function initialize() {
   <%- if current_user.curScore and (current_user.top_score == nil or current_user.top_score < 10) and current_user.curScore < 10 -%>
     showRules();
   <%- end -%>
-  mapTypeExperiment();
 }
 
-function mapTypeExperiment() {
+function drawAllInnocents() {
+  for (i = 0; i < innnocents.data.length; i++) {
+    var innocentLat = innocents.data[i].place.location.latitude;
+    var innocentLng = innocents.data[i].place.location.longitude;
+    var fname = innocents.data[i].from.name;
+    var fid = innocents.data[i].from.id;
+    var innocentLocation = new google.maps.LatLng(innocentLat, innocentLng);
+
+    var bomb = new MarkerWithLabel({
+      position: innocentLocation,
+      map: map,
+      title: fname,
+      icon: "http://jeffhuang.com/personIcon.png",
+      zIndex: 5
+    });
+  }
+}
+
+function theme() {
   var platoMapStyles = [
   {
     featureType: "road.arterial",
@@ -218,7 +237,7 @@ function placeBomb(location, i) {
     title: "Bomb",
     icon: "/images/litBomb.gif",
     zIndex: 50000,
-    labelAnchor: myLocation
+    labelAnchor: location
   });
   bomb.owner = allBombs[i][5];
   // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
