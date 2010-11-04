@@ -119,18 +119,16 @@ BombPathOverlay.prototype.draw = function() {
     for (i = 0; i < allBombs.length; ++i) {
       var targetLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(allBombs[i][0], allBombs[i][1]));
       var launchLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(allBombs[i][6], allBombs[i][7]));
-      ctx.fillRect(566,130,300,30);
       var w = targetLocation.x-launchLocation.x;
       var h = targetLocation.y-launchLocation.y;
-      ctx.fillRect(launchLocation.x,launchLocation.y,targetLocation.x-launchLocation.x,targetLocation.y-launchLocation.y);
-      //if (allBombs[i][2] > 0) {
-        //ctx.moveTo(launchLocation.x, launchLocation.y);
-        //ctx.lineTo(targetLocation.x, targetLocation.y);
-      //}
+      if (allBombs[i][2] > 0) {
+        ctx.moveTo(launchLocation.x, launchLocation.y);
+        ctx.lineTo(targetLocation.x, targetLocation.y);
+      }
     }
 
-    //ctx.strokeStyle = "#FFF";
-    //ctx.stroke();
+    ctx.strokeStyle = "#FFF";
+    ctx.stroke();
   }
 
 }
