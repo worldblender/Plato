@@ -253,7 +253,7 @@ function drawPlayer(p) {
     person.src = "http://graph.facebook.com/" + p[3] + "/picture";
   }
   person.onload=function(){
-    gDrawingContext.drawImage(person,x-person.width/2,y-person.height/2);
+    gDrawingContext.drawImage(person,targetLocation.x-person.width/2,targetLocation.y-person.height/2);
   }
 }
 function initialize() {
