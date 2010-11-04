@@ -226,6 +226,8 @@ function drawGame() {
     for(var j=0;j<allBombs.length;j++) {
       drawMissle(allBombs[j]);
     }
+    gDrawingContext.strokeStyle = "#FFF";
+    gDrawingContext.stroke();
   }
 }
 function drawMissle(b) {
