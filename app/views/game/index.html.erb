@@ -118,7 +118,7 @@ BombPathOverlay.prototype.draw = function() {
         x = launchLocation.x*(1-dOnPath)+targetLocation.x*dOnPath;
         y = launchLocation.y*(1-dOnPath)+targetLocation.y*dOnPath;
         var missle=new Image();
-        missle.src="/public/images/rocket_03.png";
+        missle.src="/images/rocket_03.png";
         missle.onLoad=function(){
           ctx.drawImage(missle,x,y,20,20);
         }
