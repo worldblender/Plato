@@ -15,7 +15,6 @@ var map;
 var myLocation;
 var playerIndex = -1;
 var zIndexTop = 0;
-var jqueryReady=false;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
@@ -254,16 +253,15 @@ function drawMissleAndPath(b) {
     missle.onload=function(){
       gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
       // add in the animation for this missle
-      jQuery(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+      if(jQuery)
+      {
+        jQuery(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
         // animation complete
-        });
+            });
+      }
     }
   }
 }
-
-$(document).ready(function () {
-    jqueryReady=true;
-    });
 function drawPlayer(p) {
   var targetLocation = gOverlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(p[0], p[1]));
   var person=new Image();
