@@ -1,4 +1,3 @@
-<% if current_user %>
 <% content_for :head do %>
 
 <style type="text/css">
@@ -107,13 +106,22 @@ function drawAllInnocents() {
     var fid = innocents.data[i].from.id;
     var innocentLocation = new google.maps.LatLng(innocentLat, innocentLng);
 
-    var bomb = new google.maps.Marker({
+    var innocent = new google.maps.Marker({
       position: innocentLocation,
       map: map,
       title: fname,
       //icon: "http://jeffhuang.com/personIcon.png",
       icon: "http://cdn.iconfinder.net/data/icons/c9d/user_white.png",
       zIndex: 5
+    });
+
+    google.maps.event.addListener(innocent, 'click', function() {
+      var innocentInfobox = new InfoBox({
+        content: fname + "<img src='http://graph.facebook.com/" + fid + "/picture'>",
+        closeBoxURL: ""
+      });
+      innocentInfobox.open(map, this);
+      setTimeout(function(){innocent.Infobox.close()}, 5000);
     });
   }
 }
