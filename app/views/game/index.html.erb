@@ -306,7 +306,9 @@ function tick(i) {
     allBombs[i][3].setVisible(true);
     setTimeout("window.location.reload(true)", 1500);
   }
-  bombPathOverlay.draw();
+  if(bombPathOverlay != null) {
+    bombPathOverlay.draw();
+  }
   allBombs[i][2] -= TICK_INTERVAL;
 }
 
