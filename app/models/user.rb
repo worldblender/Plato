@@ -64,6 +64,7 @@ class User < ActiveRecord::Base
   end
 
   def notify(textMessage,title = 'Game notification from ' + GAME_NAME)
+    textMessage = textMessage + "\nhttp://p.worldblender.com"
     puts("called with " + textMessage + " as my data")
     if self.acceptText?
       # send a text message
