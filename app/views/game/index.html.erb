@@ -135,12 +135,16 @@ BombPathOverlay.prototype.drawMissles = function() {
       missle.src="/images/rocket_06.png";
       missle.id="bomb_" + i;
       missle.onload=function(){
-        missle.style="position:absolute; x:" + x +"px; top:"+ y +"px";
-        if($) {
+        missle.style.cssText="position:absolute;";
+        missle.x=x;
+        missle.y=y;
+        try{
           $('imageLayer').appendChild(this);
           $(this).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
             // animation complete remove rocket or do the explotion animation or something
             });
+        } catch(e) {
+          //console.log(e.message);
         }
       }
     }
