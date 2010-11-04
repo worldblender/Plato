@@ -96,7 +96,7 @@ function getBearing(source,target)
 {
   var y = Math.sin(target.lng()-source.lng()) * Math.cos(target.lat());
   var x = Math.cos(source.lat())*Math.sin(target.lat()) - Math.sin(source.lat())*Math.cos(target.lat())*Math.cos(target.lng()-source.lng());
-  var brng = Math.atan2(y, x).toDeg();
+  var brng = Math.atan2(y, x);
 }
 
 BombPathOverlay.prototype.draw = function() {
@@ -333,7 +333,7 @@ function placeBomb(location, i) {
     position: location,
     map: map,
     title: "Bomb",
-    icon: "/images/target_07.target.png",
+    icon: "/images/target_07.png",
     zIndex: 50000,
     labelAnchor: myLocation
   });
