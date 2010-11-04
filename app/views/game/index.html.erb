@@ -33,6 +33,7 @@
 	overflow: auto;
 }
 </style>
+<script type="text/javasctipt" src="/javascripts/jquery-1.4.3.js"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript" src="/javascripts/infobox.js"></script>
@@ -46,8 +47,6 @@ var angle = Math.PI/2;
 var map;
 var myLocation;
 var playerIndex = -1;
-var gCanvasElement;
-var gDrawingContext;
 var zIndexTop = 0;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
@@ -134,14 +133,16 @@ BombPathOverlay.prototype.drawMissles = function() {
       var missle=new Image();
       ctx = this._ctx;
       missle.src="/images/rocket_06.png";
+      missle.id="bomb_" + i;
       missle.onload=function(){
-        //var cosa = Math.cos(angleRad);
-        //var sina = Math.sin(angleRad);
-        //ctx.save();
-        //ctx.rotate(angleRad);
-        // ctx.translate(-x * sina - y * cosa, -x * cosa + y * sina);
-        ctx.drawImage(missle,x-missle.width/2,y-missle.height/2);
-        //ctx.restore();
+        missle.style="position:absolute; x:" + x +"px; top:"+ y +"px";
+        this.div_.appendChild(missle);
+        if($)
+        {
+          $(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+            // animation complete remove rocket or do the explotion animation or something
+            });
+        }
       }
     }
   }
