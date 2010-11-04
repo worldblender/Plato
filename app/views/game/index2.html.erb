@@ -59,6 +59,81 @@ function createBomb() {
   });
 }
 
+function mapTypeExperiment() {
+  var platoMapStyles = [
+  {
+    featureType: "road.arterial",
+    elementType: "geometry",
+    stylers: [
+      { visibility: "simplified" },
+      { hue: "#f6ff00" },
+      { gamma: 0.38 }
+    ]
+  },{
+    featureType: "water",
+    elementType: "all",
+    stylers: [
+      { lightness: 36 }
+    ]
+  },{
+    featureType: "road.highway",
+    elementType: "all",
+    stylers: [
+      { visibility: "simplified" },
+      { gamma: 0.76 }
+    ]
+  },{
+    featureType: "all",
+    elementType: "labels",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "road.local",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "transit",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "administrative",
+    elementType: "labels",
+    stylers: [
+      { visibility: "on" },
+      { gamma: 0.39 },
+      { lightness: -4 },
+      { saturation: 100 }
+    ]
+  },{
+    featureType: "landscape.man_made",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  },{
+    featureType: "all",
+    elementType: "all",
+    stylers: [
+      { invert_lightness: true }
+    ]
+  },{
+    featureType: "poi",
+    elementType: "all",
+    stylers: [
+      { visibility: "off" }
+    ]
+  }];
+  var platoMap = new google.maps.StyledMapType(platoMapStyles, {name: "Plato Style" });
+  map.mapTypes.set('platoMap', platoMap);
+  map.setMapTypeId('platoMap');
+}
+
+
 function gotPositionCallback(position) {
   myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   pushData = new Image();
