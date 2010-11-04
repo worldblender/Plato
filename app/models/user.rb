@@ -120,7 +120,7 @@ class User < ActiveRecord::Base
   end
 
   def sendNotifo(message, recipient)
-    notifo = Notifo.new("wargames", "a83e0a7f7bd18ef712b4776dac84b6f55de7254f")
+    notifo = Notifo.new(GAME_NAME, "a83e0a7f7bd18ef712b4776dac84b6f55de7254f")
     self.notifoSubscribe(notifo, recipient)
     notifo.post(recipient.notifo_account,message)
   end
