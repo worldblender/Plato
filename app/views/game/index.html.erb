@@ -110,40 +110,44 @@ BombPathOverlay.prototype.draw = function() {
     var ctx = canvas.getContext('2d');
     ctx.clearRect(0,0,canvas.width,canvas.height);
     // draw the lines from launch point to target
+    this.drawMissles();
 
-    for (i = 0; i < allBombs.length; ++i) {
-      var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
-      var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
-      var targetLocation = overlayProjection.fromLatLngToDivPixel(targetLatLng);
-      var launchLocation = overlayProjection.fromLatLngToDivPixel(sourceLatLng);
-      var w = targetLocation.x-launchLocation.x;
-      var h = targetLocation.y-launchLocation.y;
-      if (allBombs[i][2] > 0) {
-        ctx.moveTo(launchLocation.x, launchLocation.y);
-        ctx.lineTo(targetLocation.x, targetLocation.y);
-        // draw the missle a distance along the path according to how close it is
-        var distance = haversineDistance(allBombs[i][0], allBombs[i][1], allBombs[i][6], allBombs[i][7]);
-        duration=<%= clientCalcDuration %>*1000;
-        dOnPath=allBombs[i][2]/duration;
-        var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
-        var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
-        //var angleRad=getBearing(sourceLatLng,targetLatLng);
-        var missle=new Image();
-        missle.src="/images/rocket_06.png";
-        missle.onload=function(){
-          //var cosa = Math.cos(angleRad);
-          //var sina = Math.sin(angleRad);
-          //ctx.save();
-          //ctx.rotate(angleRad);
-          // ctx.translate(-x * sina - y * cosa, -x * cosa + y * sina);
-          ctx.drawImage(missle,x-missle.width/2,y-missle.height/2);
-          //ctx.restore();
-        }
+  }
+}
+
+BombPathOverlay.prototype.drawMissles () {
+  for (i = 0; i < allBombs.length; ++i) {
+    var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
+    var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
+    var targetLocation = overlayProjection.fromLatLngToDivPixel(targetLatLng);
+    var launchLocation = overlayProjection.fromLatLngToDivPixel(sourceLatLng);
+    var w = targetLocation.x-launchLocation.x;
+    var h = targetLocation.y-launchLocation.y;
+    if (allBombs[i][2] > 0) {
+      ctx.moveTo(launchLocation.x, launchLocation.y);
+      ctx.lineTo(targetLocation.x, targetLocation.y);
+      // draw the missle a distance along the path according to how close it is
+      var distance = haversineDistance(allBombs[i][0], allBombs[i][1], allBombs[i][6], allBombs[i][7]);
+      duration=<%= clientCalcDuration %>*1000;
+      dOnPath=allBombs[i][2]/duration;
+      var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
+      var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
+      //var angleRad=getBearing(sourceLatLng,targetLatLng);
+      var missle=new Image();
+      missle.src="/images/rocket_06.png";
+      missle.onload=function(){
+        //var cosa = Math.cos(angleRad);
+        //var sina = Math.sin(angleRad);
+        //ctx.save();
+        //ctx.rotate(angleRad);
+        // ctx.translate(-x * sina - y * cosa, -x * cosa + y * sina);
+        ctx.drawImage(missle,x-missle.width/2,y-missle.height/2);
+        //ctx.restore();
       }
     }
-    ctx.strokeStyle = "#FFF";
-    ctx.stroke();
   }
+  ctx.strokeStyle = "#FFF";
+  ctx.stroke();
 }
 
 BombPathOverlay.prototype.onAdd = function() {
