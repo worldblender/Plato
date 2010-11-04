@@ -136,10 +136,10 @@ BombPathOverlay.prototype.drawMissles = function() {
       missle.id="bomb_" + i;
       missle.onload=function(){
         missle.style="position:absolute; x:" + x +"px; top:"+ y +"px";
-        this.div_.appendChild(missle);
+        $('imageLayer').appendChild(this);
         if($)
         {
-          $(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+          $(this).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
             // animation complete remove rocket or do the explotion animation or something
             });
         }
@@ -173,7 +173,7 @@ BombPathOverlay.prototype.onAdd = function() {
   div.style.border = "none";
   div.style.borderWidth = "0px";
   div.style.position = "absolute";
-  div.innerHTML = "<div><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
+  div.innerHTML = "<div id="imageLayer"><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
 
   // Create an IMG element and attach it to the DIV.
   // Set the overlay's div_ property to this DIV
