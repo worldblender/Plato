@@ -246,11 +246,11 @@ function drawMissle(b) {
 function drawPlayer(p) {
   var targetLocation = gOverlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(p[0], p[1]));
   var person=new Image();
-  if (allPlayers[i][4]) {
+  if (p[4]) {
     person.src = "/images/tombstone.gif";
   }
   else {
-    person.src = "http://graph.facebook.com/" + allPlayers[i][3] + "/picture";
+    person.src = "http://graph.facebook.com/" + p[3] + "/picture";
   }
   person.onload=function(){
     gDrawingContext.drawImage(person,x-person.width/2,y-person.height/2);
