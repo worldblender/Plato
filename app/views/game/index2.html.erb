@@ -253,7 +253,7 @@ function drawMissleAndPath(b) {
     missle.onload=function(){
       gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
       // add in the animation for this missle
-      $(missle.name).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+      $(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
         // animation complete
         });
     }
