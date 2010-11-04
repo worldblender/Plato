@@ -26,7 +26,7 @@ Devise.setup do |config|
     :site              => 'https://graph.facebook.com/',
     :authorize_path    => '/oauth/authorize',
     :access_token_path => '/oauth/access_token',
-    :scope             => %w(email)
+    :scope             => %w(email friends_checkins)
 
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating an user. By default is
