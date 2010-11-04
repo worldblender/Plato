@@ -4,6 +4,7 @@ Plato::Application.routes.draw do
   devise_for :users
 
   get "game/index"
+  get "game/index2"
   get "game/dropBomb"
   get "game/playerMoved"
   get "game/restart"
