@@ -136,7 +136,7 @@ BombPathOverlay.prototype.draw = function() {
           ctx.rotate(angleRad);
           // ctx.translate(-x * sina - y * cosa, -x * cosa + y * sina);
           ctx.drawImage(missle,x,y);
-          canvas.restore();
+          ctx.restore();
         }
       }
     }
