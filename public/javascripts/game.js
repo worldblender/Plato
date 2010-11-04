@@ -1,15 +1,3 @@
-<% if current_user %>
-<% content_for :head do %>
-  <style>
-    html { height: 100% }
-    body { height: 100%; margin: 0px; padding: 0px; font-family: Monospace; font-weight: bold; color: #9AFE2E }
-    #map_canvas { width:80%; height: 80% }
-  </style>
-<script type="text/javasctipt" src="/javascripts/jquery-1.4.3.js"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
-<script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
-<script type="text/javascript" src="/javascripts/infobox.js"></script>
-<script type="text/javascript">
 var TICK_INTERVAL = 8000; // in milliseconds
 var map;
 var myLocation;
@@ -253,12 +241,9 @@ function drawMissleAndPath(b) {
     missle.onload=function(){
       gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
       // add in the animation for this missle
-      if($)
-      {
-        $(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+      jQuery(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
         // animation complete
-            });
-      }
+        });
     }
   }
 }
@@ -314,9 +299,3 @@ function tick() {
 }
 window.onload = initialize;
 
-
-</script>
-<% end %>
-<div id="map_canvas"></div>
-
-<% end %>
