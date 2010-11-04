@@ -99,7 +99,7 @@ BombPathOverlay.prototype.draw = function() {
   if(canvas.getContext)
   {
     canvas.width = canvas.width;
-    var ctx = canvas.getContext('2d');
+    // var ctx = canvas.getContext('2d');
     //ctx.clearRect(0,0,canvas.width,canvas.height);
     // draw the lines from launch point to target
 
@@ -165,7 +165,7 @@ BombPathOverlay.prototype.onAdd = function() {
 }
 
 function addOverlay() {
-  overlay = new BombPathOverlay(map);
+  bombPathOverlay = new BombPathOverlay(map);
 }
 
 function initialize() {
@@ -306,6 +306,7 @@ function tick(i) {
     allBombs[i][3].setVisible(true);
     setTimeout("window.location.reload(true)", 1500);
   }
+  bombPathOverlay.draw();
   allBombs[i][2] -= TICK_INTERVAL;
 }
 
