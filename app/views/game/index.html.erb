@@ -92,6 +92,13 @@ function BombPathOverlay(map) {
   this.setMap(map);
 }
 
+function getBearing(source,target)
+{
+  var y = Math.sin(target.lng()-source.lng()) * Math.cos(target.lat());
+  var x = Math.cos(source.lat())*Math.sin(target.lat()) - Math.sin(source.lat())*Math.cos(target.lat())*Math.cos(target.lng()-source.lng());
+  var brng = Math.atan2(y, x).toDeg();
+}
+
 BombPathOverlay.prototype.draw = function() {
   var overlayProjection = this.getProjection();
 
@@ -104,8 +111,10 @@ BombPathOverlay.prototype.draw = function() {
     // draw the lines from launch point to target
 
     for (i = 0; i < allBombs.length; ++i) {
-      var targetLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(allBombs[i][0], allBombs[i][1]));
-      var launchLocation = overlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(allBombs[i][6], allBombs[i][7]));
+      var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
+      var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
+      var targetLocation = overlayProjection.fromLatLngToDivPixel(targetLatLng);
+      var launchLocation = overlayProjection.fromLatLngToDivPixel(sourceLatLng);
       var w = targetLocation.x-launchLocation.x;
       var h = targetLocation.y-launchLocation.y;
       if (allBombs[i][2] > 0) {
@@ -117,10 +126,17 @@ BombPathOverlay.prototype.draw = function() {
         dOnPath=allBombs[i][2]/duration;
         var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
         var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
+        var angleRad=getBearing(sourceLatLng,targetLatLng);
         var missle=new Image();
         missle.src="/images/rocket_06.png";
         missle.onload=function(){
-          ctx.drawImage(missle,x,y);
+          var cosa = Math.cos(angleRad);
+          var sina = Math.sin(angleRad);
+          canvas.save();
+          canvas.rotate(angleRadians);
+          canvas.translate(-x * sina - y * cosa, -x * cosa + y * sina);
+          ctx.drawImage(missle,x,y,-this.width/2,-this.height/2);
+          canvas.restore();
         }
       }
     }
