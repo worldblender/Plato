@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
     # You'll have to figure this part out from the json you get back
     data = ActiveSupport::JSON.decode(access_token.get('https://graph.facebook.com/me?'))
     places = ActiveSupport::JSON.decode(access_token.get('https://graph.facebook.com/search?type=checkin&'))
-    puts places
+    puts places.inspect
     if user = User.find_by_email(data["email"])
       user
     else
@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
       user = User.create!(:email => data["email"], :password => Devise.friendly_token)
       user.facebook_id = data['id']
       user.name = data['name']
+      user.friendPlaces = places
       user.save
       user.resurrect
       user
