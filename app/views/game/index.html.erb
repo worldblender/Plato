@@ -95,13 +95,11 @@ function BombPathOverlay(map) {
 BombPathOverlay.prototype.draw = function() {
 
 
-  var canvas=document.getElementById('test');
+  var canvas=document.getElementById('gameLayer');
   if(canvas.getContext)
   {
-    canvas.height=div.style.height;
-    canvas.width=div.style.width;
     var ctx = canvas.getContext('2d');
-    ctx.clearRect(div.style.left,div.style.top,div.style.width,div.style.height);
+    ctx.clearRect(0,0,canvas.width,canvas.height);
     // draw the lines from launch point to target
 
     for (i = 0; i < allBombs.length; ++i) {
@@ -143,7 +141,7 @@ BombPathOverlay.prototype.onAdd = function() {
   div.style.border = "none";
   div.style.borderWidth = "0px";
   div.style.position = "absolute";
-  div.innerHTML = "<div><canvas id='test' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
+  div.innerHTML = "<div><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
 
   // Create an IMG element and attach it to the DIV.
   // Set the overlay's div_ property to this DIV
