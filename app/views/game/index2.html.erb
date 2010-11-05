@@ -115,43 +115,46 @@ GameOverlay.prototype.draw = function() {
 
 GameOverlay.prototype.drawMissles = function() {
   for (i = 0; i < allBombs.length; ++i) {
-    var targetLatLng=new google.maps.LatLng(allBombs[i][msl_lat], allBombs[i][msl_lng]);
-    var sourceLatLng=new google.maps.LatLng(allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
-    var targetLocation = gameOverlayProjection.fromLatLngToDivPixel(targetLatLng);
-    var launchLocation = gameOverlayProjection.fromLatLngToDivPixel(sourceLatLng);
-    var w = targetLocation.x-launchLocation.x;
-    var h = targetLocation.y-launchLocation.y;
-    if (allBombs[i][msl_timeleft] > 0) {
-      // draw the missle a distance along the path according to how close it is
-      var distance = haversineDistance(allBombs[i][msl_lat], allBombs[i][msl_lng], allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
-      duration=<%= clientCalcDuration %>*1000;
-      dOnPath=allBombs[i][2]/duration;
-      var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
-      var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
-      var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI);;
-      var oldBomb=document.getElementById('msl_'+allBombs[msl_id]);
-      if(oldBomb == null)
-      {
-        var missle=new Image();
-        missle.src="/images/rocket_06.png";
-        missle.id="msl_" + allBombs[msl_id];
-        missle.onload=function(){
-          missle.style.cssText="position:absolute; -webkit-transform: rotate("+ angleDeg + "deg); -moz-transform: rotate(" + angleDeg+ "deg);";
-          missle.style.pixelLeft=x;
-          missle.style.pixelTop=y;
-          try{
-            document.getElementById('imageLayer').appendChild(this);
-            //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
-                // animation complete remove rocket or do the explotion animation or something
-                // remove bomb from dataset
-            //});
-          } catch(e) {
-            console.log(e.message);
+    if(gameOverlayProjection != null)
+    {
+      var targetLatLng=new google.maps.LatLng(allBombs[i][msl_lat], allBombs[i][msl_lng]);
+      var sourceLatLng=new google.maps.LatLng(allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
+      var targetLocation = gameOverlayProjection.fromLatLngToDivPixel(targetLatLng);
+      var launchLocation = gameOverlayProjection.fromLatLngToDivPixel(sourceLatLng);
+      var w = targetLocation.x-launchLocation.x;
+      var h = targetLocation.y-launchLocation.y;
+      if (allBombs[i][msl_timeleft] > 0) {
+        // draw the missle a distance along the path according to how close it is
+        var distance = haversineDistance(allBombs[i][msl_lat], allBombs[i][msl_lng], allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
+        duration=<%= clientCalcDuration %>*1000;
+        dOnPath=allBombs[i][2]/duration;
+        var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
+        var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
+        var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI);;
+        var oldBomb=document.getElementById('msl_'+allBombs[msl_id]);
+        if(oldBomb == null)
+        {
+          var missle=new Image();
+          missle.src="/images/rocket_06.png";
+          missle.id="msl_" + allBombs[msl_id];
+          missle.onload=function(){
+            missle.style.cssText="position:absolute; -webkit-transform: rotate("+ angleDeg + "deg); -moz-transform: rotate(" + angleDeg+ "deg);";
+            missle.style.pixelLeft=x;
+            missle.style.pixelTop=y;
+            try{
+              document.getElementById('imageLayer').appendChild(this);
+              //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
+                  // animation complete remove rocket or do the explotion animation or something
+                  // remove bomb from dataset
+              //});
+            } catch(e) {
+              console.log(e.message);
+            }
           }
+        } else {
+          oldBomb.style.pixelLeft=x-oldBomb.width/2;
+          oldBomb.style.pixelTop=y-oldBomb.height/2;
         }
-      } else {
-        oldBomb.style.pixelLeft=x-oldBomb.width/2;
-        oldBomb.style.pixelTop=y-oldBomb.height/2;
       }
     }
   }
