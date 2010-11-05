@@ -444,7 +444,7 @@ function createBombButton() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     allBombs.push([bombLat1, bombLng1, bombTime, null, null, "<%= current_user.name %>",myLocation.lat(),myLocation.lng()]);
-    placeBomb(this.getPosition(), allBombs.length-1);
+    createBomb(this.getPosition(), allBombs.length-1);
     var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
     pushData = new Image();
     pushData.src = targetUrl;
