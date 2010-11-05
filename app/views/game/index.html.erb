@@ -145,16 +145,17 @@ BombPathOverlay.prototype.drawMissles = function() {
           missle.style.pixelTop=y;
           try{
             document.getElementById('imageLayer').appendChild(this);
-            //document.getElementById(this).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
-              // animation complete remove rocket or do the explotion animation or something
-              //});
+            $(this).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+                // animation complete remove rocket or do the explotion animation or something
+                // remove bomb from dataset
+            });
           } catch(e) {
             console.log(e.message);
           }
         }
       } else {
-        oldBomb.style.pixelLeft=x-oldBomb.width/2;
-        oldBomb.style.pixelTop=y-oldBomb.height/2;
+        //oldBomb.style.pixelLeft=x-oldBomb.width/2;
+        //oldBomb.style.pixelTop=y-oldBomb.height/2;
       }
     }
   }
