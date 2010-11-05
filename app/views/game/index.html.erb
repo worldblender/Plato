@@ -137,8 +137,8 @@ BombPathOverlay.prototype.drawMissles = function() {
       missle.id="bomb_" + i;
       missle.onload=function(){
         missle.style.cssText="position:absolute;";
-        missle.x=x;
-        missle.y=y;
+        missle.style.pixelLeft=x;
+        missle.style.pixelTop=y;
         try{
           document.getElementById('imageLayer').appendChild(this);
           //document.getElementById(this).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
