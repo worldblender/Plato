@@ -91,6 +91,7 @@ function BombPathOverlay(map) {
 
   // Explicitly call setMap() on this overlay
   this.setMap(map);
+  this.
 }
 
 function getBearing(source,target)
@@ -145,17 +146,17 @@ BombPathOverlay.prototype.drawMissles = function() {
           missle.style.pixelTop=y;
           try{
             document.getElementById('imageLayer').appendChild(this);
-            $(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
+            //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
                 // animation complete remove rocket or do the explotion animation or something
                 // remove bomb from dataset
-            });
+            //});
           } catch(e) {
             console.log(e.message);
           }
         }
       } else {
-        //oldBomb.style.pixelLeft=x-oldBomb.width/2;
-        //oldBomb.style.pixelTop=y-oldBomb.height/2;
+        oldBomb.style.pixelLeft=x-oldBomb.width/2;
+        oldBomb.style.pixelTop=y-oldBomb.height/2;
       }
     }
   }
