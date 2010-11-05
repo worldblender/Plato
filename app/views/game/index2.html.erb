@@ -55,17 +55,17 @@ BombPathOverlay.prototype.onAdd = function() {
   div.style.border = "none";
   div.style.borderWidth = "0px";
   div.style.position = "absolute";
-  div.innerHTML = "<div id='missleLayer'><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
+  div.innerHTML = "<div id='missleLayer'></div>";
 
   var panes = this.getPanes();
   panes.overlayLayer.appendChild(div);
-  gCanvasElement = document.getElementById('gameLayer');
-  if (gCanvasElement != null && gCanvasElement.getContext)
-  {
-    gCanvasElement.width = gCanvasElement.width;
-    gCanvasElement.height = gCanvasElement.height;
-    gDrawingContext = gCanvasElement.getContext('2d');
-  }
+  // gCanvasElement = document.getElementById('gameLayer');
+  // if (gCanvasElement != null && gCanvasElement.getContext)
+  // {
+   // gCanvasElement.width = gCanvasElement.width;
+   // gCanvasElement.height = gCanvasElement.height;
+   // gDrawingContext = gCanvasElement.getContext('2d');
+ // }
 }
 
 function createBomb() {
@@ -104,6 +104,7 @@ function createBomb() {
     var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
     pushData = new Image();
     pushData.src = targetUrl;
+    // fire event to create new missle and add it to the map
   });
 }
 
@@ -227,7 +228,7 @@ function drawGame() {
     }
     gDrawingContext.beginPath();
     for(var j=0;j<allBombs.length;j++) {
-      drawMissleAndPath(allBombs[j]);
+      drawMissleAndPath(j);
     }
     gDrawingContext.strokeStyle = "#FFF";
     gDrawingContext.stroke();
@@ -235,7 +236,8 @@ function drawGame() {
 }
 function drawImpactArea(b) {
 }
-function drawMissleAndPath(b) {
+function drawMissleAndPath(j) {
+  var b = allBombs[j];
   var targetLatLng=new google.maps.LatLng(b[0], b[1]);
   var sourceLatLng=new google.maps.LatLng(b[6], b[7]);
   var targetLocation = gOverlayProjection.fromLatLngToDivPixel(targetLatLng);
@@ -248,23 +250,25 @@ function drawMissleAndPath(b) {
     dOnPath=b[2]/duration;
     var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
     var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
-    var missle=new Image();
-    missle.src="/images/rocket_06.png";
-    missle.onload=function(){
-      tarDiv = document.getElementById('missleLayer');
-      this.style ="position:absolute;";
-      this.style.x=x;
-      this.style.y=y;
-      tarDiv.appendChild(this);
+    oldBomb = document.getElementById('bomb_' + j);
+    if(oldBomb == null)
+    {
+      var missle=new Image();
+      missle.src="/images/rocket_06.png";
+      missle.onload=function(){
+        tarDiv = document.getElementById('missleLayer');
+        this.id="bomb_" + j;
+        this.style ="position:absolute;";
+        this.style.x=x;
+        this.style.y=y;
+        tarDiv.appendChild(this);
 
-      // gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
-      // add in the animation for this missle
-      //if($)
-      //{
-        // $(missle).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
-        // animation complete
-      //});
+        // gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
+        // add in the animation for this missle
       }
+    } else {
+      oldBomb.style.x=x;
+      oldBomb.style.y=y;
     }
   }
 }
