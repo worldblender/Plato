@@ -309,8 +309,6 @@ function tick() {
           strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
         });
       }
-      var timeoutStatement = "tick()";
-      setTimeout(timeoutStatement, TICK_INTERVAL);
     } else {
       allBombs[i][msl_blastObj].setMap(null);
       allBombs[i][msl_obj].setIcon("/images/explosion.gif");
@@ -320,6 +318,7 @@ function tick() {
     }
     allBombs[i][msl_timeleft] -= TICK_INTERVAL;
   }
+  setTimeout("tick();", TICK_INTERVAL);
 
   if(gameOverlay != null) {
     gameOverlay.draw();
@@ -364,7 +363,7 @@ function createBomb(location, i) {
 }
 
 function createAllBombs() {
-  for (i = 0; i < allBombs.length; ++i) {
+  for (i = 0; i < allBombs.length; i++) {
     var location = new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     if (allBombs[i][2] > 0) {
       createBomb(location, i);
