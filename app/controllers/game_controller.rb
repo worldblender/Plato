@@ -23,7 +23,7 @@ class GameController < ApplicationController
       current_user.save
       bomb.setDuration
       bomb.usersInRange.each do |u|
-        heading = bomb.heading_from(u, :units => kms)
+        heading = bomb.heading_from(u, :units => :kms)
         damage = damageFor(bomb.distance_from(u, :units => :kms))
         u.notify(sprintf("%s dropped a bomb near you! It will detonate in %.0f seconds and do %d damage reducing you to %d hitpoints, unless you move.", current_user.name, bomb.duration.to_s,damage,u.hp-damage) + " heading: " + heading)
       end
