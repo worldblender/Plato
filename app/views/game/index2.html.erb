@@ -1,52 +1,163 @@
 <% if current_user %>
 <% content_for :head do %>
-  <style>
-    html { height: 100% }
-    body { height: 100%; margin: 0px; padding: 0px; font-family: Monospace; font-weight: bold; color: #9AFE2E }
-    #map_canvas { width:80%; height: 80% }
-  </style>
-<script type="text/javasctipt" src="/javascripts/jquery-1.4.3.js"></script>
+
+<style type="text/css">
+  html { height: 100%; }
+  body { height: 100%; margin: 0px; padding: 0px; font-family: Monospace; font-weight: bold; color: #9AFE2E; }
+  #map_canvas { width:80%; height: 80%; }
+.black_overlay {
+	display: none;
+	position: absolute;
+	top: 0%;
+	left: 0%;
+	width: 100%;
+	height: 100%;
+	background-color: black;
+	z-index:1001;
+	-moz-opacity: 0.7;
+	opacity: 0.7;
+	filter: alpha(opacity=70);
+}
+
+.white_content {
+	display: none;
+	position: absolute;
+	top: 7%;
+	left: 7%;
+	width: 80%;
+	height: 80%;
+	padding: 6px;
+	border: 6px solid orange;
+	background-color: black;
+	z-index: 1000002;
+	overflow: auto;
+}
+</style>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript" src="/javascripts/infobox.js"></script>
+<script type="text/javasctipt" src="http://code.jquery.com/jquery-1.4.1.min.js></script>
 <script type="text/javascript">
-var TICK_INTERVAL = 8000; // in milliseconds
+
+var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
+var TICK_INTERVAL = 1000; // in milliseconds
+var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters
+var img = new Image();
+img.src = '/images/login.png';
+var angle = Math.PI/2;
 var map;
 var myLocation;
 var playerIndex = -1;
 var zIndexTop = 0;
-var allPlayers = [<%- @players.each do |user| -%>
-  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
+var allPlayers = [<% @players.each do |user| %>
+  [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>, <%= user.id %>],
 <%- end -%>];
-var allBombs = [<%- @bombs.each do |bomb| %>
-  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<% end %>
-<%- end %>];
-var gCanvasElement;
-var gDrawingContext;
-var gOverlayProjection;
-var kPixelWidth = 1196;
-var kPixelHeight= 736;
-var bombPathOverlay;
+var allBombs = [<%- @bombs.each do |bomb| -%>
+  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>, <%= bomb.id %>],<%- end -%>
+<%- end -%>];
+var gameOverlay;
 
-BombPathOverlay.prototype = new google.maps.OverlayView();
+function getBearing(source,target)
+{
+  var y = Math.sin(target.lng()-source.lng()) * Math.cos(target.lat());
+  var x = Math.cos(source.lat())*Math.sin(target.lat()) - Math.sin(source.lat())*Math.cos(target.lat())*Math.cos(target.lng()-source.lng());
+  var brng = Math.atan2(y, x);
+  return brng;
+}
 
-function BombPathOverlay(map) {
+function haversineDistance(lat1, lon1, lat2, lon2) {
+  var R = 6371 * 1000; // meters;
+  var dLat = (lat2-lat1) * Math.PI / 180;
+  var dLon = (lon2-lon1) * Math.PI / 180;
+  var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  var d = R * c;
+  return d;
+}
+
+function createButton(html) {
+  var b = document.createElement('DIV');
+  b.style.padding = '5px';
+  b.innerHTML = html;
+  b.style.display = "none";
+  map.controls[google.maps.ControlPosition.TOP_LEFT].push(b);
+  return b;
+}
+
+GameOverlay.prototype = new google.maps.OverlayView();
+
+function GameOverlay(map) {
+  this.map_ = map;
+  this.div_ = null;
   this.setMap(map);
 }
 
-BombPathOverlay.prototype.draw = function() {
-  if (gDrawingContext)
-  {
-    drawGame()
-  }
+GameOverlay.prototype.draw = function() {
+  this.drawMissles();
 }
 
-BombPathOverlay.prototype.onAdd = function() {
-  gOverlayProjection = this.getProjection();
+GameOverlay.prototype.drawMissles = function() {
+  var overlayProjection = this.getProjection();
+  for (i = 0; i < allBombs.length; ++i) {
+    var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
+    var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
+    var targetLocation = overlayProjection.fromLatLngToDivPixel(targetLatLng);
+    var launchLocation = overlayProjection.fromLatLngToDivPixel(sourceLatLng);
+    var w = targetLocation.x-launchLocation.x;
+    var h = targetLocation.y-launchLocation.y;
+    if (allBombs[i][2] > 0) {
+      var distance = haversineDistance(allBombs[i][0], allBombs[i][1], allBombs[i][6], allBombs[i][7]);
+      duration=<%= clientCalcDuration %>*1000;
+      dOnPath=allBombs[i][2]/duration;
+      var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
+      var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
+      var angleDeg=getBearing(sourceLatLng,targetLatLng)*180/(Math.PI);
+      var oldBomb=document.getElementById('bomb_'+i);
+      if(oldBomb == null)
+      {
+        var missle=new Image();
+        ctx = this._ctx;
+        missle.src="/images/rocket_06.png";
+        missle.id="bomb_" + i;
+        missle.onload=function(){
+          missle.style.cssText="position:absolute; rotation: "+ angleDeg + "deg;";
+          missle.style.pixelLeft=x;
+          missle.style.pixelTop=y;
+          try{
+            document.getElementById('imageLayer').appendChild(this);
+            //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
+                // animation complete remove rocket or do the explotion animation or something
+                // remove bomb from dataset
+            //});
+          } catch(e) {
+            console.log(e.message);
+          }
+        }
+      } else {
+        oldBomb.style.pixelLeft=x-oldBomb.width/2;
+        oldBomb.style.pixelTop=y-oldBomb.height/2;
+      }
+    }
+  }
+  this._ctx.strokeStyle = "#FFF";
+  this._ctx.stroke();
+}
 
-  var sw = gOverlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
-  var ne = gOverlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
+GameOverlay.prototype.onAdd = function() {
+  // Size and position the overlay. We use a southwest and northeast
+  // position of the overlay to peg it to the correct position and size.
+  // We need to retrieve the projection from this overlay to do this.
+  var overlayProjection = this.getProjection();
 
+  // Retrieve the southwest and northeast coordinates of this overlay
+  // in latlngs and convert them to pixels coordinates.
+  // We'll use these coordinates to resize the DIV.
+  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
+  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
+
+  // Resize the image's DIV to fit the indicated dimensions.
+
+  // Create the DIV and set some basic attributes.
   var div = document.createElement('DIV');
   div.style.left = sw.x + 'px';
   div.style.top = ne.y + 'px';
@@ -55,57 +166,48 @@ BombPathOverlay.prototype.onAdd = function() {
   div.style.border = "none";
   div.style.borderWidth = "0px";
   div.style.position = "absolute";
-  div.innerHTML = "<div id='missleLayer'></div>";
+  div.innerHTML = "<div id='imageLayer'><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
 
+  // Create an IMG element and attach it to the DIV.
+  // Set the overlay's div_ property to this DIV
+  this.div_ = div;
+
+  // We add an overlay to a map via one of the map's panes.
+  // We'll add this overlay to the overlayImage pane.
   var panes = this.getPanes();
   panes.overlayLayer.appendChild(div);
-  // gCanvasElement = document.getElementById('gameLayer');
-  // if (gCanvasElement != null && gCanvasElement.getContext)
-  // {
-   // gCanvasElement.width = gCanvasElement.width;
-   // gCanvasElement.height = gCanvasElement.height;
-   // gDrawingContext = gCanvasElement.getContext('2d');
- // }
 }
 
-function createBomb() {
-  var marker = new MarkerWithLabel({
-    position: myLocation,
-    map: map,
-    title: "Your bomb",
-    icon: "/images/dragBomb.png",
-    draggable: true,
-    zIndex: 100000,
-    labelContent: "",
-    labelAnchor: myLocation
-  });
+function addOverlay() {
+  gameOverlay = new GameOverlay(map);
+}
 
-  <% if current_user.curScore and current_user.curScore < 100 %>
-    var helpInfobox = new InfoBox({
-      content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
-      boxStyle: { width: "250px" },
-      closeBoxURL: ""
-    });
-    setTimeout(function(){helpInfobox.close()}, 8000);
-    helpInfobox.open(map, marker);
+function initialize() {
+  var mapOptions = {
+    zoom: 14,
+    mapTypeIds: [google.maps.MapTypeId.TERRAIN, "platoMap"],
+    navigationControl: true,
+    navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
+    mapTypeControl: false,
+    streetViewControl: false
+  };
+  map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+  drawAllPlayers();
+  drawAllBombs();
+  setMapLocation();
+  addOverlay();
+  var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.gif'></a>");
+  leaderboardButton.style.display = "block";
+  var rulesButton = createButton("<a href='#' title='Show Rules' onclick='showRules(); return false'><img src='/images/rules.png'></a>");
+  rulesButton.style.display = "block";
+  var restartButton = createButton("<a href='/game/restart' title='Restart Game'><img src='/images/restart.png'></a>");
+  <%- if current_user.deadtime -%>
+    restartButton.style.display = "block";
   <%- end -%>
-  google.maps.event.addListener(marker, "dragend", function() {
-    var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
-    var displayedBombTime = Math.round(<%= clientCalcDuration %>);
-    this.setOptions({labelContent: displayedBombTime});
-  });
-  google.maps.event.addListener(marker, "dblclick", function() {
-    this.setMap(null);
-    var bombLat1 = this.getPosition().lat();
-    var bombLng1 = this.getPosition().lng();
-    var distance = haversineDistance(myLocation.lat(), myLocation.lng(), bombLat1, bombLng1);
-    var bombTime = 1000 * <%= clientCalcDuration %>;
-    allBombs.push([bombLat1, bombLng1, bombTime, null, null, "<%= current_user.name %>",myLocation.lat(),myLocation.lng()]);
-    var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
-    pushData = new Image();
-    pushData.src = targetUrl;
-    // fire event to create new missle and add it to the map
-  });
+  <%- if current_user.curScore and (current_user.top_score == nil or current_user.top_score < 10) and current_user.curScore < 10 -%>
+    showRules();
+  <%- end -%>
+  mapTypeExperiment();
 }
 
 function mapTypeExperiment() {
@@ -182,20 +284,182 @@ function mapTypeExperiment() {
   map.setMapTypeId('platoMap');
 }
 
+function showRules() {
+  document.getElementById('rules').style.display = 'block';
+  document.getElementById('fade').style.display = 'block';
+}
+
+function zOrderRotator() {
+  zIndexTop++;
+  for (i = 0; i < allPlayers.length; ++i) {
+    var zIndex = (i + zIndexTop) % allPlayers.length + 1;
+    if (allPlayers[i][4] != "")
+      continue;
+    allPlayers[i][5].setZIndex(zIndex);
+  }
+  setTimeout("zOrderRotator()", 2000);
+}
+
+function tick(i) {
+  if (allBombs[i][2] > 0) {
+    allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
+    allBombs[i][3].setOptions({labelContent: Math.round(allBombs[i][2] / 1000)});
+    var tmpTime = allBombs[i][2];
+    if (tmpTime > MAX_BOMB_TIME) {
+      tmpTime = MAX_BOMB_TIME;
+      allBombs[i][4].setOptions({
+        fillOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.2,
+        strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
+      });
+    }
+    var timeoutStatement = "tick(" + i + ")";
+    setTimeout(timeoutStatement, TICK_INTERVAL);
+  } else {
+    allBombs[i][4].setMap(null);
+    allBombs[i][3].setIcon("/images/explosion.gif");
+    allBombs[i][3].setVisible(true);
+    setTimeout("window.location.reload(true)", 1500);
+  }
+  if(gameOverlay != null) {
+    gameOverlay.draw();
+  }
+  allBombs[i][2] -= TICK_INTERVAL;
+}
+
+function placeBomb(location, i) {
+  var bomb = new MarkerWithLabel({
+    position: location,
+    map: map,
+    title: "Bomb",
+    icon: "/images/target_07.png",
+    zIndex: 50000,
+    labelAnchor: myLocation
+  });
+  bomb.owner = allBombs[i][5];
+  // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
+  var bombFallout = new google.maps.Circle({
+    map: map,
+    center: bomb.getPosition(),
+    fillColor: "#FF0000",
+    fillOpacity: 0.2,
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    radius: BOMB_RADIUS
+    });
+
+  allBombs[i][3] = bomb;
+  allBombs[i][4] = bombFallout;
+
+  google.maps.event.addListener(bomb, 'click', function() {
+    var bombInfoWindow = new google.maps.InfoWindow({
+      content: this.owner + "'s bomb"
+    });
+    bombInfoWindow.open(map, this);
+  });
+
+  tick(i);
+}
+
+function drawAllBombs() {
+  for (i = 0; i < allBombs.length; ++i) {
+    var location = new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
+    if (allBombs[i][2] > 0) {
+      placeBomb(location, i);
+    }
+  }
+}
+
+function drawPlayer(i) {
+  if (allPlayers[i][4])
+    icon = "/images/tombstone.gif";
+  else
+    icon = "http://graph.facebook.com/" + allPlayers[i][3] + "/picture";
+  var location = new google.maps.LatLng(allPlayers[i][0], allPlayers[i][1]);
+  var marker = new google.maps.Marker({
+    position: location,
+    map: map,
+    title: allPlayers[i][2],
+    icon: icon,
+    zIndex: 0
+  });
+
+  allPlayers[i][5] = marker;
+
+  marker.info = allPlayers[i];
+  google.maps.event.addListener(marker, 'click', function() {
+    var playerInfobox = new InfoBox({
+      content: "<b>" + this.getTitle() + "</b><br>" + this.info[6] + "hp<br>" + this.info[7] + "points",
+      boxStyle: { width: "200px" },
+      closeBoxURL: ""
+    });
+    playerInfobox.open(map, this);
+    setTimeout(function(){playerInfobox.close()}, 4000);
+  });
+}
+
+function drawAllPlayers() {
+  for (var i = 0; i < allPlayers.length; ++i) {
+    if (allPlayers[i][3] == <%= current_user.facebook_id %>) {
+      playerIndex = i;
+      continue;
+    }
+    drawPlayer(i);
+  }
+}
+
+function createBomb() {
+  var marker = new MarkerWithLabel({
+    position: myLocation,
+    map: map,
+    title: "You bomb",
+    icon: "/images/dragBomb.png",
+    draggable: true,
+    zIndex: 100000,
+    labelContent: "",
+    labelAnchor: myLocation
+  });
+
+  <%- if current_user.curScore and current_user.curScore < 100 -%>
+    var helpInfobox = new InfoBox({
+      content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
+      boxStyle: { width: "250px" },
+      closeBoxURL: ""
+    });
+    setTimeout(function(){helpInfobox.close()}, 8000);
+    helpInfobox.open(map, marker);
+  <%- end -%>
+  google.maps.event.addListener(marker, "dragend", function() {
+    var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
+    var displayedBombTime = Math.round(<%= clientCalcDuration %>);
+    this.setOptions({labelContent: displayedBombTime});
+  });
+  google.maps.event.addListener(marker, "dblclick", function() {
+    this.setMap(null);
+    var bombLat1 = this.getPosition().lat();
+    var bombLng1 = this.getPosition().lng();
+    var distance = haversineDistance(myLocation.lat(), myLocation.lng(), bombLat1, bombLng1);
+    var bombTime = 1000 * <%= clientCalcDuration %>;
+    allBombs.push([bombLat1, bombLng1, bombTime, null, null, "<%= current_user.name %>",myLocation.lat(),myLocation.lng()]);
+    placeBomb(this.getPosition(), allBombs.length-1);
+    var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
+    pushData = new Image();
+    pushData.src = targetUrl;
+  });
+}
 
 function gotPositionCallback(position) {
   myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
   pushData = new Image();
   pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
   map.setCenter(myLocation);
-  <% if !current_user.deadtime and !current_user.bomb_id %>
+  <%- if !current_user.deadtime and !current_user.bomb_id -%>
     createBomb();
-  <% end %>
-  if(playerIndex >= 0 && allPlayers[playerIndex] != null)
-  {
-    allPlayers[playerIndex][0] = position.coords.latitude;
-    allPlayers[playerIndex][1] = position.coords.longitude;
-  }
+  <%- end -%>
+
+  allPlayers[playerIndex][0] = position.coords.latitude;
+  allPlayers[playerIndex][1] = position.coords.longitude;
+  drawPlayer(playerIndex);
 
   navigator.geolocation.watchPosition(function(position) {
     //console.log("position: " + position.coords.latitude + ',' + position.coords.longitude + '; myLocation: ' + myLocation.lat() + ', ' + myLocation.lng());
@@ -205,8 +469,12 @@ function gotPositionCallback(position) {
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     allPlayers[playerIndex][5].setPosition(myLocation);
+    // map.setCenter(myLocation); // maybe?
   });
+
+  zOrderRotator();
 }
+
 function setMapLocation() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(gotPositionCallback); // TODO(jeff): catch on error
@@ -215,115 +483,34 @@ function setMapLocation() {
   }
 }
 
-function drawGame() {
-  if(gDrawingContext != null)
-  {
-    gDrawingContext.clearRect(0, 0, kPixelWidth, kPixelHeight);
-    for(var i=0;i<allPlayers.length;i++) {
-      if (allPlayers[i][3] == <%= current_user.facebook_id %>) {
-        playerIndex = i;
-        continue;
-      }
-      drawPlayer(allPlayers[i])
-    }
-    gDrawingContext.beginPath();
-    for(var j=0;j<allBombs.length;j++) {
-      drawMissleAndPath(j);
-    }
-    gDrawingContext.strokeStyle = "#FFF";
-    gDrawingContext.stroke();
-  }
-}
-function drawImpactArea(b) {
-}
-function drawMissleAndPath(j) {
-  var b = allBombs[j];
-  var targetLatLng=new google.maps.LatLng(b[0], b[1]);
-  var sourceLatLng=new google.maps.LatLng(b[6], b[7]);
-  var targetLocation = gOverlayProjection.fromLatLngToDivPixel(targetLatLng);
-  var launchLocation = gOverlayProjection.fromLatLngToDivPixel(sourceLatLng);
-  if (b[2] > 0) {
-    gDrawingContext.moveTo(launchLocation.x, launchLocation.y);
-    gDrawingContext.lineTo(targetLocation.x, targetLocation.y);
-    var distance = haversineDistance(b[0], b[1], b[6], b[7]);
-    duration=<%= clientCalcDuration %>*1000;
-    dOnPath=b[2]/duration;
-    var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
-    var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
-    oldBomb = document.getElementById('bomb_' + j);
-    if(oldBomb == null)
-    {
-      var missle=new Image();
-      missle.src="/images/rocket_06.png";
-      missle.onload=function(){
-        tarDiv = document.getElementById('missleLayer');
-        this.id="bomb_" + j;
-        this.style ="position:absolute;";
-        this.style.x=x;
-        this.style.y=y;
-        tarDiv.appendChild(this);
-
-        // gDrawingContext.drawImage(missle,x-missle.width/2,y-missle.height/2);
-        // add in the animation for this missle
-      }
-    } else {
-      oldBomb.style.x=x;
-      oldBomb.style.y=y;
-    }
-  }
-}
-function drawPlayer(p) {
-  var targetLocation = gOverlayProjection.fromLatLngToDivPixel(new google.maps.LatLng(p[0], p[1]));
-  var person=new Image();
-  if (p[4]) {
-    person.src = "/images/tombstone.gif";
-  }
-  else {
-    person.src = "http://graph.facebook.com/" + p[3] + "/picture";
-  }
-  person.onload=function(){
-    gDrawingContext.drawImage(person,targetLocation.x-person.width/2,targetLocation.y-person.height/2);
-  }
-}
-function initialize() {
-  var mapOptions = {
-    zoom: 14,
-    mapTypeIds: [google.maps.MapTypeId.TERRAIN, "platoMap"],
-    navigationControl: true,
-    navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
-    mapTypeControl: false,
-    streetViewControl: false
-  };
-  map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-  setMapLocation();
-  mapTypeExperiment();
-  addOverlay();
-  tick();
+function savePhone(t) {
+  t.disabled = true;
+  pushData = new Image();
+  pushData.src = '/game/savePhone?num=' + document.getElementById('phone').value;
+  t.value = "Saved";
 }
 
-function addOverlay() {
-  bombPathOverlay = new BombPathOverlay(map);
-}
-
-function haversineDistance(lat1, lon1, lat2, lon2) {
-  var R = 6371 * 1000; // meters;
-  var dLat = (lat2-lat1) * Math.PI / 180;
-  var dLon = (lon2-lon1) * Math.PI / 180;
-  var a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon/2) * Math.sin(dLon/2);
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  var d = R * c;
-  return d;
-}
-
-function tick() {
-  setTimeout("tick()", TICK_INTERVAL);
-  if (gDrawingContext)
-  {
-    drawGame();
-  }
-}
 window.onload = initialize;
 </script>
 <% end %>
+
 <div id="map_canvas"></div>
-<% end %>
+<div id="temp">
+  <canvas id="tutorial" width="150" height="150">
+  </canvas>
+</div>
+<div id="rules" class="white_content">
+<%= GAME_NAME %> Instructions:<br>
+1. You get one bomb at a time. Drag it to where you want.<br>
+2. Double click the bomb to light it.<br>
+3. The further away you drop a bomb, the longer it takes to detonate.<br>
+4. Being near an exploding bomb (even your own) will hurt you.<br>
+5. Move around in the (real) world to avoid bombs.<br>
+<br>
+Enter your phone# to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone(this)">
+<br><br>
+<center><input type="button" value="Continue" onClick="document.getElementById('rules').style.display = 'none'; document.getElementById('fade').style.display = 'none';"></center>
+</div>
+<div id="fade" class="black_overlay"></div>
+<%- end -%>
+
