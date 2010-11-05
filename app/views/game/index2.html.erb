@@ -114,12 +114,11 @@ GameOverlay.prototype.draw = function() {
 }
 
 GameOverlay.prototype.drawMissles = function() {
-  var overlayProjection = this.getProjection();
   for (i = 0; i < allBombs.length; ++i) {
     var targetLatLng=new google.maps.LatLng(allBombs[i][msl_lat], allBombs[i][msl_lng]);
     var sourceLatLng=new google.maps.LatLng(allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
-    var targetLocation = overlayProjection.fromLatLngToDivPixel(targetLatLng);
-    var launchLocation = overlayProjection.fromLatLngToDivPixel(sourceLatLng);
+    var targetLocation = gameOverlayProjection.fromLatLngToDivPixel(targetLatLng);
+    var launchLocation = gameOverlayProjection.fromLatLngToDivPixel(sourceLatLng);
     var w = targetLocation.x-launchLocation.x;
     var h = targetLocation.y-launchLocation.y;
     if (allBombs[i][msl_timeleft] > 0) {
@@ -160,8 +159,8 @@ GameOverlay.prototype.drawMissles = function() {
 
 GameOverlay.prototype.onAdd = function() {
   gameOverlayProjection = this.getProjection();
-  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
-  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
+  var sw = gameOverlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
+  var ne = gameOverlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
   var div = document.createElement('div');
   div.style.left = sw.x + 'px';
   div.style.top = ne.y + 'px';
