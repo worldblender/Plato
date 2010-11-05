@@ -152,8 +152,8 @@ BombPathOverlay.prototype.drawMissles = function() {
           }
         }
       } else {
-        oldBomb.style.pixelLeft=x;
-        oldBomb.style.pixelTop=y;
+        oldBomb.style.pixelLeft=x-oldBomb.width/2;
+        oldBomb.style.pixelTop=y-oldBomb.height/2;
       }
     }
   }
