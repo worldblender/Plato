@@ -145,7 +145,7 @@ BombPathOverlay.prototype.drawMissles = function() {
           missle.style.pixelTop=y;
           try{
             document.getElementById('imageLayer').appendChild(this);
-            $(this).animate({x: targetLocation.x,y:targetLocation.y},5000, function () {
+            $(this).animate({pixelLeft targetLocation.x,pixelToptargetLocation.y},5000, function () {
                 // animation complete remove rocket or do the explotion animation or something
                 // remove bomb from dataset
             });
