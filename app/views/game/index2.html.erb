@@ -463,7 +463,7 @@ function gotPositionCallback(position) {
 
   allPlayers[playerIndex][usr_lat] = position.coords.latitude;
   allPlayers[playerIndex][usr_lng] = position.coords.longitude;
-  drawPlayer(playerIndex);
+  createPlayer(playerIndex);
 
   navigator.geolocation.watchPosition(function(position) {
     //console.log("position: " + position.coords.latitude + ',' + position.coords.longitude + '; myLocation: ' + myLocation.lat() + ', ' + myLocation.lng());
