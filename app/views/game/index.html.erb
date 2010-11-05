@@ -36,7 +36,7 @@
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript" src="/javascripts/infobox.js"></script>
-<script type="text/javasctipt" src="/javascripts/jquery.1.3.2.min.js"></script>
+<script type="text/javasctipt" src="/javascripts/jquery-1.4.3.js"></script>
 <script type="text/javascript">
 
 var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
@@ -56,6 +56,7 @@ var allBombs = [<%- @bombs.each do |bomb| -%>
   <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
 <%- end -%>];
 var bombPathOverlay;
+
 function haversineDistance(lat1, lon1, lat2, lon2) {
   var R = 6371 * 1000; // meters;
   var dLat = (lat2-lat1) * Math.PI / 180;
