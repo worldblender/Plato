@@ -303,11 +303,11 @@ function tick() {
       var tmpTime = allBombs[i][msl_timeleft];
       if (tmpTime > MAX_BOMB_TIME) {
         tmpTime = MAX_BOMB_TIME;
-        allBombs[i][msl_blastObj].setOptions({
-          fillOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.2,
-          strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
-        });
       }
+      allBombs[i][msl_blastObj].setOptions({
+        fillOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.2,
+        strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
+        });
     } else {
       allBombs[i][msl_blastObj].setMap(null);
       allBombs[i][msl_obj].setIcon("/images/explosion.gif");
