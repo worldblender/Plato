@@ -6,11 +6,6 @@ class GameController < ApplicationController
     @players = User.all
   end
 
-  def index2
-    @bombs = Bomb.all
-    @players = User.all
-  end
-
   def restart
     current_user.resurrect
     redirect_to '/'

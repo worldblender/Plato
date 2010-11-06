@@ -2,9 +2,9 @@
 <% content_for :head do %>
 
 <style type="text/css">
-  html { height: 100% }
-  body { height: 100%; margin: 0px; padding: 0px; font-family: Monospace; font-weight: bold; color: #9AFE2E }
-  #map_canvas { width:100%; height: 100% }
+  html { height: 100%; }
+  body { height: 100%; margin: 0px; padding: 0px; font-family: Monospace; font-weight: bold; color: #9AFE2E; }
+  #map_canvas { width:100%; height: 100%; }
 .black_overlay {
 	display: none;
 	position: absolute;
@@ -37,6 +37,24 @@
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript" src="/javascripts/infobox.js"></script>
 <script type="text/javascript">
+  var usr_lat = 0;
+  var usr_lng = 1;
+  var usr_name = 2;
+  var usr_fbid = 3;
+  var usr_deadtime = 4;
+  var usr_obj = 5;
+  var usr_hp = 6;
+  var usr_score = 7;
+
+  var msl_lat = 0;
+  var msl_lng = 1;
+  var msl_timeleft = 2;
+  var msl_obj = 3;
+  var msl_blastObj = 4;
+  var msl_ownername = 5;
+  var msl_srclat = 6;
+  var msl_srclng = 7;
+  var msl_id = 8;
 var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters
@@ -46,16 +64,16 @@ var angle = Math.PI/2;
 var map;
 var myLocation;
 var playerIndex = -1;
-var gCanvasElement;
-var gDrawingContext;
 var zIndexTop = 0;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
 var allBombs = [<%- @bombs.each do |bomb| -%>
-  <%- if !bomb.isExploded? -%>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>],<%- end -%>
+  <% if !bomb.isExploded? %>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>, <%= bomb.id %>],<% end %>
 <%- end -%>];
-var bombPathOverlay;
+var gameOverlay;
+var gameOverlayProjection;
+
 function haversineDistance(lat1, lon1, lat2, lon2) {
   var R = 6371 * 1000; // meters;
   var dLat = (lat2-lat1) * Math.PI / 180;
@@ -75,20 +93,10 @@ function createButton(html) {
   return b;
 }
 
-BombPathOverlay.prototype = new google.maps.OverlayView();
+GameOverlay.prototype = new google.maps.OverlayView();
 
-function BombPathOverlay(map) {
-
-  // Now initialize all properties.
-  this.img_ = null;
+function GameOverlay(map) {
   this.map_ = map;
-  // We define a property to hold the image's
-  // div. We'll actually create this div
-  // upon receipt of the add() method so we'll
-  // leave it null for now.
-  this.div_ = null;
-
-  // Explicitly call setMap() on this overlay
   this.setMap(map);
 }
 
@@ -100,71 +108,62 @@ function getBearing(source,target)
   return brng;
 }
 
-BombPathOverlay.prototype.draw = function() {
-  this._canvas = document.getElementById('gameLayer');
-  if (this._canvas != null && this._canvas.getContext)
-  {
-    this._canvas.width = this._canvas.width;
-    this._ctx = this._canvas.getContext('2d');
-    this._ctx.clearRect(0,0,this._canvas.width,this._canvas.height);
-    // draw the lines from launch point to target
-    this.drawMissles();
-  }
+GameOverlay.prototype.draw = function() {
+  this.drawMissles();
 }
 
-BombPathOverlay.prototype.drawMissles = function() {
-  var overlayProjection = this.getProjection();
+GameOverlay.prototype.drawMissles = function() {
   for (i = 0; i < allBombs.length; ++i) {
-    var targetLatLng=new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
-    var sourceLatLng=new google.maps.LatLng(allBombs[i][6], allBombs[i][7]);
-    var targetLocation = overlayProjection.fromLatLngToDivPixel(targetLatLng);
-    var launchLocation = overlayProjection.fromLatLngToDivPixel(sourceLatLng);
-    var w = targetLocation.x-launchLocation.x;
-    var h = targetLocation.y-launchLocation.y;
-    if (allBombs[i][2] > 0) {
-      this._ctx.moveTo(launchLocation.x, launchLocation.y);
-      this._ctx.lineTo(targetLocation.x, targetLocation.y);
-      // draw the missle a distance along the path according to how close it is
-      var distance = haversineDistance(allBombs[i][0], allBombs[i][1], allBombs[i][6], allBombs[i][7]);
-      duration=<%= clientCalcDuration %>*1000;
-      dOnPath=allBombs[i][2]/duration;
-      var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
-      var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
-      //var angleRad=getBearing(sourceLatLng,targetLatLng);
-      var missle=new Image();
-      ctx = this._ctx;
-      missle.src="/images/rocket_06.png";
-      missle.onload=function(){
-        //var cosa = Math.cos(angleRad);
-        //var sina = Math.sin(angleRad);
-        //ctx.save();
-        //ctx.rotate(angleRad);
-        // ctx.translate(-x * sina - y * cosa, -x * cosa + y * sina);
-        ctx.drawImage(missle,x-missle.width/2,y-missle.height/2);
-        //ctx.restore();
+    if(gameOverlayProjection != null)
+    {
+      var targetLatLng=new google.maps.LatLng(allBombs[i][msl_lat], allBombs[i][msl_lng]);
+      var sourceLatLng=new google.maps.LatLng(allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
+      var targetLocation = gameOverlayProjection.fromLatLngToDivPixel(targetLatLng);
+      var launchLocation = gameOverlayProjection.fromLatLngToDivPixel(sourceLatLng);
+      var w = targetLocation.x-launchLocation.x;
+      var h = targetLocation.y-launchLocation.y;
+      if (allBombs[i][msl_timeleft] > 0) {
+        // draw the missle a distance along the path according to how close it is
+        var distance = haversineDistance(allBombs[i][msl_lat], allBombs[i][msl_lng], allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
+        duration=<%= clientCalcDuration %>*1000;
+        dOnPath=allBombs[i][2]/duration;
+        var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
+        var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
+        var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI);;
+        var oldBomb=document.getElementById('msl_'+allBombs[msl_id]);
+        if(oldBomb == null)
+        {
+          var missle=new Image();
+          missle.src="/images/rocket_06.png";
+          missle.id="msl_" + allBombs[msl_id];
+          missle.onload=function(){
+            missle.style.cssText="position:absolute; -webkit-transform: rotate("+ angleDeg + "deg); -moz-transform: rotate(" + angleDeg+ "deg);";
+            missle.style.pixelLeft=x;
+            missle.style.pixelTop=y;
+            try{
+              document.getElementById('imageLayer').appendChild(this);
+              //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
+                  // animation complete remove rocket or do the explotion animation or something
+                  // remove bomb from dataset
+              //});
+            } catch(e) {
+              console.log(e.message);
+            }
+          }
+        } else {
+          oldBomb.style.pixelLeft=x-oldBomb.width/2;
+          oldBomb.style.pixelTop=y-oldBomb.height/2;
+        }
       }
     }
   }
-  this._ctx.strokeStyle = "#FFF";
-  this._ctx.stroke();
 }
 
-BombPathOverlay.prototype.onAdd = function() {
-  // Size and position the overlay. We use a southwest and northeast
-  // position of the overlay to peg it to the correct position and size.
-  // We need to retrieve the projection from this overlay to do this.
-  var overlayProjection = this.getProjection();
-
-  // Retrieve the southwest and northeast coordinates of this overlay
-  // in latlngs and convert them to pixels coordinates.
-  // We'll use these coordinates to resize the DIV.
-  var sw = overlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
-  var ne = overlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
-
-  // Resize the image's DIV to fit the indicated dimensions.
-
-  // Create the DIV and set some basic attributes.
-  var div = document.createElement('DIV');
+GameOverlay.prototype.onAdd = function() {
+  gameOverlayProjection = this.getProjection();
+  var sw = gameOverlayProjection.fromLatLngToDivPixel(map.getBounds().getSouthWest());
+  var ne = gameOverlayProjection.fromLatLngToDivPixel(map.getBounds().getNorthEast());
+  var div = document.createElement('div');
   div.style.left = sw.x + 'px';
   div.style.top = ne.y + 'px';
   div.style.width = (ne.x-sw.x) + 'px';
@@ -172,20 +171,9 @@ BombPathOverlay.prototype.onAdd = function() {
   div.style.border = "none";
   div.style.borderWidth = "0px";
   div.style.position = "absolute";
-  div.innerHTML = "<div><canvas id='gameLayer' height='" + div.style.height + "' width='" + div.style.width + "' ></canvas></div>";
-
-  // Create an IMG element and attach it to the DIV.
-  // Set the overlay's div_ property to this DIV
-  this.div_ = div;
-
-  // We add an overlay to a map via one of the map's panes.
-  // We'll add this overlay to the overlayImage pane.
+  div.innerHTML = "<div id='imageLayer'></div>";
   var panes = this.getPanes();
   panes.overlayLayer.appendChild(div);
-}
-
-function addOverlay() {
-  bombPathOverlay = new BombPathOverlay(map);
 }
 
 function initialize() {
@@ -198,10 +186,10 @@ function initialize() {
     streetViewControl: false
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-  drawAllPlayers();
-  drawAllBombs();
+  createAllPlayers();
+  createAllBombs();
   setMapLocation();
-  addOverlay();
+  gameOverlay = new GameOverlay(map);
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.gif'></a>");
   leaderboardButton.style.display = "block";
   var rulesButton = createButton("<a href='#' title='Show Rules' onclick='showRules(); return false'><img src='/images/rules.png'></a>");
@@ -299,98 +287,109 @@ function zOrderRotator() {
   zIndexTop++;
   for (i = 0; i < allPlayers.length; ++i) {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
-    if (allPlayers[i][4] != "")
+    if (allPlayers[i][usr_deadtime] != "")
       continue;
-    allPlayers[i][5].setZIndex(zIndex);
+    allPlayers[i][usr_obj].setZIndex(zIndex);
   }
-  setTimeout("zOrderRotator()", 2000);
+  setTimeout("zOrderRotator();", 2000);
 }
 
-function tick(i) {
-  if (allBombs[i][2] > 0) {
-    allBombs[i][3].setVisible(!allBombs[i][3].getVisible());
-    allBombs[i][3].setOptions({labelContent: Math.round(allBombs[i][2] / 1000)});
-    var tmpTime = allBombs[i][2];
-    if (tmpTime > MAX_BOMB_TIME) {
-      tmpTime = MAX_BOMB_TIME;
-      allBombs[i][4].setOptions({
-        fillOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.2,
-        strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
-      });
+function tick() {
+  for(var i = 0; i<allBombs.length;i++)
+  {
+    if (allBombs[i][msl_timeleft] > 0) {
+      // allBombs[i][msl_obj].setVisible(!allBombs[i][msl_obj].getVisible());
+      allBombs[i][msl_obj].setOptions({labelContent: Math.round(allBombs[i][msl_timeleft] / 1000)});
+      var tmpTime = allBombs[i][msl_timeleft];
+      if (tmpTime > MAX_BOMB_TIME) {
+        tmpTime = MAX_BOMB_TIME;
+        allBombs[i][msl_blastObj].setOptions({
+          fillOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.2,
+          strokeOpacity: (1 - tmpTime / MAX_BOMB_TIME) * 0.8
+        });
+      }
+    } else {
+      allBombs[i][msl_blastObj].setMap(null);
+      allBombs[i][msl_obj].setIcon("/images/explosion.gif");
+      allBombs[i][msl_obj].setVisible(true);
+      setTimeout("destroyBomb(i);",1500);
+      // setTimeout("window.location.reload(true);", 1500);
     }
-    var timeoutStatement = "tick(" + i + ")";
-    setTimeout(timeoutStatement, TICK_INTERVAL);
-  } else {
-    allBombs[i][4].setMap(null);
-    allBombs[i][3].setIcon("/images/explosion.gif");
-    allBombs[i][3].setVisible(true);
-    setTimeout("window.location.reload(true)", 1500);
+    allBombs[i][msl_timeleft] -= TICK_INTERVAL;
   }
-  if(bombPathOverlay != null) {
-    bombPathOverlay.draw();
+  setTimeout("tick();", TICK_INTERVAL);
+
+  if(gameOverlay != null) {
+    gameOverlay.draw();
   }
-  allBombs[i][2] -= TICK_INTERVAL;
 }
 
-function placeBomb(location, i) {
-  var bomb = new MarkerWithLabel({
-    position: location,
-    map: map,
-    title: "Bomb",
-    icon: "/images/target_07.png",
-    zIndex: 50000,
-    labelAnchor: myLocation
-  });
-  bomb.owner = allBombs[i][5];
+function destroyBomb(i) {
+  allBombs[i][msl_obj].setMap(null);
+  allBombs.splice(i,1);
+}
+
+function createBomb(location, i) {
+  if(allBombs[i][msl_obj] == null)
+  {
+    var bomb = new MarkerWithLabel({
+      position: location,
+      map: map,
+      title: "Bomb",
+      icon: "/images/target_07.png",
+      zIndex: 50000,
+      labelAnchor: myLocation
+      });
+    bomb.owner = allBombs[i][msl_ownername];
+    google.maps.event.addListener(bomb, 'click', function() {
+      var bombInfoWindow = new google.maps.InfoWindow({
+        content: this.owner + "'s bomb"
+      });
+      bombInfoWindow.open(map, this);
+    });
+    allBombs[i][msl_obj] = bomb;
+  }
   // TODO(Jeff): optimization: if bomb will not explode within MAX_BOMB_TIME, don't draw the circle yet
-  var bombFallout = new google.maps.Circle({
-    map: map,
-    center: bomb.getPosition(),
-    fillColor: "#FF0000",
-    fillOpacity: 0.2,
-    strokeColor: "#FF0000",
-    strokeOpacity: 0.8,
-    strokeWeight: 2,
-    radius: BOMB_RADIUS
-    });
-
-  allBombs[i][3] = bomb;
-  allBombs[i][4] = bombFallout;
-
-  google.maps.event.addListener(bomb, 'click', function() {
-    var bombInfoWindow = new google.maps.InfoWindow({
-      content: this.owner + "'s bomb"
-    });
-    bombInfoWindow.open(map, this);
-  });
-
-  tick(i);
+  if(allBombs[i][msl_blastObj] == null)
+  {
+    var bombFallout = new google.maps.Circle({
+      map: map,
+      center: bomb.getPosition(),
+      fillColor: "#FF0000",
+      fillOpacity: 0.2,
+      strokeColor: "#FF0000",
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      radius: BOMB_RADIUS
+      });
+    allBombs[i][msl_blastObj] = bombFallout;
+  }
 }
 
-function drawAllBombs() {
-  for (i = 0; i < allBombs.length; ++i) {
+function createAllBombs() {
+  for (i = 0; i < allBombs.length; i++) {
     var location = new google.maps.LatLng(allBombs[i][0], allBombs[i][1]);
     if (allBombs[i][2] > 0) {
-      placeBomb(location, i);
+      createBomb(location, i);
     }
   }
 }
 
-function drawPlayer(i) {
-  if (allPlayers[i][4])
+function createPlayer(i) {
+  if (allPlayers[i][usr_deadtime])
     icon = "/images/tombstone.gif";
   else
-    icon = "http://graph.facebook.com/" + allPlayers[i][3] + "/picture";
-  var location = new google.maps.LatLng(allPlayers[i][0], allPlayers[i][1]);
+    icon = "http://graph.facebook.com/" + allPlayers[i][usr_fbid] + "/picture";
+  var location = new google.maps.LatLng(allPlayers[i][usr_lat], allPlayers[i][usr_lng]);
   var marker = new google.maps.Marker({
     position: location,
     map: map,
-    title: allPlayers[i][2],
+    title: allPlayers[i][usr_name],
     icon: icon,
     zIndex: 0
   });
 
-  allPlayers[i][5] = marker;
+  allPlayers[i][usr_obj] = marker;
 
   marker.info = allPlayers[i];
   google.maps.event.addListener(marker, 'click', function() {
@@ -404,17 +403,21 @@ function drawPlayer(i) {
   });
 }
 
-function drawAllPlayers() {
+function updatePlayer(i, position) {
+  allPlayers[i][usr_obj].setPosition(myLocation);
+}
+
+function createAllPlayers() {
   for (var i = 0; i < allPlayers.length; ++i) {
-    if (allPlayers[i][3] == <%= current_user.facebook_id %>) {
+    if (allPlayers[i][usr_fbid] == <%= current_user.facebook_id %>) {
       playerIndex = i;
       continue;
     }
-    drawPlayer(i);
+    createPlayer(i);
   }
 }
 
-function createBomb() {
+function createBombButton() {
   var marker = new MarkerWithLabel({
     position: myLocation,
     map: map,
@@ -447,7 +450,7 @@ function createBomb() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
     allBombs.push([bombLat1, bombLng1, bombTime, null, null, "<%= current_user.name %>",myLocation.lat(),myLocation.lng()]);
-    placeBomb(this.getPosition(), allBombs.length-1);
+    createBomb(this.getPosition(), allBombs.length-1);
     var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
     pushData = new Image();
     pushData.src = targetUrl;
@@ -460,12 +463,12 @@ function gotPositionCallback(position) {
   pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
   map.setCenter(myLocation);
   <%- if !current_user.deadtime and !current_user.bomb_id -%>
-    createBomb();
+    createBombButton();
   <%- end -%>
 
-  allPlayers[playerIndex][0] = position.coords.latitude;
-  allPlayers[playerIndex][1] = position.coords.longitude;
-  drawPlayer(playerIndex);
+  allPlayers[playerIndex][usr_lat] = position.coords.latitude;
+  allPlayers[playerIndex][usr_lng] = position.coords.longitude;
+  createPlayer(playerIndex);
 
   navigator.geolocation.watchPosition(function(position) {
     //console.log("position: " + position.coords.latitude + ',' + position.coords.longitude + '; myLocation: ' + myLocation.lat() + ', ' + myLocation.lng());
@@ -474,11 +477,10 @@ function gotPositionCallback(position) {
     pushData = new Image();
     pushData.src = "/game/playerMoved?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude;
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-    allPlayers[playerIndex][5].setPosition(myLocation);
-    // map.setCenter(myLocation); // maybe?
+    allPlayers[playerIndex][usr_obj].setPosition(myLocation);
   });
-
   zOrderRotator();
+  tick();
 }
 
 function setMapLocation() {
@@ -501,10 +503,6 @@ window.onload = initialize;
 <% end %>
 
 <div id="map_canvas"></div>
-<div id="temp">
-  <canvas id="tutorial" width="150" height="150">
-  </canvas>
-</div>
 <div id="rules" class="white_content">
 <%= GAME_NAME %> Instructions:<br>
 1. You get one bomb at a time. Drag it to where you want.<br>
@@ -519,3 +517,5 @@ Enter your phone# to receive SMS instead of email notifications: <input id="phon
 </div>
 <div id="fade" class="black_overlay"></div>
 <%- end -%>
+
+
