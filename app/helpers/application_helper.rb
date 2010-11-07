@@ -4,18 +4,11 @@ module ApplicationHelper
     Event.new(:data => params[:data], :event_type => event_type.id).save
   end
   def jsonEvent(function,propertyArray)
-    text = '{ "fxn": ' + function + ','
+    event = GameEvent.new
+    event << :fxn function
     propertyArray.each do |propPair|
-      if propPair == propertyArray.first
-        text += '"data" : {'
-      end
-      text += '"' + propPair[0].to_s + '" : "' + propPair[1].to_s + ' " '
-      if propPair != propertyArray.last
-        text += ','
-      else
-        text += '}'
-      end
+      event.fields << { propPair[0] => propPair[1] }
     end
-    GameEvent.new(:json => text).save
+    event.save
   end
 end

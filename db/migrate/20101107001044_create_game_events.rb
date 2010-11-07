@@ -1,8 +1,6 @@
 class CreateGameEvents < ActiveRecord::Migration
   def self.up
     create_table :game_events do |t|
-      t.text :json
-
       t.timestamps
     end
   end
