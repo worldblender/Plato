@@ -16,7 +16,7 @@ class GameController < ApplicationController
   def pollGameState
     @jsonObjects=GameEvent.since(current_user.last_poll)
     current_user.last_poll = DateTime.now
-    render layout => false
+    render :layout => false
   end
 
   def dropBomb
