@@ -1,6 +1,6 @@
 class AddLastPollToUsers < ActiveRecord::Migration
   def self.up
-    add_column :users, :last_poll, :DateTime
+    add_column :users, :last_poll, :datetime
   end
 
   def self.down
