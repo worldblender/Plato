@@ -14,7 +14,7 @@ class GameController < ApplicationController
   end
 
   def pollGameState
-    @jsonObjects=GameEvents.since(current_user.last_poll)
+    @jsonObjects=GameEvent.since(current_user.last_poll)
     current_user.last_poll = DateTime.now
   end
 
