@@ -9,7 +9,7 @@ module ApplicationHelper
       if propPair == propertyArray.first
         text += '"data" : {'
       end
-      text += '"'+propPair[0].to_s + '" : "' + propPair[1].to_s + ' " '
+      text += '"' + propPair[0].to_s + '" : "' + propPair[1].to_s + ' " '
       if propPair != propertyArray.last
         text += ','
       else
