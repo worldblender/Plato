@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101102231803) do
+ActiveRecord::Schema.define(:version => 20101107002308) do
 
   create_table "bombs", :force => true do |t|
     t.float    "latitude"
@@ -39,6 +39,12 @@ ActiveRecord::Schema.define(:version => 20101102231803) do
     t.datetime "updated_at"
   end
 
+  create_table "game_events", :force => true do |t|
+    t.text     "json"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", :force => true do |t|
     t.string   "email",                               :default => "", :null => false
     t.string   "encrypted_password",   :limit => 128, :default => "", :null => false
@@ -63,6 +69,7 @@ ActiveRecord::Schema.define(:version => 20101102231803) do
     t.float    "hp"
     t.string   "notifio_account"
     t.boolean  "notifio_configured"
+    t.datetime "last_poll"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

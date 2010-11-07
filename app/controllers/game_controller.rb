@@ -2,6 +2,8 @@ class GameController < ApplicationController
   include BombsHelper
   include ApplicationHelper
   def index
+    current_user.last_poll = DateTime.now
+    current_user.save
     @bombs = Bomb.all
     @players = User.all
   end
@@ -9,6 +11,11 @@ class GameController < ApplicationController
   def restart
     current_user.resurrect
     redirect_to '/'
+  end
+
+  def pollGameState
+    @jsonObjects=game_events.since(current_user.last_poll)
+    current_user.last_poll = DateTime.now
   end
 
   def dropBomb
@@ -28,6 +35,15 @@ class GameController < ApplicationController
         damage = damageFor(bomb.distance_from(u, :units => :kms))
         u.notify(sprintf("%s dropped a bomb near you! It will detonate in %.0f seconds and do %d damage reducing you to %d hitpoints, unless you move.", current_user.name, bomb.duration.to_s,damage,u.hp-damage))
       end
+      updateValues = Array.new
+      updateValues << ['0', bomb.latitude.to_s]
+      updateValues << ['1', bomb.longitude.to_s]
+      updateValues << ['2', bomb.timeLeft * 1000]
+      updateValues << ['5', current_user.id]
+      updateValues << ['6', current_user.latitude]
+      updateValues << ['7', current_user.longitude]
+      updateValues << ['8', bomb.id]
+      jsonEvent('dropBomb',updateValues)
     end
   end
 
@@ -35,6 +51,10 @@ class GameController < ApplicationController
     current_user.latitude = params[:lat]
     current_user.longitude = params[:lng]
     event(:type => 'move', :data => 'lat: ' + current_user.latitude.to_s + '; long: ' + current_user.longitude.to_s + '; id:' + current_user.id.to_s + ';')
+    updateValues = Array.new
+    updateValues << ['0', current_user.latitude.to_s]
+    updateValues << ['1', current_user.longitude.to_s]
+    jsonEvent('updatePlayer',updateValues)
     current_user.save
   end
 
