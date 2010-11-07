@@ -5,7 +5,7 @@ module ApplicationHelper
   end
   def jsonEvent(function,propertyArray)
     event = GameEvent.new
-    event << :fxn function
+    event.fields << { :fxn => function }
     propertyArray.each do |propPair|
       event.fields << { propPair[0] => propPair[1] }
     end
