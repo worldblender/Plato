@@ -7,6 +7,7 @@ Plato::Application.routes.draw do
   get "game/dropBomb"
   get "game/playerMoved"
   get "game/restart"
+  get "game/pollGameState"
   get "game/savePhone"
 
   resources :users
