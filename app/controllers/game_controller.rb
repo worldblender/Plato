@@ -38,12 +38,12 @@ class GameController < ApplicationController
       updateValues = Array.new
       updateValues << ['0', bomb.latitude.to_s]
       updateValues << ['1', bomb.longitude.to_s]
-      updateValues << ['2', bomb.timeLeft * 1000]
-      updateValues << ['5', current_user.id]
-      updateValues << ['6', current_user.latitude]
-      updateValues << ['7', current_user.longitude]
-      updateValues << ['8', bomb.id]
-      jsonEvent('dropBomb',updateValues)
+      updateValues << ['2', (bomb.timeLeft * 1000).to_s]
+      updateValues << ['5', current_user.id.to_s]
+      updateValues << ['6', current_user.latitude.to_s]
+      updateValues << ['7', current_user.longitude.to_s]
+      updateValues << ['8', bomb.id.to_s]
+      jsonEvent('dropBomb',updateValues.to_s)
     end
   end
 
@@ -54,7 +54,7 @@ class GameController < ApplicationController
     updateValues = Array.new
     updateValues << ['0', current_user.latitude.to_s]
     updateValues << ['1', current_user.longitude.to_s]
-    updateValues << ['3', current_user.facebook_id]
+    updateValues << ['3', current_user.facebook_id.to_s]
     jsonEvent('updatePlayer',updateValues)
     current_user.save
   end
