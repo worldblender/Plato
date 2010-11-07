@@ -404,8 +404,21 @@ function createPlayer(i) {
   });
 }
 
-function updatePlayer(i, position) {
-  allPlayers[i][usr_obj].setPosition(myLocation);
+function updatePlayer(valuesArray) {
+  // usr = allPlayers.findBy_fbid(valuesArray.usr_fbid)
+  // foreach(value in valuesArray {except usr_fbid}
+  //    usr[value.first] = value.second
+  user[usr_lat] = valuesArray.usr_lat;
+  user[usr_lng] = valuesArray.usr_lng;
+  user[user_obj].setPosition(new google.maps.LatLng(valuesArray.usr_lat, valuesArray.usr_lng));
+
+  // allPlayers[i][usr_obj].setPosition(myLocation);
+}
+
+function dropBomb(valuesArray) {
+  // <%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>, <%= bomb.id %>
+  allBombs.push([valuesArray.msl_lat, valuesArray.msl_lng, valuesArray.msl_timeleft, null, null, valuesArray.msl_ownername, valuesArray.msl_srclat, valuesArray.msl_srclng]);
+  createBomb(new google.maps.LatLng(msl_lat, msl_lng), allBombs.length-1);
 }
 
 function createAllPlayers() {

@@ -54,6 +54,7 @@ class GameController < ApplicationController
     updateValues = Array.new
     updateValues << ['0', current_user.latitude.to_s]
     updateValues << ['1', current_user.longitude.to_s]
+    updateValues << ['3', current_user.facebook_id]
     jsonEvent('updatePlayer',updateValues)
     current_user.save
   end
