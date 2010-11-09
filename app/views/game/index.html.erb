@@ -132,31 +132,13 @@ GameOverlay.prototype.drawMissiles = function() {
         var oldBomb=document.getElementById('msl_'+allBombs[i][msl_id]);
         if(oldBomb == null)
         {
-<<<<<<< HEAD
-          var missle=new Image();
-          missle.src="/images/rocket_06.png";
-          missle.id="msl_" + allBombs[i][msl_id];
-          missle.onload=function(){
-            missle.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg);";
-            missle.style.pixelLeft=x;
-            missle.style.pixelTop=y;
-|||||||
-          var missle=new Image();
-          missle.src="/images/rocket_06.png";
-          missle.id="msl_" + allBombs[i][msl_id];
-          missle.onload=function(){
-            missle.style.cssText="position:absolute; -webkit-transform: rotate("+ angleDeg + "deg); -moz-transform: rotate(" + angleDeg+ "deg);";
-            missle.style.pixelLeft=x;
-            missle.style.pixelTop=y;
-=======
           var missile = new Image();
           missile.src="/images/rocket_06.png";
           missile.id="msl_" + allBombs[i][msl_id];
           missile.onload=function(){
-            missile.style.cssText="position:absolute; -webkit-transform: rotate("+ angleDeg + "deg); -moz-transform: rotate(" + angleDeg+ "deg);";
+            missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg);";
             missile.style.pixelLeft=x;
             missile.style.pixelTop=y;
->>>>>>> 4de1c2579a63f0209f0308652614b47f957216bc
             try{
               document.getElementById('imageLayer').appendChild(this);
               //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
