@@ -185,11 +185,11 @@ function initialize() {
     streetViewControl: false
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+  setMapLocation();
   theme();
   createAllPlayers();
   createAllBombs();
   drawAllInnocents();
-  setMapLocation();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.png'></a>");
   gameOverlay = new GameOverlay(map);
   leaderboardButton.style.display = "block";
