@@ -185,11 +185,11 @@ function initialize() {
     streetViewControl: false
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+  setMapLocation();
   theme();
   createAllPlayers();
   createAllBombs();
   drawAllInnocents();
-  setMapLocation();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.png'></a>");
   gameOverlay = new GameOverlay(map);
   leaderboardButton.style.display = "block";
@@ -366,7 +366,7 @@ function createBomb(location, i) {
     var bomb = new MarkerWithLabel({
       position: location,
       map: map,
-      title: "Bomb",
+      title: "Missile",
       icon: "/images/target_07.png",
       zIndex: 50000,
       labelAnchor: myLocation
@@ -374,7 +374,7 @@ function createBomb(location, i) {
     bomb.owner = allBombs[i][msl_ownername];
     google.maps.event.addListener(bomb, 'click', function() {
       var bombInfobox = new InfoBox({
-        content: this.owner + "'s bomb",
+        content: this.owner + "'s missile",
         boxStyle: { width: "200px" },
         closeBoxURL: ""
       });
@@ -456,7 +456,6 @@ function createBombButton() {
   var marker = new MarkerWithLabel({
     position: myLocation,
     map: map,
-    title: "Your bomb",
     icon: "/images/dragBomb.png",
     draggable: true,
     zIndex: 100000,
@@ -466,7 +465,7 @@ function createBombButton() {
 
   <%- if current_user.curScore and current_user.curScore < 100 -%>
     var helpInfobox = new InfoBox({
-      content: "Drag your bomb to where you want to drop it, and then double-click to light the fuse!",
+      content: "Drag your crosshairs to where you want to drop it, and then double-click to launch it!",
       boxStyle: { width: "250px" },
       closeBoxURL: ""
     });
@@ -484,7 +483,7 @@ function createBombButton() {
     var bombLng1 = this.getPosition().lng();
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), bombLat1, bombLng1);
     var bombTime = 1000 * <%= clientCalcDuration %>;
-    allBombs.push([bombLat1, bombLng1, bombTime, null, null, "<%= current_user.name %>",myLocation.lat(),myLocation.lng()]);
+    allBombs.push([bombLat1, bombLng1, bombTime, null, null, "<%= current_user.name %>", myLocation.lat(), myLocation.lng()]);
     createBomb(this.getPosition(), allBombs.length-1);
     var targetUrl = "/game/dropBomb?lat=" + this.getPosition().lat() + "&lng=" + this.getPosition().lng();
     pushData = new Image();
@@ -540,11 +539,11 @@ window.onload = initialize;
 <div id="map_canvas"></div>
 <div id="rules" class="white_content">
 <%= GAME_NAME %> Instructions:<br>
-1. You get one bomb at a time. Drag it to where you want.<br>
-2. Double click the bomb to light it.<br>
-3. The further away you drop a bomb, the longer it takes to detonate.<br>
-4. Being near an exploding bomb (even your own) will hurt you.<br>
-5. Move around in the (real) world to avoid bombs.<br>
+1. You get one missile at a time. Drag it to where you want.<br>
+2. Double click the crosshairs to launch the missle.<br>
+3. The further away you target, the longer it takes for the missle to arrive.<br>
+4. Being near a landed missle (even your own) will hurt you.<br>
+5. Move around in the (real) world to avoid missiles.<br>
 <br>
 Enter your phone# to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone(this)">
 <br><br>
