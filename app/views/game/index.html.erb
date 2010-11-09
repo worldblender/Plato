@@ -37,29 +37,28 @@
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript" src="/javascripts/infobox.js"></script>
 <script type="text/javascript">
-  var usr_lat = 0;
-  var usr_lng = 1;
-  var usr_name = 2;
-  var usr_fbid = 3;
-  var usr_deadtime = 4;
-  var usr_obj = 5;
-  var usr_hp = 6;
-  var usr_score = 7;
+var usr_lat = 0;
+var usr_lng = 1;
+var usr_name = 2;
+var usr_fbid = 3;
+var usr_deadtime = 4;
+var usr_obj = 5;
+var usr_hp = 6;
+var usr_score = 7;
 
-  var msl_lat = 0;
-  var msl_lng = 1;
-  var msl_timeleft = 2;
-  var msl_obj = 3;
-  var msl_blastObj = 4;
-  var msl_ownername = 5;
-  var msl_srclat = 6;
-  var msl_srclng = 7;
-  var msl_id = 8;
+var msl_lat = 0;
+var msl_lng = 1;
+var msl_timeleft = 2;
+var msl_obj = 3;
+var msl_blastObj = 4;
+var msl_ownername = 5;
+var msl_srclat = 6;
+var msl_srclng = 7;
+var msl_id = 8;
+
 var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
 var BOMB_RADIUS = <%= BOMB_RADIUS * 1000 %>; // in meters
-var img = new Image();
-img.src = '/images/login.png';
 var angle = Math.PI/2;
 var map;
 var myLocation;
