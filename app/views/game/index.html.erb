@@ -135,10 +135,10 @@ GameOverlay.prototype.drawMissiles = function() {
           var missile = new Image();
           missile.src="/images/rocket_06.png";
           missile.id="msl_" + allBombs[i][msl_id];
-          missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg);";
+          missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg); z-index: 5000;";
+          missile.style.pixelLeft=x;
+          missile.style.pixelTop=y;
           missile.onload=function(){
-            this.style.pixelLeft=x;
-            this.style.pixelTop=y;
             try{
               document.getElementById('imageLayer').appendChild(this);
               //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
