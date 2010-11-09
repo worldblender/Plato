@@ -108,10 +108,10 @@ function getBearing(source,target)
 }
 
 GameOverlay.prototype.draw = function() {
-  this.drawMissles();
+  this.drawMissiles();
 }
 
-GameOverlay.prototype.drawMissles = function() {
+GameOverlay.prototype.drawMissiles = function() {
   for (i = 0; i < allBombs.length; ++i) {
     if(gameOverlayProjection != null)
     {
@@ -122,7 +122,7 @@ GameOverlay.prototype.drawMissles = function() {
       var w = targetLocation.x-launchLocation.x;
       var h = targetLocation.y-launchLocation.y;
       if (allBombs[i][msl_timeleft] > 0) {
-        // draw the missle a distance along the path according to how close it is
+        // draw the missile a distance along the path according to how close it is
         var distance = haversineDistance(allBombs[i][msl_lat], allBombs[i][msl_lng], allBombs[i][msl_srclat], allBombs[i][msl_srclng]);
         duration=<%= clientCalcDuration %>*1000;
         dOnPath=allBombs[i][2]/duration;
@@ -132,6 +132,7 @@ GameOverlay.prototype.drawMissles = function() {
         var oldBomb=document.getElementById('msl_'+allBombs[i][msl_id]);
         if(oldBomb == null)
         {
+<<<<<<< HEAD
           var missle=new Image();
           missle.src="/images/rocket_06.png";
           missle.id="msl_" + allBombs[i][msl_id];
@@ -139,6 +140,23 @@ GameOverlay.prototype.drawMissles = function() {
             missle.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg);";
             missle.style.pixelLeft=x;
             missle.style.pixelTop=y;
+|||||||
+          var missle=new Image();
+          missle.src="/images/rocket_06.png";
+          missle.id="msl_" + allBombs[i][msl_id];
+          missle.onload=function(){
+            missle.style.cssText="position:absolute; -webkit-transform: rotate("+ angleDeg + "deg); -moz-transform: rotate(" + angleDeg+ "deg);";
+            missle.style.pixelLeft=x;
+            missle.style.pixelTop=y;
+=======
+          var missile = new Image();
+          missile.src="/images/rocket_06.png";
+          missile.id="msl_" + allBombs[i][msl_id];
+          missile.onload=function(){
+            missile.style.cssText="position:absolute; -webkit-transform: rotate("+ angleDeg + "deg); -moz-transform: rotate(" + angleDeg+ "deg);";
+            missile.style.pixelLeft=x;
+            missile.style.pixelTop=y;
+>>>>>>> 4de1c2579a63f0209f0308652614b47f957216bc
             try{
               document.getElementById('imageLayer').appendChild(this);
               //$(this).animate({pixelLeft: targetLocation.x,pixelTop: targetLocation.y},5000, function () {
@@ -323,10 +341,9 @@ function zOrderRotator() {
 }
 
 function tick() {
-  for(var i = 0; i<allBombs.length;i++)
+  for(var i = 0; i < allBombs.length;i++)
   {
     if (allBombs[i][msl_timeleft] > 0 && allBombs[i][msl_timeleft] != null) {
-      // allBombs[i][msl_obj].setVisible(!allBombs[i][msl_obj].getVisible());
       allBombs[i][msl_obj].setOptions({labelContent: Math.round(allBombs[i][msl_timeleft] / 1000)});
       var tmpTime = allBombs[i][msl_timeleft];
       if (tmpTime > MAX_BOMB_TIME) {
@@ -370,7 +387,7 @@ function createBomb(location, i) {
       icon: "/images/target_07.png",
       zIndex: 50000,
       labelAnchor: myLocation
-      });
+    });
     bomb.owner = allBombs[i][msl_ownername];
     google.maps.event.addListener(bomb, 'click', function() {
       var bombInfobox = new InfoBox({
@@ -539,11 +556,10 @@ window.onload = initialize;
 <div id="map_canvas"></div>
 <div id="rules" class="white_content">
 <%= GAME_NAME %> Instructions:<br>
-1. You get one missile at a time. Drag it to where you want.<br>
-2. Double click the crosshairs to launch the missle.<br>
-3. The further away you target, the longer it takes for the missle to arrive.<br>
-4. Being near a landed missle (even your own) will hurt you.<br>
-5. Move around in the (real) world to avoid missiles.<br>
+1. Drag the crosshair to where you want to attack, and double click it to launch your missile.<br>
+2. You can have one missile in the air at a time.<br>
+3. The further away you target, the longer it takes for the missile to arrive.<br>
+4. Move around in the (real) world to avoid missiles.<br>
 <br>
 Enter your phone# to receive SMS instead of email notifications: <input id="phone" type="text" name="phone" size="10"><input type="button" value="Save" onClick="savePhone(this)">
 <br><br>
