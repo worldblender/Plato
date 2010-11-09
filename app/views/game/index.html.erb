@@ -135,8 +135,8 @@ GameOverlay.prototype.drawMissiles = function() {
           var missile = new Image();
           missile.src="/images/rocket_06.png";
           missile.id="msl_" + allBombs[i][msl_id];
+          missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg);";
           missile.onload=function(){
-            this.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg);";
             this.style.pixelLeft=x;
             this.style.pixelTop=y;
             try{
