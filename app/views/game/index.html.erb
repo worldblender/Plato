@@ -128,7 +128,7 @@ GameOverlay.prototype.drawMissles = function() {
         dOnPath=allBombs[i][2]/duration;
         var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
         var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
-        var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI)-90;
+        var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI)*-1+90;
         var oldBomb=document.getElementById('msl_'+allBombs[i][msl_id]);
         if(oldBomb == null)
         {
