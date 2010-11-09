@@ -17,6 +17,8 @@ class GameController < ApplicationController
       bomb.createtime = DateTime.now
       bomb.latitude = params[:lat]
       bomb.longitude = params[:lng]
+      bomb.srcLat = current_user.latitude
+      bomb.srcLng = current_user.longitude
       bomb.owner_id = current_user.id
       bomb.save
       current_user.bomb_id = bomb.id
