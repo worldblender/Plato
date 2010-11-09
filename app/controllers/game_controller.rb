@@ -14,9 +14,9 @@ class GameController < ApplicationController
   end
 
   def pollGameState
-    @jsonObjects=GameEvent.since(current_user.last_poll)
+    jsonObjects=GameEvent.since(current_user.last_poll)
     current_user.last_poll = DateTime.now
-    render :json => @jsonObjects, :layout => false
+    render :json => jsonObjects, :layout => false
   end
 
   def dropBomb
@@ -37,13 +37,13 @@ class GameController < ApplicationController
         u.notify(sprintf("%s dropped a bomb near you! It will detonate in %.0f seconds and do %d damage reducing you to %d hitpoints, unless you move.", current_user.name, bomb.duration.to_s,damage,u.hp-damage))
       end
       updateValues = Array.new
-      updateValues << ['0', bomb.latitude.to_s]
-      updateValues << ['1', bomb.longitude.to_s]
-      updateValues << ['2', (bomb.timeLeft * 1000).to_s]
-      updateValues << ['5', current_user.id.to_s]
-      updateValues << ['6', current_user.latitude.to_s]
-      updateValues << ['7', current_user.longitude.to_s]
-      updateValues << ['8', bomb.id.to_s]
+      updateValues << ['ms_lat', bomb.latitude.to_s]
+      updateValues << ['ms_lng', bomb.longitude.to_s]
+      updateValues << ['msl_timeleft', (bomb.timeLeft * 1000).to_s]
+      updateValues << ['msl_ownername', current_user.name]
+      updateValues << ['msl_srclat', current_user.latitude.to_s]
+      updateValues << ['msl_srclng', current_user.longitude.to_s]
+      updateValues << ['msl_id', bomb.id.to_s]
       jsonEvent('dropBomb',updateValues.to_s)
     end
   end
@@ -53,9 +53,9 @@ class GameController < ApplicationController
     current_user.longitude = params[:lng]
     event(:type => 'move', :data => 'lat: ' + current_user.latitude.to_s + '; long: ' + current_user.longitude.to_s + '; id:' + current_user.id.to_s + ';')
     updateValues = Array.new
-    updateValues << ['0', current_user.latitude.to_s]
-    updateValues << ['1', current_user.longitude.to_s]
-    updateValues << ['3', current_user.facebook_id.to_s]
+    updateValues << ['usr_lat', current_user.latitude.to_s]
+    updateValues << ['usr_lng', current_user.longitude.to_s]
+    updateValues << ['usr_fbid', current_user.facebook_id.to_s]
     jsonEvent('updatePlayer',updateValues)
     current_user.save
   end

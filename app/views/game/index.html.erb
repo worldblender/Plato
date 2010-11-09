@@ -33,6 +33,7 @@
 	overflow: auto;
 }
 </style>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 <script type="text/javascript" src="/javascripts/markerWithLabel.js"></script>
 <script type="text/javascript" src="/javascripts/infobox.js"></script>
@@ -295,6 +296,26 @@ function zOrderRotator() {
 }
 
 function tick() {
+  $.get("/game/pollGameState", {}, function(data, textStatus, req){
+      events = $(req.responseText);
+      for(var i = 0; i< events.length; i++) {
+        switch(events[i].fields.fxn)
+        {
+        case 'updatePlayer':
+            updatePlayer(events[i].fields);
+          break;
+          case 'dropBomb':
+            dropBomb(events[i].fields);
+          break;
+          case 'createUser':
+            createPlayerEvent(events[i].fields);
+          break;
+          default:
+          break;
+        }
+      }
+    });
+
   for(var i = 0; i<allBombs.length;i++)
   {
     if (allBombs[i][msl_timeleft] > 0 && allBombs[i][msl_timeleft] != null) {
@@ -405,19 +426,26 @@ function createPlayer(i) {
 }
 
 function updatePlayer(valuesArray) {
-  // usr = allPlayers.findBy_fbid(valuesArray.usr_fbid)
-  // foreach(value in valuesArray {except usr_fbid}
-  //    usr[value.first] = value.second
-  //user[usr_lat] = valuesArray.usr_lat;
-  //user[usr_lng] = valuesArray.usr_lng;
-  //user[user_obj].setPosition(new google.maps.LatLng(valuesArray.usr_lat, valuesArray.usr_lng));
+  for (var i = 0; i < allPlayers.length; ++i) {
+    if (allPlayers[i][usr_fbid] == valuesArray.usr_fbid) {
+      if(valuesArray.usr_lat != null && valuesArray.usr_lng != null) {
+        allPlayers[i][usr_lat] = valuesArray.usr_lat;
+        allPlayers[i][usr_lng] = valuesArray.usr_lng;
+        allPlayers[i][usr_obj].setPosition(new google.maps.LatLng(valuesArray.usr_lat, valuesArray.usr_lng));
+      }
+      break;
+    }
+  }
+}
 
-  // allPlayers[i][usr_obj].setPosition(myLocation);
+function createPlayerEvent(valuesArray)
+  allPlayers.push([valuesArray.usr_lat, valuesArray.usr_lng, valuesArray.usr_name, valuesArray.usr_fbid, null, null, 100, 0]);
+  createPlayer(i);
 }
 
 function dropBomb(valuesArray) {
-  //allBombs.push([valuesArray.msl_lat, valuesArray.msl_lng, valuesArray.msl_timeleft, null, null, valuesArray.msl_ownername, valuesArray.msl_srclat, valuesArray.msl_srclng]);
-  //createBomb(new google.maps.LatLng(msl_lat, msl_lng), allBombs.length-1);
+  allBombs.push([valuesArray.msl_lat, valuesArray.msl_lng, valuesArray.msl_timeleft, null, null, valuesArray.msl_ownername, valuesArray.msl_srclat, valuesArray.msl_srclng,valuesArray.msl_id]);
+  createBomb(new google.maps.LatLng(valuesArray.msl_lat, valuesArray.msl_lng), allBombs.length-1);
 }
 
 function createAllPlayers() {

@@ -1,4 +1,10 @@
 Plato::Application.routes.draw do
+  get "game2/index"
+
+  get "game2/getEvents"
+
+  get "game2/fireEvent"
+
   get "facebook/index"
 
   devise_for :users
