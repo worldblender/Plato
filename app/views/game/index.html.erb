@@ -363,11 +363,12 @@ function destroyBomb(i) {
 function createBomb(location, i) {
   if(allBombs[i][msl_obj] == null)
   {
+    var bombTarget = new google.maps.MarkerImage("/images/target_07.png", null, null, new google.maps.Point(12, 12));
     var bomb = new MarkerWithLabel({
       position: location,
       map: map,
       title: "Missile",
-      icon: "/images/target_07.png",
+      icon: bombTarget,
       zIndex: 50000,
       labelAnchor: myLocation
     });
@@ -411,10 +412,13 @@ function createAllBombs() {
 }
 
 function createPlayer(i) {
+  var icon;
   if (allPlayers[i][usr_deadtime])
-    icon = "/images/tombstone.gif";
-  else
-    icon = "http://graph.facebook.com/" + allPlayers[i][usr_fbid] + "/picture";
+    icon = new google.maps.MarkerImage("/images/tombstone.gif", null, null, new google.maps.Point(16, 16));
+  else {
+    var playerImagePath = "http://graph.facebook.com/" + allPlayers[i][usr_fbid] + "/picture";
+    icon = new google.maps.MarkerImage(playerImagePath, null, null, new google.maps.Point(25, 25));
+  }
   var location = new google.maps.LatLng(allPlayers[i][usr_lat], allPlayers[i][usr_lng]);
   var marker = new google.maps.Marker({
     position: location,
@@ -453,7 +457,7 @@ function createAllPlayers() {
 }
 
 function createBombButton() {
-  var marker = new MarkerWithLabel({
+  var crosshairs = new MarkerWithLabel({
     position: myLocation,
     map: map,
     icon: "/images/dragBomb.png",
@@ -470,14 +474,14 @@ function createBombButton() {
       closeBoxURL: ""
     });
     setTimeout(function(){helpInfobox.close()}, 8000);
-    helpInfobox.open(map, marker);
+    helpInfobox.open(map, crosshairs);
   <%- end -%>
-  google.maps.event.addListener(marker, "dragend", function() {
+  google.maps.event.addListener(crosshairs, "dragend", function() {
     var distance = haversineDistance(myLocation.lat(), myLocation.lng(), this.getPosition().lat(), this.getPosition().lng());
     var displayedBombTime = Math.round(<%= clientCalcDuration %>);
     this.setOptions({labelContent: displayedBombTime});
   });
-  google.maps.event.addListener(marker, "dblclick", function() {
+  google.maps.event.addListener(crosshairs, "dblclick", function() {
     this.setMap(null);
     var bombLat1 = this.getPosition().lat();
     var bombLng1 = this.getPosition().lng();
