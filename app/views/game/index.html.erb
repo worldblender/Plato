@@ -133,7 +133,7 @@ GameOverlay.prototype.drawMissiles = function() {
         if(oldBomb == null)
         {
           var missile = new Image();
-          missile.src="/images/rocket_06.png";
+          missile.src="/images/missile.png";
           missile.id="msl_" + allBombs[i][msl_id];
           missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg); z-index: 5000;";
           missile.style.pixelLeft=x;
@@ -414,7 +414,7 @@ function createAllBombs() {
 function createPlayer(i) {
   var icon;
   if (allPlayers[i][usr_deadtime])
-    icon = new google.maps.MarkerImage("/images/tombstone.gif", null, null, new google.maps.Point(16, 16));
+    icon = new google.maps.MarkerImage("/images/dead.png", null, null, new google.maps.Point(16, 16));
   else {
     var playerImagePath = "http://graph.facebook.com/" + allPlayers[i][usr_fbid] + "/picture";
     icon = new google.maps.MarkerImage(playerImagePath, null, null, new google.maps.Point(25, 25));
