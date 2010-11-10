@@ -457,10 +457,11 @@ function createAllPlayers() {
 }
 
 function createBombButton() {
+  var crosshairsImage = var innocentImage = new google.maps.MarkerImage("/images/dragBomb.png", null, null, new google.maps.Point(21, 21));
   var crosshairs = new MarkerWithLabel({
     position: myLocation,
     map: map,
-    icon: "/images/dragBomb.png",
+    icon: crosshairsImage,
     draggable: true,
     zIndex: 100000,
     labelContent: "",
