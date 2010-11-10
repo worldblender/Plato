@@ -63,7 +63,7 @@ var map;
 var myLocation;
 var playerIndex = -1;
 var zIndexTop = 0;
-// var innocents = <%= current_user.fplaces.html_safe %>;
+var innocents = <%= current_user.fplaces.html_safe %>;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
@@ -178,7 +178,7 @@ GameOverlay.prototype.onAdd = function() {
 function initialize() {
   var mapOptions = {
     zoom: 13,
-    mapTypeId: google.maps.MapTypeId.ROADMAP,
+    mapTypeIds: [google.maps.MapTypeId.TERRAIN, "platoMap"],
     navigationControl: true,
     navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
     mapTypeControl: false,
@@ -186,10 +186,10 @@ function initialize() {
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
   setMapLocation();
-  //theme();
+  theme();
   createAllPlayers();
   createAllBombs();
-  // drawAllInnocents();
+  drawAllInnocents();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.png'></a>");
   gameOverlay = new GameOverlay(map);
   leaderboardButton.style.display = "block";
@@ -370,7 +370,7 @@ function createBomb(location, i) {
       title: "Missile",
       icon: bombTarget,
       zIndex: 50000,
-      labelAnchor: new google.maps.Point(15, 0)
+      labelAnchor: myLocation
     });
     bomb.owner = allBombs[i][msl_ownername];
     google.maps.event.addListener(bomb, 'click', function() {
@@ -464,7 +464,8 @@ function createBombButton() {
     icon: crosshairsImage,
     draggable: true,
     zIndex: 100000,
-    labelContent: ""
+    labelContent: "",
+    labelAnchor: myLocation
   });
 
   <%- if current_user.curScore and current_user.curScore < 100 -%>
