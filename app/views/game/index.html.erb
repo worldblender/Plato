@@ -63,7 +63,7 @@ var map;
 var myLocation;
 var playerIndex = -1;
 var zIndexTop = 0;
-var innocents = <%= current_user.fplaces.html_safe %>;
+// var innocents = <%= current_user.fplaces.html_safe %>;
 var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
@@ -189,7 +189,7 @@ function initialize() {
   theme();
   createAllPlayers();
   createAllBombs();
-  drawAllInnocents();
+  // drawAllInnocents();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.png'></a>");
   gameOverlay = new GameOverlay(map);
   leaderboardButton.style.display = "block";
