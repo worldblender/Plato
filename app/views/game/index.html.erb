@@ -191,6 +191,7 @@ function initialize() {
   drawAllInnocents();
   setMapLocation();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.png'></a>");
+  setMapLocation();
   gameOverlay = new GameOverlay(map);
   leaderboardButton.style.display = "block";
   var rulesButton = createButton("<a href='#' title='Show Rules' onclick='showRules(); return false'><img src='/images/rules.png'></a>");
