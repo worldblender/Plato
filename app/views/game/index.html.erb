@@ -135,7 +135,7 @@ GameOverlay.prototype.drawMissiles = function() {
           var missile = new Image();
           missile.src="/images/missile.png";
           missile.id="msl_" + allBombs[i][msl_id];
-          missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg); z-index: 100007;";
+          missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg); -moz-transform: rotate(" + angleDeg + ");";
           missile.style.pixelLeft=x;
           missile.style.pixelTop=y;
           missile.onload=function(){
@@ -185,11 +185,11 @@ function initialize() {
     streetViewControl: false
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
-  setMapLocation();
   theme();
   createAllPlayers();
   createAllBombs();
   drawAllInnocents();
+  setMapLocation();
   var leaderboardButton = createButton("<a href='http://apps.facebook.com/worldblender_plato/' title='Top Scores'><img src='/images/leaderboard.png'></a>");
   gameOverlay = new GameOverlay(map);
   leaderboardButton.style.display = "block";
@@ -324,7 +324,7 @@ function zOrderRotator() {
 }
 
 function tick() {
-  for(var i = 0; i < allBombs.length;i++)
+  for(var i = 0; i<allBombs.length;i++)
   {
     if (allBombs[i][msl_timeleft] > 0 && allBombs[i][msl_timeleft] != null) {
       allBombs[i][msl_obj].setOptions({labelContent: Math.round(allBombs[i][msl_timeleft] / 1000)});
