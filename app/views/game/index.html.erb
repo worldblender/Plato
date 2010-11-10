@@ -178,7 +178,7 @@ GameOverlay.prototype.onAdd = function() {
 function initialize() {
   var mapOptions = {
     zoom: 13,
-    mapTypeIds: [google.maps.MapTypeId.TERRAIN, "platoMap"],
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
     navigationControl: true,
     navigationControlOptions: { style: google.maps.NavigationControlStyle.SMALL },
     mapTypeControl: false,
@@ -186,7 +186,7 @@ function initialize() {
   };
   map = new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
   setMapLocation();
-  theme();
+  //theme();
   createAllPlayers();
   createAllBombs();
   // drawAllInnocents();
@@ -370,7 +370,7 @@ function createBomb(location, i) {
       title: "Missile",
       icon: bombTarget,
       zIndex: 50000,
-      labelAnchor: myLocation
+      labelAnchor: new google.maps.Point(15, 0)
     });
     bomb.owner = allBombs[i][msl_ownername];
     google.maps.event.addListener(bomb, 'click', function() {
@@ -464,8 +464,7 @@ function createBombButton() {
     icon: crosshairsImage,
     draggable: true,
     zIndex: 100000,
-    labelContent: "",
-    labelAnchor: myLocation
+    labelContent: ""
   });
 
   <%- if current_user.curScore and current_user.curScore < 100 -%>
