@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(:version => 20101102231803) do
     t.float    "hp"
     t.string   "notifio_account"
     t.boolean  "notifio_configured"
-    t.string   "friendplaces"
+    t.text     "friendplaces"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
