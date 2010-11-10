@@ -128,7 +128,7 @@ GameOverlay.prototype.drawMissiles = function() {
         dOnPath=allBombs[i][2]/duration;
         var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
         var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
-        var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI)*-1+90;
+        var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI)*-1;
         var oldBomb=document.getElementById('msl_'+allBombs[i][msl_id]);
         if(oldBomb == null)
         {
@@ -212,12 +212,13 @@ function drawAllInnocents() {
     var fname = innocents.data[i].from.name;
     var fid = innocents.data[i].from.id;
     var innocentLocation = new google.maps.LatLng(innocentLat, innocentLng);
+    var innocentImage = new google.maps.MarkerImage("/images/innocent.png", null, null, new google.maps.Point(25, 25));
 
     var innocent = new google.maps.Marker({
       position: innocentLocation,
       map: map,
       title: fname,
-      icon: "/images/innocent.png",
+      icon: innocentImage,
       zIndex: 5
     });
     innocent.fid = fid;
@@ -363,11 +364,12 @@ function destroyBomb(i) {
 function createBomb(location, i) {
   if(allBombs[i][msl_obj] == null)
   {
+    var bombTarget = new google.maps.MarkerImage("/images/target_07.png", null, null, new google.maps.Point(12, 12));
     var bomb = new MarkerWithLabel({
       position: location,
       map: map,
       title: "Missile",
-      icon: "/images/target_07.png",
+      icon: bombTarget,
       zIndex: 50000,
       labelAnchor: myLocation
     });
@@ -413,9 +415,11 @@ function createAllBombs() {
 function createPlayer(i) {
   var icon;
   if (allPlayers[i][usr_deadtime])
-    icon = "/images/dead.png";
-  else
-    icon = "http://graph.facebook.com/" + allPlayers[i][usr_fbid] + "/picture";
+    icon = new google.maps.MarkerImage("/images/dead.png", null, null, new google.maps.Point(16, 16));
+  else {
+    var playerImagePath = "http://graph.facebook.com/" + allPlayers[i][usr_fbid] + "/picture";
+    icon = new google.maps.MarkerImage(playerImagePath, null, null, new google.maps.Point(25, 25));
+  }
   var location = new google.maps.LatLng(allPlayers[i][usr_lat], allPlayers[i][usr_lng]);
   var marker = new google.maps.Marker({
     position: location,
@@ -514,7 +518,7 @@ function gotPositionCallback(position) {
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     allPlayers[playerIndex][usr_obj].setPosition(myLocation);
   });
-  zOrderRotator();
+  // zOrderRotator();
   tick();
 }
 
