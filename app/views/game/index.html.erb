@@ -370,7 +370,7 @@ function createBomb(location, i) {
       title: "Missile",
       icon: bombTarget,
       zIndex: 50000,
-      labelAnchor: myLocation
+      labelAnchor: new google.maps.Point(8, 0)
     });
     bomb.owner = allBombs[i][msl_ownername];
     google.maps.event.addListener(bomb, 'click', function() {
@@ -465,7 +465,7 @@ function createBombButton() {
     draggable: true,
     zIndex: 100000,
     labelContent: "",
-    labelAnchor: myLocation
+    labelAnchor: new google.maps.Point(120, 0)
   });
 
   <%- if current_user.curScore and current_user.curScore < 100 -%>
