@@ -1,6 +1,6 @@
 class AddFacebookIdToUser < ActiveRecord::Migration
   def self.up
-    add_column :users, :facebook_id, :integer
+    add_column :users, :facebook_id, :string
   end
 
   def self.down

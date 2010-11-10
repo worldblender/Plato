@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(:version => 20101102231803) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "name"
-    t.integer  "facebook_id"
+    t.string   "facebook_id"
     t.string   "phone"
     t.integer  "top_score"
     t.float    "hp"
