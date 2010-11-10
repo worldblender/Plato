@@ -49,7 +49,7 @@ class GameController < ApplicationController
 	end
         bombDistance = bomb.distance_from(u, :units => :kms)
         damage = damageFor(bombDistance)
-        u.notify(sprintf("%s dropped a bomb %d meters %s of you! It will detonate in %.0f seconds and do %d damage reducing you to %d hitpoints, unless you move.", current_user.name, bombDistance * 1000, heading, bomb.duration.to_s,damage,u.hp-damage))
+        u.notify("%s dropped a bomb %d meters %s of you! It will detonate in %.0f seconds and do %d damage reducing you to %d hitpoints, unless you move.", current_user.name, bombDistance * 1000, heading, bomb.duration.to_s,damage,u.hp-damage))
       end
     end
   end
@@ -57,7 +57,7 @@ class GameController < ApplicationController
   def playerMoved
     current_user.latitude = params[:lat]
     current_user.longitude = params[:lng]
-    event(:type => 'move', :data => 'lat: ' + current_user.latitude.to_s + '; long: ' + current_user.longitude.to_s + '; id:' + current_user.id.to_s + ';')
+    event(:type => 'move', :data => "lat: #{current_user.latitude.to_s}; long: #{current_user.longitude}; id: #{current_user.id};")
     current_user.save
   end
 
