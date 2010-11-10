@@ -517,7 +517,7 @@ function gotPositionCallback(position) {
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     allPlayers[playerIndex][usr_obj].setPosition(myLocation);
   });
-  // zOrderRotator();
+  zOrderRotator();
   tick();
 }
 
