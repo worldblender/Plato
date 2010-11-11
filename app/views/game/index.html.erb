@@ -4,7 +4,7 @@
 <style type="text/css">
   html { height: 100%; }
   body { height: 100%; margin: 0px; padding: 0px; font-family: Monospace; font-weight: bold; color: #9AFE2E; }
-  #map_canvas { width:80%; height: 80%; }
+  #map_canvas { width:100%; height: 100%; }
 .black_overlay {
 	display: none;
 	position: absolute;
@@ -55,6 +55,7 @@ var msl_ownername = 5;
 var msl_srclat = 6;
 var msl_srclng = 7;
 var msl_id = 8;
+var msl_flightObj = 9;
 
 var MAX_BOMB_TIME = 60*10*1000; // in milliseconds
 var TICK_INTERVAL = 1000; // in milliseconds
@@ -68,7 +69,7 @@ var allPlayers = [<%- @players.each do |user| -%>
   [<%= user.latitude %>, <%= user.longitude %>, "<%= user.name %>", <%= user.facebook_id %>, "<%= user.deadtime %>", null, <%= user.hp %>, <%= user.curScore.round %>],
 <%- end -%>];
 var allBombs = [<%- @bombs.each do |bomb| -%>
-  <% if !bomb.isExploded? %>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>, <%= bomb.id %>],<% end %>
+  <% if !bomb.isExploded? %>[<%= bomb.latitude %>, <%= bomb.longitude %>, <%= bomb.timeLeft * 1000 %>, null, null, "<%= User.find(bomb.owner_id).name %>",<%= bomb.srcLat %>, <%=  bomb.srcLng %>, <%= bomb.id %>, null],<% end %>
 <%- end -%>];
 var gameOverlay;
 var gameOverlayProjection;
@@ -129,7 +130,7 @@ GameOverlay.prototype.drawMissiles = function() {
         var x = launchLocation.x*(dOnPath)+targetLocation.x*(1-dOnPath);
         var y = launchLocation.y*(dOnPath)+targetLocation.y*(1-dOnPath);
         var angleDeg=getBearing(targetLatLng,sourceLatLng)*180/(Math.PI)*-1+180;
-        var oldBomb=document.getElementById('msl_'+allBombs[i][msl_id]);
+        var oldBomb=allBombs[i][msl_flightObj];
         if(oldBomb == null)
         {
           var missile = new Image();
@@ -138,6 +139,7 @@ GameOverlay.prototype.drawMissiles = function() {
           missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg); -moz-transform: rotate(" + angleDeg + ");";
           missile.style.pixelLeft=x;
           missile.style.pixelTop=y;
+          allBombs[i][msl_flightObj]=missile;
           missile.onload=function(){
             try{
               document.getElementById('imageLayer').appendChild(this);
