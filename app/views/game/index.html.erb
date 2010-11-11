@@ -316,9 +316,8 @@ function zOrderRotator() {
   zIndexTop = (zIndexTop+1) % allPlayers.length;
   for (i = 0; i < allPlayers.length; ++i) {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
-    if (allPlayers[i][usr_deadtime] != "")
-      continue;
-    allPlayers[i][usr_obj].setZIndex(zIndex);
+    if (allPlayers[i][usr_deadtime] == "")
+      allPlayers[i][usr_obj].setZIndex(zIndex);
   }
   setTimeout("zOrderRotator();", 2000);
 }
@@ -517,7 +516,7 @@ function gotPositionCallback(position) {
     myLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     allPlayers[playerIndex][usr_obj].setPosition(myLocation);
   });
-  zOrderRotator();
+  // zOrderRotator();
   tick();
 }
 
