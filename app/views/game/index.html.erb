@@ -318,7 +318,8 @@ function zOrderRotator() {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
     if (allPlayers[i][usr_deadtime] != "")
       continue;
-    allPlayers[i][usr_obj].setZIndex(zIndex);
+    if (allPlayers[i][usr_obj].getZIndex()) // fix bug
+      allPlayers[i][usr_obj].setZIndex(zIndex);
   }
   setTimeout("zOrderRotator();", 2000);
 }
