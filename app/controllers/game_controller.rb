@@ -57,7 +57,7 @@ class GameController < ApplicationController
   def playerMoved
     current_user.latitude = params[:lat]
     current_user.longitude = params[:lng]
-    event(:type => 'move', :data => 'lat: ' + current_user.latitude.to_s + '; long: ' + current_user.longitude.to_s + '; id:' + current_user.id.to_s + ';')
+    event(:type => 'move', :data => "lat: #{current_user.latitude.to_s}; long: #{current_user.longitude}; id: #{current_user.id};")
     current_user.save
   end
 

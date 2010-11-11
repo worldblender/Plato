@@ -135,7 +135,7 @@ GameOverlay.prototype.drawMissiles = function() {
           var missile = new Image();
           missile.src="/images/missile.png";
           missile.id="msl_" + allBombs[i][msl_id];
-          missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg); z-index: 5000;";
+          missile.style.cssText="position:absolute; -webkit-transform: rotate("+ Math.round(angleDeg) + "deg); z-index: 100007;";
           missile.style.pixelLeft=x;
           missile.style.pixelTop=y;
           missile.onload=function(){
@@ -371,7 +371,7 @@ function createBomb(location, i) {
       title: "Missile",
       icon: bombTarget,
       zIndex: 50000,
-      labelAnchor: new google.maps.Point(15, 0)
+      labelAnchor: myLocation
     });
     bomb.owner = allBombs[i][msl_ownername];
     google.maps.event.addListener(bomb, 'click', function() {
@@ -465,7 +465,8 @@ function createBombButton() {
     icon: crosshairsImage,
     draggable: true,
     zIndex: 100000,
-    labelContent: ""
+    labelContent: "",
+    labelAnchor: myLocation
   });
 
   <%- if current_user.curScore and current_user.curScore < 100 -%>
