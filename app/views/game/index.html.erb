@@ -314,7 +314,7 @@ function showRules() {
 
 function zOrderRotator() {
   zIndexTop++;
-  for (i = 0; i < allPlayers.length; ++i) {
+  for (var i = 0; i < allPlayers.length; ++i) {
     var zIndex = (i + zIndexTop) % allPlayers.length + 1;
     if (allPlayers[i][usr_deadtime] != "")
       continue;
